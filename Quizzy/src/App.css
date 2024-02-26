@@ -1,0 +1,10 @@
+#root {
+  /* max-width: 1280px; */
+  width: 100%;
+  margin: 0;
+  display: flex;
+}
+
+body {
+  margin: 0;
+}

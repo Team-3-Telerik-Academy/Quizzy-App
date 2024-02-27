@@ -1,135 +1,289 @@
-import { Button, TextField, Grid, Container, Typography, Link } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
- 
+import {
+  Button,
+  TextField,
+  Grid,
+  Container,
+  Typography,
+  Link,
+  Box,
+} from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useContext, useState } from "react";
+import AppContext from "../../Context/AppContext";
+import {
+  createUserUsername,
+  getUserByUsername,
+} from "../../services/users.service";
+import { registerUser } from "../../services/auth.service";
+import { useNavigate } from "react-router-dom";
+import signUpBackground from "../../Images/sign-up-background.jpg";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "rgb(3, 165, 251)",
+    },
+  },
+});
+
 export default function SignUp() {
+  const { setContext } = useContext(AppContext);
+  const navigate = useNavigate();
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+  });
+  const [error, setError] = useState("");
+
+  const updateForm = (prop) => (e) => {
+    setError("");
+    setForm({
+      ...form,
+      [prop]: e.target.value,
+    });
+  };
+
+  const submitForm = (e) => {
+    e.preventDefault();
+    onRegister();
+  };
+
+  const onRegister = () => {
+    // TODO: validate the form before submitting request
+
+    getUserByUsername(form.username)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          throw new Error(`Handle @${form.username} has already been taken!`);
+        }
+
+        return registerUser(form.email, form.password);
+      })
+      .then((credential) => {
+        return createUserUsername(
+          form.username,
+          credential.user.uid,
+          credential.user.email,
+          form.firstName,
+          form.lastName,
+          form.phone
+        ).then(() => {
+          setContext({
+            user: credential.user,
+          });
+        });
+      })
+      .then(() => {
+        navigate("/");
+      })
+      .catch((e) => console.log(e));
+  };
   return (
-    <Container component="main" maxWidth="xs">
-      <div style={{ marginTop: '64px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <AccountCircleIcon style={{ fontSize: 60, color: 'rgb(3, 165, 251)' }} />
-        <Typography component="h1" variant="h5" style={{ marginBottom: '20px', textAlign: 'center' }}>
-          Sign up
-        </Typography>
-        <form style={{ width: '100%', marginTop: '8px' }} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                autoComplete="username"
-                name="username"
-                variant="outlined"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                autoFocus
-                size="small"
-                style={{ borderRadius: '10px' }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="fname"
-                name="firstName"
-                variant="outlined"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                size="small"
-                style={{ borderRadius: '10px' }}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
-                size="small"
-                style={{ borderRadius: '10px' }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                size="small"
-                style={{ borderRadius: '10px' }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                id="phoneNumber"
-                label="Phone Number"
-                name="phoneNumber"
-                autoComplete="tel"
-                size="small"
-                style={{ borderRadius: '10px' }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                size="small"
-                style={{ borderRadius: '10px', marginBottom: '20px' }}
-              />
-            </Grid>
-            <Grid container spacing={1} justifyContent="space-between" style={{width: '100%', marginLeft: '7px'}}>
-              <Grid item xs={6}>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  style={{ margin: '0 0 16px', backgroundColor: '#fff', color: 'rgb(3, 165, 251)' }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgb(3, 165, 251)';
-                    e.currentTarget.style.color = '#fff';
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.backgroundColor = '#fff';
-                    e.currentTarget.style.color = 'rgb(3, 165, 251)';
-                  }}
+    <ThemeProvider theme={theme}>
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          height: "90.5vh",
+          backgroundImage: `url(${signUpBackground})`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          zIndex: '0',
+        }}
+      >
+        <Container
+          component="main"
+          maxWidth="xs"
+          style={{
+            width: "30vw",
+            position: "absolute",
+            left: "200px",
+            bottom: "80px",
+          }}
+        >
+          <div
+            style={{
+              marginTop: "64px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <AccountCircleIcon
+              style={{ fontSize: 60, color: "rgb(3, 165, 251)" }}
+            />
+            <Typography
+              component="h1"
+              variant="h5"
+              style={{ marginBottom: "20px", textAlign: "center" }}
+            >
+              Sign up
+            </Typography>
+            <form
+              onSubmit={submitForm}
+              style={{ width: "100%", marginTop: "8px" }}
+              noValidate
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    value={form.username}
+                    onChange={updateForm("username")}
+                    autoComplete="username"
+                    name="username"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="username"
+                    label="Username"
+                    autoFocus
+                    size="small"
+                    style={{ borderRadius: "10px" }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    value={form.firstName}
+                    onChange={updateForm("firstName")}
+                    autoComplete="fname"
+                    name="firstName"
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    size="small"
+                    style={{ borderRadius: "10px" }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    value={form.lastName}
+                    onChange={updateForm("lastName")}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    name="lastName"
+                    autoComplete="lname"
+                    size="small"
+                    style={{ borderRadius: "10px" }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    value={form.email}
+                    onChange={updateForm("email")}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    size="small"
+                    style={{ borderRadius: "10px" }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    value={form.phone}
+                    onChange={updateForm("phone")}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    id="phoneNumber"
+                    label="Phone Number"
+                    name="phoneNumber"
+                    autoComplete="tel"
+                    size="small"
+                    style={{ borderRadius: "10px" }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    value={form.password}
+                    onChange={updateForm("password")}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    size="small"
+                    style={{ borderRadius: "10px", marginBottom: "20px" }}
+                  />
+                </Grid>
+                <Grid
+                  container
+                  spacing={1}
+                  justifyContent="space-between"
+                  style={{ width: "100%", marginLeft: "7px" }}
                 >
-                  Cancel
-                </Button>
+                  <Grid item xs={6}>
+                    <Button
+                      onClick={() => navigate("/")}
+                      fullWidth
+                      variant="contained"
+                      style={{
+                        margin: "0 0 16px",
+                        backgroundColor: "#fff",
+                        color: "rgb(3, 165, 251)",
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          "rgb(3, 165, 251)";
+                        e.currentTarget.style.color = "#fff";
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = "#fff";
+                        e.currentTarget.style.color = "rgb(3, 165, 251)";
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      style={{
+                        margin: "0 0 16px",
+                        backgroundColor: "rgb(3, 165, 251)",
+                        color: "#fff",
+                      }}
+                    >
+                      Sign Up
+                    </Button>
+                  </Grid>
+                </Grid>
+                <Grid container justifyContent="flex-end">
+                  <Grid item>
+                    <Link
+                      href="/signIn"
+                      variant="body2"
+                      style={{ color: "rgb(3, 165, 251)" }}
+                    >
+                      Already have an account? Sign in
+                    </Link>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  style={{ margin: '0 0 16px', backgroundColor: 'rgb(3, 165, 251)', color: '#fff' }}
-                >
-                  Sign Up
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/signin" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
-    </Container>
+            </form>
+          </div>
+        </Container>
+      </Box>
+    </ThemeProvider>
   );
 }

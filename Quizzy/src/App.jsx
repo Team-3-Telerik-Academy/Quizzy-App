@@ -9,17 +9,8 @@ import Home from "./Views/Home/Home";
 import { auth } from "./config/firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getUserData } from "./services/users.service";
+import { logoutUser } from "./services/auth.service";
 
-// for logout button onClick
-// const onLogout = () => {
-//   logoutUser()
-//     .then(() => {
-//       setAppState({
-//         user: null,
-//         userData: null,
-//       });
-//     });
-// };
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -27,6 +18,17 @@ function App() {
     user: null,
     userData: null,
   });
+
+  // for logout button onClick
+const onLogout = () => {
+  logoutUser()
+    .then(() => {
+      setAppState({
+        user: null,
+        userData: null,
+      });
+    });
+};
 
   if (appState.user !== user) {
     setAppState({ user });
@@ -53,7 +55,7 @@ function App() {
   return (
     <AppContext.Provider value={{ ...appState, setContext: setAppState }}>
       <BrowserRouter>
-      {!appState.user && <Header/>}
+      {!appState.user ? <Header/> : <button onClick={onLogout}>Log Out</button>}
         <Routes>
           <Route path="/" element={<Home/>}/>
           <Route path="/signIn" element={<SignIn/>}/>

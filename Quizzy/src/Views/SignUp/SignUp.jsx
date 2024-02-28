@@ -8,16 +8,19 @@ import {
   Box,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppContext from "../../Context/AppContext";
 import {
   createUserUsername,
   getUserByUsername,
+  getUserData,
 } from "../../services/users.service";
 import { registerUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import signUpBackground from "../../Images/sign-up-background.jpg";
+import toast, { Toaster } from "react-hot-toast";
 
 const theme = createTheme({
   palette: {
@@ -28,6 +31,7 @@ const theme = createTheme({
 });
 
 export default function SignUp() {
+  const [success, setSuccess] = useState(false);
   const { setContext } = useContext(AppContext);
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -40,6 +44,14 @@ export default function SignUp() {
   });
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if(success) {
+      toast.success('You have signed up successfully!', {
+        position: "bottom-right"
+      })
+    }
+  }, [success])
+
   const updateForm = (prop) => (e) => {
     setError("");
     setForm({
@@ -48,20 +60,80 @@ export default function SignUp() {
     });
   };
 
+  const validateData = () => {
+    if (form.username.length < 3 || form.username.length > 30) {
+      setError("Username should be between 3 and 30 characters long!");
+      return false;
+    }
+
+    if (form.firstName.length < 1 || form.firstName.length > 30) {
+      setError("First Name should be between 1 and 30 characters long!");
+      return false;
+    }
+
+    if (!/^[A-Za-z]+$/.test(form.firstName)) {
+      setError(
+        "First Name should include only uppercase and lowercase letters!"
+      );
+      return false;
+    }
+
+    if (form.lastName.length < 1 || form.lastName.length > 30) {
+      setError("Last Name should be between 1 and 30 characters long!");
+      return false;
+    }
+
+    if (!/^[A-Za-z]+$/.test(form.lastName)) {
+      setError(
+        "Last Name should include only uppercase and lowercase letters!"
+      );
+      return false;
+    }
+
+    const isValidEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+
+    const isValid = isValidEmail(form.email);
+
+    if (!isValid) {
+      setError("Email is not valid!");
+      return false;
+    }
+
+    if (!/^\d{10}$/.test(form.phone)) {
+      setError("Phone number should have exactly 10 digits!");
+      return false;
+    }
+
+    if (!form.password) {
+      setError("Password is required!");
+      return false;
+    }
+
+    return true;
+  };
+
   const submitForm = (e) => {
     e.preventDefault();
+    if (!validateData()) return;
     onRegister();
   };
 
   const onRegister = () => {
-    // TODO: validate the form before submitting request
-
     getUserByUsername(form.username)
       .then((snapshot) => {
         if (snapshot.exists()) {
-          throw new Error(`Handle @${form.username} has already been taken!`);
+          throw new Error(`Username ${form.username} has already been taken!`);
         }
-
+        return getUserData("phone", form.phone);
+      })
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          throw new Error(`Phone number ${form.phone} has already been taken!`);
+        }
+        setSuccess(true);
         return registerUser(form.email, form.password);
       })
       .then((credential) => {
@@ -78,11 +150,18 @@ export default function SignUp() {
           });
         });
       })
-      .then(() => {
-        navigate("/");
-      })
-      .catch((e) => console.log(e));
+      .then(() => navigate('./'))
+      .catch((e) => {
+        if (e.message.includes("email")) {
+          setError("Email is already in use!");
+        } else if (e.message.includes("weak-password")) {
+          setError("Password should be at least 6 characters long!");
+        } else {
+          setError(e.message);
+        }
+      });
   };
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -90,14 +169,15 @@ export default function SignUp() {
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "center",
-          height: "90.5vh",
+          height: "90.9vh",
           backgroundImage: `url(${signUpBackground})`,
           backgroundPosition: "center",
           backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
-          zIndex: '0',
+          zIndex: "0",
         }}
       >
+        <Toaster/>
         <Container
           component="main"
           maxWidth="xs"
@@ -126,6 +206,11 @@ export default function SignUp() {
             >
               Sign up
             </Typography>
+            {error && (
+              <Alert severity="error" style={{ marginBottom: "20px" }}>
+                {error}
+              </Alert>
+            )}
             <form
               onSubmit={submitForm}
               style={{ width: "100%", marginTop: "8px" }}

@@ -1,4 +1,5 @@
 import Avatar from "@mui/material/Avatar";
+import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -9,11 +10,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppContext from "../../Context/AppContext";
 import { loginUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import signInBackground from "../../Images/sign-in-background.jpg";
+import toast, { Toaster } from "react-hot-toast";
 
 const theme = createTheme({
   palette: {
@@ -23,6 +25,7 @@ const theme = createTheme({
 });
 
 const SignIn = () => {
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const { setContext } = useContext(AppContext);
   const [error, setError] = useState("");
@@ -30,6 +33,14 @@ const SignIn = () => {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (success) {
+      toast.success("You have signed in successfully!", {
+        position: "bottom-right",
+      });
+    }
+  }, [success]);
 
   const updateForm = (prop) => (e) => {
     setError("");
@@ -45,7 +56,23 @@ const SignIn = () => {
   };
 
   const onLogin = () => {
-    // TODO: validate form before submitting
+    if (!form.email) {
+      setError("Email is required!");
+      setForm({
+        ...form,
+        password: "",
+      });
+      return;
+    }
+
+    if (!form.password) {
+      setError("Password is required!");
+      setForm({
+        ...form,
+        password: "",
+      });
+      return;
+    }
 
     loginUser(form.email, form.password)
       .then((credential) => {
@@ -54,9 +81,17 @@ const SignIn = () => {
         });
       })
       .then(() => {
-        navigate("/");
+        setSuccess(true);
+        navigate(location.state?.from.pathname || "/");
       })
-      .catch((e) => console.log(e.message));
+      .catch((e) => {
+        console.log(e.message);
+        setError("Your login information was incorrect! Please try again.");
+        setForm({
+          ...form,
+          password: "",
+        });
+      });
   };
 
   return (
@@ -75,8 +110,7 @@ const SignIn = () => {
         }}
       >
         <Container component="main" maxWidth="xs">
-          {" "}
-          <CssBaseline />{" "}
+          <CssBaseline />
           <Box
             sx={{
               marginTop: 8,
@@ -85,22 +119,23 @@ const SignIn = () => {
               alignItems: "center",
             }}
           >
-            {" "}
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              {" "}
-              <LockOutlinedIcon />{" "}
-            </Avatar>{" "}
+              <LockOutlinedIcon />
+            </Avatar>
             <Typography component="h1" variant="h5">
-              {" "}
-              Sign in{" "}
-            </Typography>{" "}
+              Sign in
+            </Typography>
             <Box
               component="form"
               onSubmit={handleSubmit}
               noValidate
               sx={{ mt: 1 }}
             >
-              {" "}
+              {error && (
+                <Alert severity="error" style={{ marginBottom: "20px" }}>
+                  {error}
+                </Alert>
+              )}
               <TextField
                 value={form.email}
                 onChange={updateForm("email")}
@@ -116,7 +151,7 @@ const SignIn = () => {
               />{" "}
               <TextField
                 value={form.password}
-                onChange={updateForm("password")}               
+                onChange={updateForm("password")}
                 size="small"
                 required
                 fullWidth

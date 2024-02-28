@@ -10,7 +10,7 @@ import { auth } from "./config/firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getUserData } from "./services/users.service";
 import { logoutUser } from "./services/auth.service";
-
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -20,15 +20,14 @@ function App() {
   });
 
   // for logout button onClick
-const onLogout = () => {
-  logoutUser()
-    .then(() => {
+  const onLogout = () => {
+    logoutUser().then(() => {
       setAppState({
         user: null,
         userData: null,
       });
     });
-};
+  };
 
   if (appState.user !== user) {
     setAppState({ user });
@@ -38,10 +37,10 @@ const onLogout = () => {
   useEffect(() => {
     if (user === null) return;
 
-    getUserData(user.uid)
-      .then(snapshot => {
+    getUserData("uid", user.uid)
+      .then((snapshot) => {
         if (!snapshot.exists()) {
-          throw new Error('Something went wrong!');
+          throw new Error("Something went wrong!");
         }
 
         setAppState({
@@ -49,17 +48,22 @@ const onLogout = () => {
           userData: snapshot.val()[Object.keys(snapshot.val())[0]],
         });
       })
-      .catch(e => alert(e.message));
+      .catch((e) => alert(e.message));
   }, [user]);
 
   return (
     <AppContext.Provider value={{ ...appState, setContext: setAppState }}>
+      <Toaster/>
       <BrowserRouter>
-      {!appState.user ? <Header/> : <button onClick={onLogout}>Log Out</button>}
+        {!appState.user ? (
+          <Header />
+        ) : (
+          <button onClick={onLogout}>Log Out</button>
+        )}
         <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/signIn" element={<SignIn/>}/>
-          <Route path="/signUp" element={<SignUp/>}/>
+          <Route path="/" element={<Home />} />
+          <Route path="/signIn" element={<SignIn />} />
+          <Route path="/signUp" element={<SignUp />} />
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>

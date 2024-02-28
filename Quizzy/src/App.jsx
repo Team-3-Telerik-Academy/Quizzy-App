@@ -11,6 +11,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { getUserData } from "./services/users.service";
 import { logoutUser } from "./services/auth.service";
 import toast, { Toaster } from "react-hot-toast";
+import AboutUs from "./Views/AboutUs/AboutUs";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -67,6 +68,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
+          <Route path="/aboutUs" element={<AboutUs />} />
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>

@@ -10,12 +10,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AppContext from "../../Context/AppContext";
 import { loginUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import signInBackground from "../../Images/sign-in-background.jpg";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const theme = createTheme({
   palette: {
@@ -25,7 +25,6 @@ const theme = createTheme({
 });
 
 const SignIn = () => {
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const { setContext } = useContext(AppContext);
   const [error, setError] = useState("");
@@ -33,14 +32,6 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-
-  useEffect(() => {
-    if (success) {
-      toast.success("You have signed in successfully!", {
-        position: "bottom-right",
-      });
-    }
-  }, [success]);
 
   const updateForm = (prop) => (e) => {
     setError("");
@@ -76,12 +67,14 @@ const SignIn = () => {
 
     loginUser(form.email, form.password)
       .then((credential) => {
+        toast.success("You have signed in successfully!", {
+          position: "bottom-right",
+        });
         setContext({
           user: credential.user,
         });
       })
       .then(() => {
-        setSuccess(true);
         navigate(location.state?.from.pathname || "/");
       })
       .catch((e) => {

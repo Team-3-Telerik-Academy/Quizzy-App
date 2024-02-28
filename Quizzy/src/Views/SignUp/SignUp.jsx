@@ -10,7 +10,7 @@ import {
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AppContext from "../../Context/AppContext";
 import {
   createUserUsername,
@@ -20,7 +20,7 @@ import {
 import { registerUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import signUpBackground from "../../Images/sign-up-background.jpg";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 const theme = createTheme({
   palette: {
@@ -31,7 +31,6 @@ const theme = createTheme({
 });
 
 export default function SignUp() {
-  const [success, setSuccess] = useState(false);
   const { setContext } = useContext(AppContext);
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -43,14 +42,6 @@ export default function SignUp() {
     phone: "",
   });
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if(success) {
-      toast.success('You have signed up successfully!', {
-        position: "bottom-right"
-      })
-    }
-  }, [success])
 
   const updateForm = (prop) => (e) => {
     setError("");
@@ -133,10 +124,12 @@ export default function SignUp() {
         if (snapshot.exists()) {
           throw new Error(`Phone number ${form.phone} has already been taken!`);
         }
-        setSuccess(true);
         return registerUser(form.email, form.password);
       })
       .then((credential) => {
+        toast.success("You have signed up successfully!", {
+          position: "bottom-right",
+        });
         return createUserUsername(
           form.username,
           credential.user.uid,
@@ -150,7 +143,7 @@ export default function SignUp() {
           });
         });
       })
-      .then(() => navigate('./'))
+      .then(() => navigate("/"))
       .catch((e) => {
         if (e.message.includes("email")) {
           setError("Email is already in use!");
@@ -177,7 +170,6 @@ export default function SignUp() {
           zIndex: "0",
         }}
       >
-        <Toaster/>
         <Container
           component="main"
           maxWidth="xs"

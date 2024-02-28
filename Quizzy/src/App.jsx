@@ -10,7 +10,7 @@ import { auth } from "./config/firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getUserData } from "./services/users.service";
 import { logoutUser } from "./services/auth.service";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -22,6 +22,9 @@ function App() {
   // for logout button onClick
   const onLogout = () => {
     logoutUser().then(() => {
+      toast.success("You have logged out successfully!", {
+        position: "bottom-right",
+      });
       setAppState({
         user: null,
         userData: null,

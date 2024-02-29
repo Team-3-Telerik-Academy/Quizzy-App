@@ -12,6 +12,7 @@ import { getUserData } from "./services/users.service";
 import { Toaster } from "react-hot-toast";
 import LoggedInMain from "./Components/LoggedInMain/LoggedInMain";
 import Loading from "./Components/Loading/Loading";
+import AboutUs from "./Views/AboutUs/AboutUs";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -64,6 +65,7 @@ function App() {
           <Route path="/friends" element={<Friends />} />
           <Route path="/messenger" element={<Messenger />} />
           <Route path="/liveBattle" element={<LiveBattle />} /> */}
+          <Route path="/aboutUs" element={<AboutUs />} />
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>

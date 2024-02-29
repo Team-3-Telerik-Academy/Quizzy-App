@@ -10,7 +10,7 @@ const Header = () => {
       style={{
         backgroundColor: "white",
         color: "black",
-        zIndex: '1',
+        zIndex: "1",
       }}
     >
       <Toolbar style={{ display: "flex", justifyContent: "center" }}>
@@ -32,6 +32,7 @@ const Header = () => {
           <Button
             color="inherit"
             style={{ fontSize: "15px", textTransform: "none" }}
+            onClick={() => navigate("/aboutUs")}
           >
             About Us
           </Button>

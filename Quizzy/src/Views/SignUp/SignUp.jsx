@@ -6,6 +6,8 @@ import {
   Typography,
   Link,
   Box,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Alert from "@mui/material/Alert";
@@ -21,6 +23,7 @@ import { registerUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import signUpBackground from "../../Images/sign-up-background.jpg";
 import toast from "react-hot-toast";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 const theme = createTheme({
   palette: {
@@ -40,6 +43,7 @@ export default function SignUp() {
     firstName: "",
     lastName: "",
     phone: "",
+    role: '',
   });
   const [error, setError] = useState("");
 
@@ -103,6 +107,11 @@ export default function SignUp() {
       return false;
     }
 
+    if (!form.role) {
+      setError("Role is required!");
+      return false;
+    }
+
     return true;
   };
 
@@ -136,7 +145,8 @@ export default function SignUp() {
           credential.user.email,
           form.firstName,
           form.lastName,
-          form.phone
+          form.phone,
+          form.role
         ).then(() => {
           setContext({
             user: credential.user,
@@ -300,6 +310,27 @@ export default function SignUp() {
                     size="small"
                     style={{ borderRadius: "10px", marginBottom: "20px" }}
                   />
+                </Grid>
+                <Grid item xs={12} style={{ paddingTop: "0", paddingBottom: '10px' }}>
+                  <Typography variant="subtitle1">Role:</Typography>
+                  <RadioGroup
+                    aria-label="role"
+                    name="role"
+                    value={form.role}
+                    onChange={updateForm("role")}
+                    row
+                  >
+                    <FormControlLabel
+                      value="teacher"
+                      control={<Radio color="primary" />}
+                      label="Teacher"
+                    />
+                    <FormControlLabel
+                      value="student"
+                      control={<Radio color="primary" />}
+                      label="Student"
+                    />
+                  </RadioGroup>
                 </Grid>
                 <Grid
                   container

@@ -9,8 +9,9 @@ import Home from "./Views/Home/Home";
 import { auth } from "./config/firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getUserData } from "./services/users.service";
-import { logoutUser } from "./services/auth.service";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
+import LoggedInMain from "./Components/LoggedInMain/LoggedInMain";
+import Loading from "./Components/Loading/Loading";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -18,19 +19,6 @@ function App() {
     user: null,
     userData: null,
   });
-
-  // for logout button onClick
-  const onLogout = () => {
-    logoutUser().then(() => {
-      toast.success("You have logged out successfully!", {
-        position: "bottom-right",
-      });
-      setAppState({
-        user: null,
-        userData: null,
-      });
-    });
-  };
 
   if (appState.user !== user) {
     setAppState({ user });
@@ -56,17 +44,26 @@ function App() {
 
   return (
     <AppContext.Provider value={{ ...appState, setContext: setAppState }}>
-      <Toaster/>
+      <Toaster />
       <BrowserRouter>
-        {!appState.user ? (
-          <Header />
-        ) : (
-          <button onClick={onLogout}>Log Out</button>
-        )}
+        {loading && <Loading />}
+        {!user && <Header />}
         <Routes>
-          <Route path="/" element={<Home />} />
+          {!user ? (
+            <Route path="/" element={<Home />} />
+          ) : (
+            <Route path="/" element={<LoggedInMain><Home /></LoggedInMain>} />
+          )}
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
+          {/* <Route path="/quizzes" element={<Quizzes />} />
+          <Route path="/quiz/:id" element={<Quiz />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/createQuiz" element={<CreateQuiz />} />
+          <Route path="/myQuizzes" element={<MyQuizzes />} />
+          <Route path="/friends" element={<Friends />} />
+          <Route path="/messenger" element={<Messenger />} />
+          <Route path="/liveBattle" element={<LiveBattle />} /> */}
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>

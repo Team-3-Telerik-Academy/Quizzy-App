@@ -47,23 +47,6 @@ const SignIn = () => {
   };
 
   const onLogin = () => {
-    if (!form.email) {
-      setError("Email is required!");
-      setForm({
-        ...form,
-        password: "",
-      });
-      return;
-    }
-
-    if (!form.password) {
-      setError("Password is required!");
-      setForm({
-        ...form,
-        password: "",
-      });
-      return;
-    }
 
     loginUser(form.email, form.password)
       .then((credential) => {

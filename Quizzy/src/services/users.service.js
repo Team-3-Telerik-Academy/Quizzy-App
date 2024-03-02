@@ -1,6 +1,14 @@
 import { get, set, ref, query, equalTo, orderByChild } from 'firebase/database';
 import { db } from '../config/firebase-config';
 
+export const getAllUsers = async () => {
+
+    const snapshot = await get(ref(db, `users/`));
+    const arrayOfAllUsers = Object.keys(snapshot.val()).map(el => snapshot.val()[el]);
+
+    return arrayOfAllUsers;
+};
+
 export const getUserByUsername = (username) => {
 
     return get(ref(db, `users/${username}`));

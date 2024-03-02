@@ -15,6 +15,7 @@ import Loading from "./Components/Loading/Loading";
 import AboutUs from "./Views/AboutUs/AboutUs";
 import PublicQuizzes from "./Views/PublicQuizzes/PublicQuizzes";
 import PublicQuizView from "./Views/PublicQuizView/PublicQuizView";
+import CreateQuiz from "./Views/CreateQuiz/CreateQuiz";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -59,10 +60,10 @@ function App() {
           )}
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
+          <Route path="/createQuiz" element={<LoggedInMain><CreateQuiz /></LoggedInMain>} />
           {/* <Route path="/quizzes" element={<Quizzes />} />
           <Route path="/quiz/:id" element={<Quiz />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/createQuiz" element={<CreateQuiz />} />
           <Route path="/myQuizzes" element={<MyQuizzes />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/messenger" element={<Messenger />} />

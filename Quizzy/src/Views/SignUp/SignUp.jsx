@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import signUpBackground from "../../Images/sign-up-background.jpg";
 import toast from "react-hot-toast";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import { validateData } from "./validations";
 
 const theme = createTheme({
   palette: {
@@ -55,69 +56,9 @@ export default function SignUp() {
     });
   };
 
-  const validateData = () => {
-    if (form.username.length < 3 || form.username.length > 30) {
-      setError("Username should be between 3 and 30 characters long!");
-      return false;
-    }
-
-    if (form.firstName.length < 1 || form.firstName.length > 30) {
-      setError("First Name should be between 1 and 30 characters long!");
-      return false;
-    }
-
-    if (!/^[A-Za-z]+$/.test(form.firstName)) {
-      setError(
-        "First Name should include only uppercase and lowercase letters!"
-      );
-      return false;
-    }
-
-    if (form.lastName.length < 1 || form.lastName.length > 30) {
-      setError("Last Name should be between 1 and 30 characters long!");
-      return false;
-    }
-
-    if (!/^[A-Za-z]+$/.test(form.lastName)) {
-      setError(
-        "Last Name should include only uppercase and lowercase letters!"
-      );
-      return false;
-    }
-
-    const isValidEmail = (email) => {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(email);
-    };
-
-    const isValid = isValidEmail(form.email);
-
-    if (!isValid) {
-      setError("Email is not valid!");
-      return false;
-    }
-
-    if (!/^\d{10}$/.test(form.phone)) {
-      setError("Phone number should have exactly 10 digits!");
-      return false;
-    }
-
-    if (!form.password) {
-      setError("Password is required!");
-      return false;
-    }
-
-    if (!form.role) {
-      setError("Role is required!");
-      return false;
-    }
-
-    return true;
-  };
-
   const submitForm = (e) => {
     e.preventDefault();
-    if (!validateData()) return;
+    if (!validateData(form, setError)) return;
     onRegister();
   };
 

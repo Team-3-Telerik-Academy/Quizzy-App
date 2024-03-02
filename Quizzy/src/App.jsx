@@ -13,6 +13,8 @@ import { Toaster } from "react-hot-toast";
 import LoggedInMain from "./Components/LoggedInMain/LoggedInMain";
 import Loading from "./Components/Loading/Loading";
 import AboutUs from "./Views/AboutUs/AboutUs";
+import PublicQuizzes from "./Views/PublicQuizzes/PublicQuizzes";
+import PublicQuizView from "./Views/PublicQuizView/PublicQuizView";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -66,6 +68,8 @@ function App() {
           <Route path="/messenger" element={<Messenger />} />
           <Route path="/liveBattle" element={<LiveBattle />} /> */}
           <Route path="/aboutUs" element={<AboutUs />} />
+          <Route path="/publicQuizzes" element={<PublicQuizzes />} />
+          <Route path="/publicQuizzes/:id" element={<PublicQuizView />} />
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>

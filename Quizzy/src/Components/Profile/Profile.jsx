@@ -76,7 +76,7 @@ const Profile = () => {
               style={{
                 marginTop: "90px",
                 fontFamily: "Georgia, serif",
-                fontSize: "40px",
+                fontSize: "35px",
               }}
             >
               {owner.name}

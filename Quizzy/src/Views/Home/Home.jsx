@@ -3,6 +3,7 @@ import brainIcon from "..//..//Images/brain-icon.svg";
 import testIcon from "..//..//Images/test-icon.svg";
 import starIcon from "..//..//Images/star-icon.svg";
 import { useNavigate } from "react-router-dom";
+import quizMainLogo from "..//..//Images/quiz-main-pic.png";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -12,7 +13,6 @@ const Home = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        // justifyContent: "center",
         alignItems: "center",
         height: "100vh",
       }}
@@ -48,35 +48,27 @@ const Home = () => {
         application where curiosity unfurls its wings,
         <br />
         and <br />
-        every answer becomes a constellation in the vast sky of knowledge.{" "}
-        <img
-          src={starIcon}
-          style={{ width: "35px", height: "30px" }}
-          alt=""
-        />{" "}
-        <img src={brainIcon} style={{ width: "35px", height: "30px" }} alt="" />{" "}
-        <img
-          src={testIcon}
-          style={{ width: "35px", height: "30px" }}
-          alt=""
-        />
+        every answer becomes a constellation in the vast sky of knowledge.
+        <img src={starIcon} style={{ width: "35px", height: "30px" }} alt="" />
+        <img src={brainIcon} style={{ width: "35px", height: "30px" }} alt="" />
+        <img src={testIcon} style={{ width: "35px", height: "30px" }} alt="" />
       </Typography>
       <Button
         onClick={() => navigate("/signUp")}
         variant="contained"
         style={{
-          marginTop:'15px',
+          marginTop: "15px",
           backgroundColor: "rgb(3, 165, 251)",
           textTransform: "none",
-          borderRadius:'20px',
-          width:'120px',
-          height:'45px',
-          // fontFamily: "Georgia, serif",
-          fontWeight:'500'
+          borderRadius: "20px",
+          width: "120px",
+          height: "45px",
+          fontWeight: "500",
         }}
       >
         Get started
       </Button>
+      <img src={quizMainLogo} alt="" style={{marginTop:'15px' ,height:'370px',width:'500px'}} />
     </div>
   );
 };

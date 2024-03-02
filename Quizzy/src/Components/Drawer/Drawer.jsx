@@ -20,6 +20,8 @@ import propTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
+import { Typography } from "@mui/material";
+import QuizzyLogo from "..//..//Images/logo.png";
 
 const drawerWidth = 240;
 
@@ -77,6 +79,21 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
+        {/* <Typography
+          variant="h6"
+          component="div"
+          style={{ marginRight: "auto" }}
+        >
+          <img
+            src={QuizzyLogo}
+            style={{
+              width: "80px",
+              height: "45px",
+              marginTop: "10px",
+              marginLeft: "50px",
+            }}
+          />
+        </Typography> */}
         <IconButton onClick={handleDrawerClose}>
           {theme.direction === "rtl" ? (
             <ChevronRightIcon />

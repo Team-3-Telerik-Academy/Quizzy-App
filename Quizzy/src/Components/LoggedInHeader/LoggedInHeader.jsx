@@ -27,6 +27,7 @@ import propTypes from "prop-types";
 import { logoutUser } from "../../services/auth.service";
 import toast from "react-hot-toast";
 import AppContext from "../../Context/AppContext";
+import QuizzyLogo from "..//..//Images/logo.png";
 
 const drawerWidth = 240;
 
@@ -125,9 +126,24 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          Quizzy
+        <Typography
+          variant="h6"
+          component="div"
+          style={{ marginRight: "auto" }}
+        >
+          <img
+            src={QuizzyLogo}
+            style={{
+              width: "80px",
+              height: "45px",
+              marginTop: "10px",
+              marginRight: "10px",
+            }}
+          />
         </Typography>
+        {/* <Typography variant="h6" noWrap component="div">
+          Quizzy
+        </Typography> */}
         <Search>
           <SearchIconWrapper>
             <SearchIcon />

@@ -1,11 +1,10 @@
 import { createContext } from 'react';
 
 const AppContext = createContext({
-  user: null,
+  userCredentials: null,
+  setUserCredentials() {},
   userData: null,
-  setContext() {
-    // real implementation comes from App.jsx
-  },
+  setUserData() {},
 });
 
 export default AppContext;

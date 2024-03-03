@@ -110,7 +110,7 @@ const CreateQuiz = () => {
     let promise;
 
     if (quiz.image) {
-      const pastStorageRef = ref(storage, "quizzesImages/" + userData.username);
+      const pastStorageRef = ref(storage, "createQuizImage/" + userData.username);
       const newStorageRef = ref(storage, "quizzesImages/" + quiz.title);
 
       promise = moveFile(pastStorageRef, newStorageRef, setQuiz, quiz);
@@ -141,6 +141,7 @@ const CreateQuiz = () => {
         );
       })
       .then(() => {
+        toast.success("Quiz has been successfully created!");
         setQuiz({
           title: "",
           image: "",

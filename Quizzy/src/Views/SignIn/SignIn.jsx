@@ -61,7 +61,7 @@ const SignIn = () => {
       })
       .catch((e) => {
         console.log(e.message);
-        setError("Your login information was incorrect! Please try again.");
+        toast.error("Your login information was incorrect! Please try again.");
         setForm({
           ...form,
           password: "",

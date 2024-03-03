@@ -41,10 +41,10 @@ export const getQuizByTitle = async (title) => {
 
 export const addQuiz = async (title, questions, image, difficulty, timer, totalPoints, type, category, invitedUsers, username) => {
 
-    const questionsObject = questions.reduce((obj, question) => {
-        obj[question.title] = question;
-        return obj;
-    }, {});
+    // const questionsObject = questions.reduce((obj, question) => {
+    //     obj[question.title] = question;
+    //     return obj;
+    // }, {});
 
     const invitedUsersObject = invitedUsers.reduce((obj, user) => {
         obj[user] = true;
@@ -54,8 +54,8 @@ export const addQuiz = async (title, questions, image, difficulty, timer, totalP
     try {
         const result = await push(ref(db, "quizzes"), {
             title,
-            questions: questionsObject,
-            image,
+            questions,
+            image: image || 'https://firebasestorage.googleapis.com/v0/b/quizzy-application-f0713.appspot.com/o/quiz-main-pic.png?alt=media&token=c1fa864d-d5c8-4d63-a759-d06f32413f9d',
             difficulty,
             timer,
             totalPoints,

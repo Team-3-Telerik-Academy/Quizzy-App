@@ -183,7 +183,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             color="inherit"
           >
             <img
-              src={userData?.avatar}
+              src={userData?.image}
               alt={userData?.username}
               style={{ width: "35px", height: "35px", borderRadius: "50%" }}
             />
@@ -235,7 +235,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             color="inherit"
           >
             <img
-              src={userData?.avatar}
+              src={userData?.image}
               alt={userData?.username}
               style={{ width: "35px", height: "35px", borderRadius: "50%" }}
             />

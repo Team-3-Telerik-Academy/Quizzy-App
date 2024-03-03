@@ -21,7 +21,7 @@ const LoggedInMain = ({ children }) => {
 
   return (
     <>
-      {!userData?.avatar ? (
+      {!userData?.image ? (
         <Loading />
       ) : (
         <Box sx={{ display: "flex" }}>

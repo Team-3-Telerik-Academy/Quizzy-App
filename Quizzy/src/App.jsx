@@ -16,6 +16,9 @@ import AboutUs from "./Views/AboutUs/AboutUs";
 import PublicQuizzes from "./Views/PublicQuizzes/PublicQuizzes";
 import PublicQuizView from "./Views/PublicQuizView/PublicQuizView";
 import CreateQuiz from "./Views/CreateQuiz/CreateQuiz";
+import HomeWhenLoggedIn from "./Views/HomeWhenLoggedIn/HomeWhenLoggedIn";
+import NotFound from "./Views/NotFound/NotFound";
+import UserProfile from "./Views/UserProfile/UserProfile";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -56,14 +59,35 @@ function App() {
           {!user ? (
             <Route path="/" element={<Home />} />
           ) : (
-            <Route path="/" element={<LoggedInMain><Home /></LoggedInMain>} />
+            <Route
+              path="/"
+              element={
+                <LoggedInMain>
+                  <HomeWhenLoggedIn />
+                </LoggedInMain>
+              }
+            />
           )}
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
-          <Route path="/createQuiz" element={<LoggedInMain><CreateQuiz /></LoggedInMain>} />
+          <Route
+            path="/createQuiz"
+            element={
+              <LoggedInMain>
+                <CreateQuiz />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <LoggedInMain>
+                <UserProfile />
+              </LoggedInMain>
+            }
+          />
           {/* <Route path="/quizzes" element={<Quizzes />} />
           <Route path="/quiz/:id" element={<Quiz />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/myQuizzes" element={<MyQuizzes />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/messenger" element={<Messenger />} />
@@ -71,6 +95,7 @@ function App() {
           <Route path="/aboutUs" element={<AboutUs />} />
           <Route path="/publicQuizzes" element={<PublicQuizzes />} />
           <Route path="/publicQuizzes/:id" element={<PublicQuizView />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>

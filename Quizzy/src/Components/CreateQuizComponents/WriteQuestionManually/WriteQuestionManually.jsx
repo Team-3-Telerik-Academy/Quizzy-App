@@ -2,8 +2,24 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import toast from "react-hot-toast";
 import AnswerForm from "../AnswerForm/AnswerForm";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 const WriteQuestionManually = ({ addQuestion, cancelQuestion }) => {
+  const [open, setOpen] = useState(true);
   const [isAddAnswerButtonClicked, setIsAddAnswerButtonClicked] =
     useState(false);
   const [question, setQuestion] = useState({
@@ -50,76 +66,118 @@ const WriteQuestionManually = ({ addQuestion, cancelQuestion }) => {
   };
 
   return (
-    <>
-      <input
-        type="text"
-        placeholder="Question Title"
-        value={question.title}
-        onChange={updateQuestion("title")}
-      />
-      <select value={question.type} onChange={updateQuestion("type")}>
-        <option value="">Select...</option>
-        <option value="multiple">Multiple Choice</option>
-        <option value="boolean">True / False</option>
-      </select>
-      {question.type && question.type === "boolean" ? (
-        <>
-          <input
-            type="radio"
-            name="booleanQuestion"
-            value="True"
-            id="true"
-            onChange={updateQuestion("correctAnswer")}
-          />
-          <label htmlFor="true">True</label>
-          <input
-            type="radio"
-            name="booleanQuestion"
-            value="False"
-            id="false"
-            onChange={updateQuestion("correctAnswer")}
-          />
-          <label htmlFor="false">False</label>
-        </>
-      ) : (
-        question.type === "multiple" && (
+    <Dialog open={open}>
+      <DialogContent style={{ padding: "30px" }}>
+        <TextField
+          style={{ marginBottom: "15px" }}
+          fullWidth
+          label="Question Title"
+          value={question.title}
+          onChange={updateQuestion("title")}
+        />
+
+        <FormControl fullWidth style={{ marginBottom: "15px" }}>
+          <InputLabel>Type:</InputLabel>
+          <Select value={question.type} onChange={updateQuestion("type")}>
+            <MenuItem value="multiple">Multiple Choice</MenuItem>
+            <MenuItem value="boolean">True / False</MenuItem>
+          </Select>
+        </FormControl>
+
+        {question.type && question.type === "boolean" ? (
           <>
-            {isAddAnswerButtonClicked ? (
-              <AnswerForm
-                addAnswer={addAnswer}
-                hideForm={() => setIsAddAnswerButtonClicked(false)}
+            <Typography variant="h6" color="primary" gutterBottom>
+              Mark the correct answer:
+            </Typography>
+            <RadioGroup
+              style={{ marginBottom: "15px" }}
+              name="booleanQuestion"
+              value={question.correctAnswer}
+              onChange={updateQuestion("correctAnswer")}
+            >
+              <FormControlLabel value="True" control={<Radio />} label="True" />
+              <FormControlLabel
+                value="False"
+                control={<Radio />}
+                label="False"
               />
-            ) : (
-              <button onClick={() => setIsAddAnswerButtonClicked(true)}>
-                Add Answer
-              </button>
-            )}
-            {question?.answers?.map((answer) => (
-              <div key={answer}>
-                <input
-                  type="radio"
-                  name="multipleQuestion"
-                  value={answer}
-                  id={answer}
-                  onChange={updateQuestion("correctAnswer")}
-                />
-                <label htmlFor="public">{answer}</label>
-              </div>
-            ))}
+            </RadioGroup>
           </>
-        )
-      )}
-      <span>Points:</span>
-      <input
-        type="number"
-        name="points"
-        id="points"
-        value={question.points}
-        onChange={updateQuestion("points")}
-      />
-      <button onClick={() => addQuestion(question)}>Add Question</button>
-      <button onClick={cancelQuestion}>Cancel</button>
-    </>
+        ) : (
+          question.type === "multiple" && (
+            <>
+              {isAddAnswerButtonClicked ? (
+                <AnswerForm
+                  addAnswer={addAnswer}
+                  hideForm={() => setIsAddAnswerButtonClicked(false)}
+                />
+              ) : (
+                <Button
+                  style={{ marginBottom: "20px" }}
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setIsAddAnswerButtonClicked(true)}
+                >
+                  Add Answer
+                </Button>
+              )}
+              {question?.answers.length > 0 && (
+                <div style={{ marginBottom: "15px" }}>
+                  <Typography variant="h6" color="primary" gutterBottom>
+                    Mark the correct answer:
+                  </Typography>
+                  <RadioGroup
+                  style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap'}}
+                    value={question.correctAnswer}
+                    onChange={updateQuestion("correctAnswer")}
+                  >
+                    {question.answers.map((answer) => (
+                      <FormControlLabel
+                        key={answer}
+                        value={answer}
+                        control={<Radio />}
+                        label={answer}
+                        onChange={updateQuestion("correctAnswer")}
+                      />
+                    ))}
+                  </RadioGroup>
+                </div>
+              )}
+            </>
+          )
+        )}
+
+        <TextField
+          style={{ marginBottom: "15px" }}
+          fullWidth
+          type="number"
+          label="Points"
+          value={question.points}
+          onChange={updateQuestion("points")}
+        />
+
+        <Box display="flex" justifyContent="flex-end">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => addQuestion(question)}
+            style={{ marginRight: "10px" }}
+          >
+            Add Question
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              cancelQuestion();
+              setOpen(false);
+            }}
+          >
+            Cancel
+          </Button>
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -21,8 +21,8 @@ export const getQuizQuestions = async (category, difficulty) => {
 
         const question = data.results.map(el => ({
             title: decodeHtml(el.question),
-            correctAnswer: el.correct_answer,
-            answers: shuffleArray([...el.incorrect_answers, el.correct_answer]), generated: true,
+            correctAnswer: decodeHtml(el.correct_answer),
+            answers: shuffleArray([...el.incorrect_answers.map(el => decodeHtml(el)), decodeHtml(el.correct_answer)]), generated: true,
             points: 1,
         }));
 

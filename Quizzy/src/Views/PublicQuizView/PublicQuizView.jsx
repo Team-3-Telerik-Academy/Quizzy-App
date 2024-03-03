@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { quizzesData } from "../PublicQuizzes/PublicQuizzes";
+// import { quizzesData } from "../PublicQuizzes/PublicQuizzes";
+import { getQuizById } from "../../services/quizzes.service";
 import {
   Box,
   Typography,
@@ -29,40 +30,6 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const objQuestions = {
-  id: 1,
-  questions: [
-    {
-      question: "What does HTML stand for?",
-      options: [
-        { option: "Hyper Text Markup Language", value: 1 },
-        { option: "Hyperlinks and Text Markup Language", value: 2 },
-        { option: "Home Tool Markup Language", value: 3 },
-      ],
-      answer: 1,
-    },
-    {
-      question: "Choose the correct HTML element for the largest heading?",
-      options: [
-        { option: "<heading>", value: 1 },
-        { option: "<h1>", value: 2 },
-        { option: "<h6>", value: 3 },
-        { option: "<head>", value: 4 },
-      ],
-      answer: 2,
-    },
-    {
-      question: "What is the correct HTML element for inserting a line break?",
-      options: [
-        { option: "<lb>", value: 1 },
-        { option: "<br>", value: 2 },
-        { option: "<break>", value: 3 },
-      ],
-      answer: 3,
-    },
-  ],
-};
-
 const PublicQuizView = () => {
   const { id } = useParams();
   const [index, setIndex] = useState(0);
@@ -70,11 +37,22 @@ const PublicQuizView = () => {
   const [questionaryView, setQuestionaryView] = useState(true);
   const [resultView, setResultView] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  const [questionNumber, setQuestionNumber] = useState(0);
+  const [questions, setQuestions] = useState([]);
   const [points, setPoits] = useState({});
+  const [quiz, setQuiz] = useState({});
+
+  useEffect(() => {
+    getQuizById(id).then((data) => {
+      setQuiz(data);
+      setQuestions(Object.values(data.questions));
+    });
+  }, []);
+
   console.log(points);
+
   const handleClick = (option, value, answer, page) => {
     setSelectedItem({ ...selectedItem, [page]: option });
+
     if (value === answer) {
       setPoits({ ...points, [page]: 1 });
     } else {
@@ -92,8 +70,7 @@ const PublicQuizView = () => {
     setResultView(true);
   };
 
-  const question = objQuestions.questions;
-  const length = objQuestions.questions.length;
+  const length = questions?.length;
 
   return (
     <>
@@ -119,16 +96,16 @@ const PublicQuizView = () => {
             style={{ fontFamily: "fantasy", color: "#394E6A" }}
             variant="h5"
           >
-            {question[index].question}
+            {questions[index]?.title}
           </Typography>
           <Grid
             container
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
-            {question[index].options.map((option) => {
+            {questions[index]?.answers?.map((option) => {
               return (
-                <Grid item xs={6}>
+                <Grid key={option.title} item xs={6}>
                   <Item
                     style={{
                       fontFamily: "Monospace",
@@ -145,13 +122,13 @@ const PublicQuizView = () => {
                     onClick={() =>
                       handleClick(
                         option,
-                        option.value,
-                        question[index].answer,
+                        option,
+                        questions[index].correctAnswer,
                         page
                       )
                     }
                   >
-                    {option.option}
+                    {option}
                   </Item>
                 </Grid>
               );

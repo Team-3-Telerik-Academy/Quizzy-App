@@ -1,33 +1,7 @@
-import reactIcon from "..//..//Images/react-icon.jpg";
-import htmlCssIcon from "..//..//Images/html-css-icon.png";
-import javaScriptIcon from "..//..//Images/javascript-icon.png";
 import unlocked from "..//..//Images/unlocked.svg";
 import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
-export const quizzesData = [
-  {
-    name: "HTML & CSS",
-    createdOn: "29 February 2024",
-    image: htmlCssIcon,
-    id: 1,
-    difficulty: "Easy",
-  },
-  {
-    name: "JavaScript",
-    createdOn: "29 February 2024",
-    image: javaScriptIcon,
-    id: 2,
-    difficulty: "Medium",
-  },
-  {
-    name: "React",
-    createdOn: "29 February 2024",
-    image: reactIcon,
-    id: 3,
-    difficulty: "Hard",
-  },
-];
+import { quizzesData } from "../../utils/publicQuizzesData";
 
 const PublicQuizzes = () => {
   const navigate = useNavigate();
@@ -146,9 +120,9 @@ const PublicQuizzes = () => {
                       fontWeight: "bold",
                       color: "white",
                       backgroundColor:
-                        quiz.difficulty === "Easy"
+                        quiz.difficulty === "easy"
                           ? "green"
-                          : quiz.difficulty === "Medium"
+                          : quiz.difficulty === "medium"
                           ? "orange"
                           : "red",
                       borderRadius: "15px",

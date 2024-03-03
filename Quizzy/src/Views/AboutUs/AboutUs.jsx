@@ -24,7 +24,9 @@ const AboutUs = () => {
       <Typography
         component="h2"
         variant="h4"
-        style={{ marginTop: "20px", fontFamily: "Georgia, serif", marginBottom: '30px' }}
+        style={{ marginTop: "20px", 
+        fontFamily: "Georgia, serif", 
+        marginBottom: '30px' }}
       >
         The Masterminds behind{" "}
         <span style={{ color: "rgb(3, 165, 251)" }}>Quizzy Application</span>

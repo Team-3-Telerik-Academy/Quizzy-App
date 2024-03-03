@@ -4,6 +4,7 @@
   margin: 0;
   display: flex;
   flex-direction: column;
+  font-family: Georgia, serif;
 }
 
 body {

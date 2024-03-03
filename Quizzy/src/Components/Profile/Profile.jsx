@@ -98,6 +98,7 @@ const Profile = () => {
                 marginBottom: "13px",
                 padding: "7px",
                 color: "#4B5563",
+                fontFamily: "Georgia, serif",
               }}
             >
               <span>{owner.content}</span>

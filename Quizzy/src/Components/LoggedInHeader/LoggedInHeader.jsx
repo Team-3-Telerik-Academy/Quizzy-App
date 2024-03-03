@@ -27,6 +27,8 @@ import propTypes from "prop-types";
 import { logoutUser } from "../../services/auth.service";
 import toast from "react-hot-toast";
 import AppContext from "../../Context/AppContext";
+import QuizzyLogo from "..//..//Images/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -85,6 +87,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const { userData, setAppState } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const onLogout = () => {
     logoutUser().then(() => {
@@ -125,9 +128,24 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          Quizzy
+        <Typography
+          variant="h6"
+          component="div"
+          style={{ marginRight: "auto" }}
+        >
+          <img
+            src={QuizzyLogo}
+            style={{
+              width: "70px",
+              height: "45px",
+              marginTop: "10px",
+              marginRight: "10px",
+            }}
+          />
         </Typography>
+        {/* <Typography variant="h6" noWrap component="div">
+          Quizzy
+        </Typography> */}
         <Search>
           <SearchIconWrapper>
             <SearchIcon />
@@ -193,7 +211,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+        <MenuItem onClick={() => {handleMenuClose(); navigate('/profile')}}>Profile</MenuItem>
         <MenuItem onClick={onLogout}>
           Logout
           <LogoutIcon sx={{ ml: 1 }} />

@@ -1,6 +1,6 @@
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import QuizzyLogo from "..//..//Images/quizzy-logo.png";
+import QuizzyLogo from "..//..//Images/logo.png";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const Header = () => {
           <img
             src={QuizzyLogo}
             alt=""
-            style={{ width: "170px", height: "3em", marginTop: "10px" }}
+            style={{ width: "100px", height: "65px", marginTop: "10px" }}
           />
         </Typography>
         <Box style={{ marginLeft: "100px" }}>

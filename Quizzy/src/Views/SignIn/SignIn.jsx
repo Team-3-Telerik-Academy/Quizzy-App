@@ -47,7 +47,6 @@ const SignIn = () => {
   };
 
   const onLogin = () => {
-
     loginUser(form.email, form.password)
       .then((credential) => {
         toast.success("You have signed in successfully!", {
@@ -113,9 +112,9 @@ const SignIn = () => {
                 </Alert>
               )}
               <TextField
+                style={{ marginBottom: "15px" }}
                 value={form.email}
                 onChange={updateForm("email")}
-                margin="normal"
                 size="small"
                 required
                 fullWidth

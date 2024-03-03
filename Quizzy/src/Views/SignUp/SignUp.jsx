@@ -44,7 +44,7 @@ export default function SignUp() {
     firstName: "",
     lastName: "",
     phone: "",
-    role: '',
+    role: "",
   });
   const [error, setError] = useState("");
 
@@ -249,29 +249,40 @@ export default function SignUp() {
                     id="password"
                     autoComplete="current-password"
                     size="small"
-                    style={{ borderRadius: "10px", marginBottom: "20px" }}
+                    style={{ borderRadius: "10px", marginBottom: "5px" }}
                   />
                 </Grid>
-                <Grid item xs={12} style={{ paddingTop: "0", paddingBottom: '10px' }}>
-                  <Typography variant="subtitle1">Role:</Typography>
-                  <RadioGroup
-                    aria-label="role"
-                    name="role"
-                    value={form.role}
-                    onChange={updateForm("role")}
-                    row
-                  >
-                    <FormControlLabel
-                      value="teacher"
-                      control={<Radio color="primary" />}
-                      label="Teacher"
-                    />
-                    <FormControlLabel
-                      value="student"
-                      control={<Radio color="primary" />}
-                      label="Student"
-                    />
-                  </RadioGroup>
+                <Grid
+                  item
+                  xs={12}
+                  style={{ paddingTop: "0", paddingBottom: "10px" }}
+                >
+                  <Box display="flex" alignItems="center">
+                    <Typography
+                      variant="subtitle1"
+                      style={{ marginRight: "10px", marginTop: "0" }}
+                    >
+                      Role:
+                    </Typography>
+                    <RadioGroup
+                      aria-label="role"
+                      name="role"
+                      value={form.role}
+                      onChange={updateForm("role")}
+                      row
+                    >
+                      <FormControlLabel
+                        value="teacher"
+                        control={<Radio color="primary" />}
+                        label="Teacher"
+                      />
+                      <FormControlLabel
+                        value="student"
+                        control={<Radio color="primary" />}
+                        label="Student"
+                      />
+                    </RadioGroup>
+                  </Box>
                 </Grid>
                 <Grid
                   container

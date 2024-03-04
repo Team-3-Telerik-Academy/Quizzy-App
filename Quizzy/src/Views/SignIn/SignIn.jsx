@@ -26,7 +26,7 @@ const theme = createTheme({
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { setContext } = useContext(AppContext);
+  const { setUserCredentials } = useContext(AppContext);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     email: "",
@@ -52,9 +52,7 @@ const SignIn = () => {
         toast.success("You have signed in successfully!", {
           position: "bottom-right",
         });
-        setContext({
-          user: credential.user,
-        });
+        setUserCredentials(credential.user);
       })
       .then(() => {
         navigate(location.state?.from.pathname || "/");

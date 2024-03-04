@@ -61,7 +61,7 @@ const UploadImage = ({ prop, fn, value }) => {
       value === "userImage" &&
       prop.image !== defaultUserImage
     ) {
-      deleteImage(storageRef)
+      deleteImage(storageRef);
     }
 
     uploadImage(storageRef, file).then((downloadUrl) => {
@@ -79,9 +79,11 @@ const UploadImage = ({ prop, fn, value }) => {
       <Box
         id="upload-image"
         marginBottom={2}
+        marginTop={3}
         display="flex"
         alignItems="center"
         justifyContent="center"
+        flexDirection="column"
         gap="15px"
       >
         <input
@@ -93,21 +95,22 @@ const UploadImage = ({ prop, fn, value }) => {
         <img
           src={prop.image}
           alt={prop.title}
-          style={{ width: "150px", height: "150px" }}
+          style={{ width: "200px", height: "200px" }}
         />
         <Box
           id="upload-image"
           marginBottom={2}
           marginTop={1}
           display="flex"
-          flexDirection="column"
-          alignItems="flex-start"
+          flexDirection="row"
+          alignItems="center"
+          justifyContent="center"
+          gap="15px"
         >
           <Button
             variant="contained"
             color="primary"
             onClick={handleUploadClick}
-            style={{ marginTop: "10px" }}
           >
             Change Image
           </Button>
@@ -117,7 +120,6 @@ const UploadImage = ({ prop, fn, value }) => {
               variant="contained"
               color="secondary"
               onClick={handleDelete}
-              style={{ marginTop: "10px", width: "100%" }}
             >
               Delete Image
             </Button>

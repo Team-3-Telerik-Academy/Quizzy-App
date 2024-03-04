@@ -39,7 +39,14 @@ export const getQuizByTitle = async (title) => {
     }
 };
 
-export const addQuiz = async (title, questions, image, difficulty, timer, totalPoints, type, category, invitedUsers, username) => {
+export const addQuiz = async (title, questions, image, difficulty, timer, totalPoints, type, category, invitedUsers, username, activeTimeInMinutes) => {
+    let realCategory;
+
+    if (category === '9') realCategory = 'General Knowledge'
+    if (category === '25') realCategory = 'Geography'
+    if (category === '23') realCategory = 'History'
+    if (category === '19') realCategory = 'Math'
+    if (category === '17') realCategory = 'Science & Nature'
 
     // const questionsObject = questions.reduce((obj, question) => {
     //     obj[question.title] = question;
@@ -60,11 +67,13 @@ export const addQuiz = async (title, questions, image, difficulty, timer, totalP
             timer,
             totalPoints,
             type,
-            category,
+            category: realCategory,
             invitedUsers: invitedUsersObject,
             author: username,
+            activeTimeInMinutes,
             createdOn: new Date().toString(),
             takenBy: {},
+            status: 'active',
         });
 
         return getQuizById(result.key);

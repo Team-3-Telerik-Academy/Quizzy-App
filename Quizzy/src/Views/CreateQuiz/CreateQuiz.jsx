@@ -31,6 +31,26 @@ import QuizImage from "../../Components/CreateQuizComponents/QuizImage/QuizImage
 
 const storage = getStorage();
 
+const numbers = Array.from({ length: 60 }, (_, i) => i + 1);
+
+const timeUnits = [
+  { value: "minutes", label: "Minutes" },
+  { value: "hours", label: "Hours" },
+  { value: "days", label: "Days" },
+  { value: "weeks", label: "Weeks" },
+];
+
+const convertToMinutes = (number, timeUnit) => {
+  const multipliers = {
+    minutes: 1,
+    hours: 60,
+    days: 24 * 60,
+    weeks: 7 * 24 * 60,
+  };
+
+  return number * multipliers[timeUnit];
+};
+
 const CreateQuiz = () => {
   const { userData } = useContext(AppContext);
   const [users, setUsers] = useState(null);
@@ -47,6 +67,8 @@ const CreateQuiz = () => {
     invitedUsers: [],
     questions: [],
     generated: false,
+    activeNumber: 1,
+    activeTimeUnit: "minutes",
   });
 
   useEffect(() => {
@@ -105,12 +127,19 @@ const CreateQuiz = () => {
   };
 
   const handleAddQuiz = () => {
+    const activeTimeInMinutes = convertToMinutes(
+      quiz.activeNumber,
+      quiz.activeTimeUnit
+    );
     if (validateQuiz(quiz)) return;
 
     let promise;
 
     if (quiz.image) {
-      const pastStorageRef = ref(storage, "createQuizImage/" + userData.username);
+      const pastStorageRef = ref(
+        storage,
+        "createQuizImage/" + userData.username
+      );
       const newStorageRef = ref(storage, "quizzesImages/" + quiz.title);
 
       promise = moveFile(pastStorageRef, newStorageRef, setQuiz, quiz);
@@ -137,7 +166,8 @@ const CreateQuiz = () => {
           quiz.type,
           quiz.category,
           quiz.invitedUsers,
-          userData.username
+          userData.username,
+          activeTimeInMinutes
         );
       })
       .then(() => {
@@ -153,6 +183,8 @@ const CreateQuiz = () => {
           invitedUsers: [],
           questions: [],
           generated: false,
+          activeNumber: 1,
+          activeTimeUnit: "minutes",
         });
         setGeneratedQuestions(null);
       });
@@ -178,6 +210,37 @@ const CreateQuiz = () => {
             style={{ marginBottom: "20px" }}
           />
           <QuizImage quiz={quiz} setQuiz={setQuiz} />
+          <Typography variant="h6" color="primary" marginBottom="5px">Active Time For The Quiz:</Typography>
+          <Box display="flex" justifyContent="space-between">
+            <FormControl
+              style={{ marginBottom: "15px", flex: 1, marginRight: "10px" }}
+            >
+              <Select
+                value={quiz.activeNumber}
+                onChange={updateQuiz("activeNumber")}
+              >
+                {numbers.map((number) => (
+                  <MenuItem key={number} value={number}>
+                    {number}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl
+              style={{ marginBottom: "15px", flex: 1, marginLeft: "10px" }}
+            >
+              <Select
+                value={quiz.activeTimeUnit}
+                onChange={updateQuiz("activeTimeUnit")}
+              >
+                {timeUnits.map((unit) => (
+                  <MenuItem key={unit.value} value={unit.value}>
+                    {unit.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
           <FormControl component="fieldset">
             <FormLabel component="legend">Type:</FormLabel>
             <RadioGroup
@@ -234,7 +297,6 @@ const CreateQuiz = () => {
               )}
             </Box>
           </FormControl>
-
           <FormControl fullWidth style={{ marginBottom: "15px" }}>
             <InputLabel>Timer:</InputLabel>
             <Select value={quiz.timer} onChange={updateQuiz("timer")}>
@@ -245,7 +307,6 @@ const CreateQuiz = () => {
               <MenuItem value="120">120 minutes</MenuItem>
             </Select>
           </FormControl>
-
           <FormControl fullWidth>
             <InputLabel>Category:</InputLabel>
             <Select value={quiz.category} onChange={updateQuiz("category")}>
@@ -257,7 +318,6 @@ const CreateQuiz = () => {
               <MenuItem value="17">Science & Nature</MenuItem>
             </Select>
           </FormControl>
-
           <FormControl
             component="fieldset"
             fullWidth
@@ -279,7 +339,6 @@ const CreateQuiz = () => {
               <FormControlLabel value="hard" control={<Radio />} label="Hard" />
             </RadioGroup>
           </FormControl>
-
           <div id="quiz-questions">
             {showQuizForm ? (
               <WriteQuestionManually
@@ -297,7 +356,6 @@ const CreateQuiz = () => {
               </Button>
             )}
           </div>
-
           {quiz?.questions?.length > 0 && (
             <>
               <hr />
@@ -313,7 +371,6 @@ const CreateQuiz = () => {
               ))}
             </>
           )}
-
           {generatedQuestions && (
             <>
               <hr />

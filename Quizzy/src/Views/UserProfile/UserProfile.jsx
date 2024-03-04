@@ -3,19 +3,70 @@ import { updateUserInfo } from "../../services/users.service";
 import { useContext, useState } from "react";
 import AppContext from "../../Context/AppContext";
 import UploadImage from "../../Components/UploadImage/UploadImage";
+import { Box, Button, Divider, TextField, Typography } from "@mui/material";
+import { styled } from "@mui/system";
+
+const UserProfileBox = styled(Box)({
+  backgroundColor: "white",
+  color: "black",
+  marginTop: "50px",
+  boxShadow: "0 0 10px 0 rgba(0,0,0,0.7)",
+});
+
+const HeaderBox = styled(Box)({
+  backgroundColor: "rgb(3,165,251)",
+  color: "white",
+  padding: "1em",
+  display: "flex",
+  justifyContent: "space-between",
+});
+
+const InfoBox = styled(Box)({
+  display: "flex",
+  justifyContent: "space-between",
+  padding: "1em",
+});
+
+const LeftInfoBox = styled(Box)({
+  flex: "1 1 50%",
+  marginRight: "1em",
+});
+
+const RightInfoBox = styled(Box)({
+  flex: "1 1 50%",
+});
+
+const InfoText = styled(Typography)({
+  margin: "1em 0",
+});
+
+const ProfileContent = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  padding: "1em",
+});
+
+const ChangeInfo = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+});
+
+const InfoInput = styled(TextField)({
+  marginBottom: "1em",
+});
 
 const UserProfile = () => {
   const { userData, setUserData } = useContext(AppContext);
   const [profileInfo, setProfileInfo] = useState({
     firstName: userData?.firstName || "",
     lastName: userData?.lastName || "",
-    number: userData?.number || "",
+    phone: userData?.phone || "",
   });
 
   const [editProfile, setEditProfile] = useState({
     firstName: false,
     lastName: false,
-    number: false,
+    phone: false,
     image: false,
   });
 
@@ -25,9 +76,12 @@ const UserProfile = () => {
       return;
     }
 
-    updateUserInfo(userData.username, "firstName", profileInfo.firstName, setUserData).then(
-      () => setEditProfile({ ...editProfile, firstName: false })
-    );
+    updateUserInfo(
+      userData.username,
+      "firstName",
+      profileInfo.firstName,
+      setUserData
+    ).then(() => setEditProfile({ ...editProfile, firstName: false }));
   };
 
   const handleLastNameChange = () => {
@@ -36,71 +90,77 @@ const UserProfile = () => {
       return;
     }
 
-    updateUserInfo(userData.username, "lastName", profileInfo.lastName, setUserData).then(
-      () => setEditProfile({ ...editProfile, lastName: false })
-    );
+    updateUserInfo(
+      userData.username,
+      "lastName",
+      profileInfo.lastName,
+      setUserData
+    ).then(() => setEditProfile({ ...editProfile, lastName: false }));
   };
 
   const handlePhoneChange = () => {
-    if (!profileInfo.number) {
+    if (!profileInfo.phone) {
       toast.error("Phone number cannot be empty!");
       return;
     }
 
-    if (!/^\d+$/.test(profileInfo.number)) {
+    if (!/^\d+$/.test(profileInfo.phone)) {
       toast.error("Phone number can only contain digits!");
       return;
     }
 
-    if (profileInfo.number.length !== 10) {
+    if (profileInfo.phone.length !== 10) {
       toast.error("Phone number must be 10 digits long");
       return;
     }
 
-    updateUserInfo(userData.username, "number", profileInfo.number, setUserData).then(() => {
-      userData.number = profileInfo.number;
-      setEditProfile({ ...editProfile, number: false });
+    updateUserInfo(
+      userData.username,
+      "number",
+      profileInfo.phone,
+      setUserData
+    ).then(() => {
+      userData.phone = profileInfo.phone;
+      setEditProfile({ ...editProfile, phone: false });
     });
   };
 
-  const deleteNumber = () => {
-    setEditProfile({ ...editProfile, number: true });
-    updateUserInfo(userData.username, "number", null, setUserData).then(() => {
-      setProfileInfo({ ...profileInfo, number: "" });
-      setEditProfile({ ...editProfile, number: false });
-    });
-  };
+  // const deleteNumber = () => {
+  //   setEditProfile({ ...editProfile, phone: true });
+  //   updateUserInfo(userData.username, "number", null, setUserData).then(() => {
+  //     setProfileInfo({ ...profileInfo, phone: "" });
+  //     setEditProfile({ ...editProfile, phone: false });
+  //   });
+  // };
 
   return (
-    <div id="user-profile">
-      <div id="profile-header">
-        <div id="username-and-image">
+    <UserProfileBox>
+      <HeaderBox>
+        <Box>
           {userData?.image && (
             <img
-              id="little-image-display"
+              style={{ width: "100px", height: "100px", borderRadius: "50%" }}
               src={userData?.image}
               alt={userData?.username}
             />
           )}
-
-          <h1>{userData?.username}</h1>
-        </div>
-        <div id="header-profile-info">
-          <p className="info">
-            Created quizzes <br />{" "}
+          <Typography variant="h4" marginLeft="17px">
+            {userData?.username}
+          </Typography>
+        </Box>
+        <Box>
+          <Typography variant="body1">
+            Created quizzes:{" "}
             {userData?.quizzes ? Object.keys(userData.quizzes).length : 0}
-          </p>
-          <div className="vertical-line"></div>
-          <p className="info">
-            Taken quizzes <br /> {userData?.takenQuizzes || 0}
-          </p>
-          <div className="vertical-line"></div>
-          <p className="info">
-            Rank / Scoreboard Place <br /> {userData?.rank || 0}
-          </p>
-          <div className="vertical-line"></div>
-          <p className="info">
-            Joined <br />{" "}
+          </Typography>
+          <Typography variant="body1">
+            Taken quizzes: {userData?.takenQuizzes || 0}
+          </Typography>
+          <Typography variant="body1">
+            Rank / Scoreboard Place: {userData?.rank || 0}
+          </Typography>
+          <Typography variant="body1">
+            Joined on:{" "}
             {new Date(userData?.createdOn).toLocaleString("bg-BG", {
               year: "numeric",
               month: "numeric",
@@ -108,141 +168,203 @@ const UserProfile = () => {
               hour: "2-digit",
               minute: "2-digit",
             })}
-          </p>
+          </Typography>
           {userData?.isBlocked && (
-            <div id="blocked-info">This profile is blocked!</div>
+            <Typography>This profile is blocked!</Typography>
           )}
-        </div>
-      </div>
-      <div id="profile-main-content">
-          <div id="profile-change-info">
-            <div id="change-info-left-side">
-              <p className="info">
+        </Box>
+      </HeaderBox>
+      <InfoBox>
+        <LeftInfoBox>
+          <ProfileContent>
+            <ChangeInfo>
+              <InfoText variant="body1">
                 <strong>Username:</strong> <br /> {userData?.username}
-                <hr />
-              </p>
-              <p className="info">
+              </InfoText>
+              <Divider />
+              <InfoText variant="body1">
                 <strong>Email:</strong> <br /> {userData?.email}
-              </p>
-              <hr />
-              <p className="info">
-                <strong>First Name:</strong> <br />
-                {editProfile.firstName ? (
-                  <>
-                    <input
-                      type="text"
-                      value={profileInfo.firstName}
-                      onChange={(e) => {
-                        setProfileInfo({
-                          ...profileInfo,
-                          firstName: e.target.value,
-                        });
-                      }}
-                      name="firstName"
-                      id="firstName"
-                    />
-                    <button onClick={handleFirstNameChange}>Done</button>
-                  </>
-                ) : (
-                  <>
-                    {userData?.firstName}
-                    <button
-                      onClick={() =>
-                        setEditProfile({ ...editProfile, firstName: true })
-                      }
-                    >
-                      Edit
-                    </button>
-                  </>
-                )}
-              </p>
-              <hr />
-              <p className="info">
-                <strong>Last Name:</strong> <br />
-                {editProfile.lastName ? (
-                  <>
-                    <input
-                      type="text"
-                      value={profileInfo.lastName}
-                      onChange={(e) => {
-                        setProfileInfo({
-                          ...profileInfo,
-                          lastName: e.target.value,
-                        });
-                      }}
-                      name="secondName"
-                      id="secondName"
-                    />
-                    <button onClick={handleLastNameChange}>Done</button>
-                  </>
-                ) : (
-                  <>
-                    {userData?.lastName}
-                    <button
-                      onClick={() =>
-                        setEditProfile({ ...editProfile, lastName: true })
-                      }
-                    >
-                      Edit
-                    </button>
-                  </>
-                )}
-              </p>
-              <hr />
-              {userData?.admin && (
-                <p className="info">
-                  <strong>Phone Number:</strong> <br />
-                  {editProfile.number ? (
-                    <>
-                      <input
+              </InfoText>
+              <Divider />
+              <InfoText variant="body1" position="relative">
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="flex-start"
+                  style={{ flexDirection: "column", height: "100%" }}
+                >
+                  <div style={{ lineHeight: "2" }}>
+                    <strong>First Name:</strong> <br />
+                    {editProfile.firstName ? (
+                      <InfoInput
                         type="text"
-                        value={profileInfo.number}
+                        value={profileInfo.firstName}
                         onChange={(e) => {
                           setProfileInfo({
                             ...profileInfo,
-                            number: e.target.value,
+                            firstName: e.target.value,
+                          });
+                        }}
+                        name="firstName"
+                        id="firstName"
+                        style={{ paddingTop: "7px", marginRight: "-10px" }}
+                        inputProps={{ style: { padding: "7px" } }}
+                      />
+                    ) : (
+                      <>{userData?.firstName}</>
+                    )}
+                  </div>
+                  <div
+                    style={{
+                      alignSelf: "flex-end",
+                      position: "absolute",
+                      bottom: "19%",
+                    }}
+                  >
+                    {editProfile.firstName ? (
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleFirstNameChange}
+                      >
+                        Done
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        onClick={() =>
+                          setEditProfile({ ...editProfile, firstName: true })
+                        }
+                      >
+                        Edit
+                      </Button>
+                    )}
+                  </div>
+                </Box>
+              </InfoText>
+              <Divider />
+              <InfoText variant="body1" position="relative">
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="flex-start"
+                  style={{ flexDirection: "column", height: "100%" }}
+                >
+                  <div style={{ lineHeight: "2" }}>
+                    <strong>Last Name:</strong> <br />
+                    {editProfile.lastName ? (
+                      <InfoInput
+                        type="text"
+                        value={profileInfo.lastName}
+                        onChange={(e) => {
+                          setProfileInfo({
+                            ...profileInfo,
+                            lastName: e.target.value,
+                          });
+                        }}
+                        name="secondName"
+                        id="secondName"
+                        style={{ paddingTop: "7px", marginRight: "-10px" }}
+                        inputProps={{ style: { padding: "7px" } }}
+                      />
+                    ) : (
+                      <>{userData?.lastName}</>
+                    )}
+                  </div>
+                  <div
+                    style={{
+                      alignSelf: "flex-end",
+                      position: "absolute",
+                      bottom: "24%",
+                    }}
+                  >
+                    {editProfile.lastName ? (
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handleLastNameChange}
+                      >
+                        Done
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        onClick={() =>
+                          setEditProfile({ ...editProfile, lastName: true })
+                        }
+                      >
+                        Edit
+                      </Button>
+                    )}
+                  </div>
+                </Box>
+              </InfoText>
+              <Divider />
+
+              <InfoText variant="body1" position="relative">
+                <Box
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="flex-start"
+                  style={{ flexDirection: "column", height: "100%" }}
+                >
+                  <div style={{ lineHeight: "2" }}>
+                    <strong>Phone Number:</strong> <br />
+                    {editProfile.phone ? (
+                      <InfoInput
+                        type="text"
+                        value={profileInfo.phone}
+                        onChange={(e) => {
+                          setProfileInfo({
+                            ...profileInfo,
+                            phone: e.target.value,
                           });
                         }}
                         name="phone"
                         id="phone"
+                        style={{ paddingTop: "7px", marginRight: "-10px" }}
+                        inputProps={{ style: { padding: "7px" } }}
                       />
-                      <button onClick={handlePhoneChange} color={"#d98f40"}>
+                    ) : (
+                      <>{userData?.number}</>
+                    )}
+                  </div>
+                  <div
+                    style={{
+                      alignSelf: "flex-end",
+                      position: "absolute",
+                      bottom: "22%",
+                    }}
+                  >
+                    {editProfile.phone ? (
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={handlePhoneChange}
+                      >
                         Done
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      {userData?.number}
-                      <button
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
                         onClick={() =>
-                          setEditProfile({ ...editProfile, number: true })
+                          setEditProfile({ ...editProfile, phone: true })
                         }
-                        color={"#d98f40"}
                       >
                         Edit
-                      </button>
-                      {userData.number && (
-                        <button
-                          id={"delete-number-button"}
-                          onClick={deleteNumber}
-                          color={"#d98f40"}
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </>
-                  )}
-                </p>
-              )}
-            </div>
-            <UploadImage
-              prop={userData}
-              value="userImage"
-              fn={setUserData}
-            />
-          </div>
-      </div>
-    </div>
+                      </Button>
+                    )}
+                  </div>
+                </Box>
+              </InfoText>
+            </ChangeInfo>
+          </ProfileContent>
+        </LeftInfoBox>
+        <RightInfoBox>
+          <UploadImage prop={userData} value="userImage" fn={setUserData} />
+        </RightInfoBox>
+      </InfoBox>
+    </UserProfileBox>
   );
 };
 

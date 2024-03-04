@@ -22,6 +22,25 @@ const PublicQuizView = () => {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(59);
   const [buttonColor, setButtonColor] = useState("rgb(3,165,251)");
+  // reset this in Quiz Result
+  const [correctAns, setCorrectAns] = useState({});
+  const [timeTaken, setTimeTaken] = useState("");
+  const [resultMinutes, setResultMinutes] = useState(0);
+  const [resultSeconds, setResultSeconds] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setResultSeconds((prev) => {
+        if (prev < 60) {
+          return prev + 1;
+        } else {
+          setResultMinutes((prev) => prev + 1);
+          return 0;
+        }
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const formattedSeconds = String(seconds).padStart(2, "0");
 
@@ -60,6 +79,7 @@ const PublicQuizView = () => {
 
     if (value === answer) {
       setPoits({ ...points, [page]: 1 });
+      setCorrectAns({ ...correctAns, [page]: 1 });
     } else {
       setPoits({ ...points, [page]: 0 });
     }
@@ -89,6 +109,12 @@ const PublicQuizView = () => {
       setQuestionaryView(false);
       setResultView(true);
       setScore(Object.values(points).reduce((acc, point) => acc + point));
+      setTimeTaken(
+        resultMinutes > 1
+          ? `${resultMinutes} minutes  ${resultSeconds} seconds`
+          : `${resultMinutes} minute  ${resultSeconds} seconds`
+      );
+      // setTimeTaken(`${resultMinutes} ${resultSeconds}`);
     }
   };
 
@@ -114,6 +140,9 @@ const PublicQuizView = () => {
           handleView={handleView}
           handleChange={handleChange}
           handleClick={handleClick}
+          resultMinutes={resultMinutes}
+          resultSeconds={resultSeconds}
+          setTimeTaken={setTimeTaken}
         />
       )}
       {resultView && (
@@ -124,8 +153,16 @@ const PublicQuizView = () => {
           score={score}
           setQuestionaryView={setQuestionaryView}
           setResultView={setResultView}
-          // setIndex={setIndex}
-          // setPage={setPage}
+          setIndex={setIndex}
+          setPage={setPage}
+          quiz={quiz}
+          setMinutes={setMinutes}
+          setSeconds={setSeconds}
+          setPoits={setPoits}
+          setSelectedItem={setSelectedItem}
+          setScore={setScore}
+          correctAns={correctAns}
+          timeTaken={timeTaken}
           // setSelectedItem={setSelectedItem}
           // setQuestions={setQuestions}
           // setPoits={setPoits}

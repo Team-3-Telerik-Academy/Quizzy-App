@@ -7,7 +7,7 @@ export const quizzesData = [
     name: "HTML & CSS",
     createdOn: "29 February 2024",
     image: htmlCssIcon,
-    id: "-Ns49xQme6Xhd1-YCRlS",
+    id: "-Ns9gQvxuCs_tR0W2OPZ",
     difficulty: "Easy",
   },
   {

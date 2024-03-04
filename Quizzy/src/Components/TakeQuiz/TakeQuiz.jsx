@@ -45,6 +45,10 @@ const TakeQuiz = ({
   handleView,
   handleChange,
   handleClick,
+  setCorrectAns,
+  resultMinutes,
+  resultSeconds,
+  setTimeTaken,
 }) => {
   return (
     <>
@@ -130,9 +134,8 @@ const TakeQuiz = ({
           >
             {questions[index]?.answers?.map((question) => {
               return (
-                <Grid item xs={6}>
+                <Grid key={question} item xs={6}>
                   <Item
-                    key={question.title}
                     sx={{
                       fontFamily: "Monospace",
                       cursor: "pointer",
@@ -163,7 +166,8 @@ const TakeQuiz = ({
                         question,
                         question,
                         questions[index].correctAnswer,
-                        page
+                        page,
+                        setCorrectAns
                       )
                     }
                   >
@@ -208,7 +212,6 @@ const TakeQuiz = ({
           </div>
         </Box>
       </Box>
-      )
     </>
   );
 };

@@ -2,33 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 // import { quizzesData } from "../PublicQuizzes/PublicQuizzes";
 import { getQuizById } from "../../services/quizzes.service";
-import {
-  Box,
-  Typography,
-  Button,
-  Pagination,
-  Grid,
-  Paper,
-} from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "rgba(3,165,251)",
-      contrastText: "#ffffff",
-    },
-  },
-});
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
+import toast from "react-hot-toast";
+import TakeQuiz from "../../Components/TakeQuiz/TakeQuiz";
+import QuizResult from "../../Components/QuizResult/QuizResult";
 
 const PublicQuizView = () => {
   const { id } = useParams();
@@ -40,23 +16,58 @@ const PublicQuizView = () => {
   const [questions, setQuestions] = useState([]);
   const [points, setPoits] = useState({});
   const [quiz, setQuiz] = useState({});
+  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const length = questions?.length;
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(59);
+  const [buttonColor, setButtonColor] = useState("rgb(3,165,251)");
+
+  const formattedSeconds = String(seconds).padStart(2, "0");
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSeconds((prevSec) => {
+        if (prevSec > 0) {
+          return prevSec - 1;
+        } else {
+          setMinutes((prevMin) => {
+            if (prevMin > 0) {
+              return prevMin - 1;
+            } else {
+              return prevMin;
+            }
+          });
+          return 59;
+        }
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     getQuizById(id).then((data) => {
       setQuiz(data);
       setQuestions(Object.values(data.questions));
+      setMinutes(Number(data.timer));
     });
   }, []);
 
-  console.log(points);
-
-  const handleClick = (option, value, answer, page) => {
-    setSelectedItem({ ...selectedItem, [page]: option });
+  const handleClick = (question, value, answer, page) => {
+    setSelectedItem({ ...selectedItem, [page]: question });
+    setButtonColor("rgb(3,165,251)");
 
     if (value === answer) {
       setPoits({ ...points, [page]: 1 });
     } else {
       setPoits({ ...points, [page]: 0 });
+    }
+
+    if (value === answer) {
+      setAnswers({ ...answers, [page]: value });
+    } else {
+      setAnswers({ ...answers, [page]: [value, answer] });
     }
   };
 
@@ -65,96 +76,67 @@ const PublicQuizView = () => {
     setIndex(value - 1);
   };
 
-  const handleview = () => {
-    setQuestionaryView(false);
-    setResultView(true);
+  const handleView = () => {
+    if (Object.values(points).length < length) {
+      toast.error("Make sure you have answered all of the questions!", {
+        position: "bottom-right",
+      });
+      setButtonColor("red");
+      setTimeout(() => {
+        setButtonColor("rgb(3,165,251)");
+      }, 270);
+    } else {
+      setQuestionaryView(false);
+      setResultView(true);
+      setScore(Object.values(points).reduce((acc, point) => acc + point));
+    }
   };
-
-  const length = questions?.length;
 
   return (
     <>
       {questionaryView && (
-        <Box
-          sx={{
-            boxShadow: 4,
-            width: "600px",
-            height: "auto",
-            display: "flex",
-            flexDirection: "column",
-            padding: "10px",
-          }}
-        >
-          <span style={{ color: "#394E6A", fontFamily: "Fantasy" }}>
-            Question
-            <span style={{ fontSize: "23px", marginLeft: "7px" }}>
-              {index + 1}
-            </span>{" "}
-            / {length}
-          </span>
-          <Typography
-            style={{ fontFamily: "fantasy", color: "#394E6A" }}
-            variant="h5"
-          >
-            {questions[index]?.title}
-          </Typography>
-          <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          >
-            {questions[index]?.answers?.map((option) => {
-              return (
-                <Grid key={option.title} item xs={6}>
-                  <Item
-                    style={{
-                      fontFamily: "Monospace",
-                      cursor: "pointer",
-                      backgroundColor:
-                        selectedItem[page] === option
-                          ? "rgb(3,165,251)"
-                          : "initial",
-                      color:
-                        selectedItem[page] === option
-                          ? "#ffffff"
-                          : theme.palette.text.secondary,
-                    }}
-                    onClick={() =>
-                      handleClick(
-                        option,
-                        option,
-                        questions[index].correctAnswer,
-                        page
-                      )
-                    }
-                  >
-                    {option}
-                  </Item>
-                </Grid>
-              );
-            })}
-          </Grid>
-          <ThemeProvider theme={theme}>
-            <Pagination
-              count={length}
-              color="primary"
-              page={page}
-              onChange={handleChange}
-            />
-          </ThemeProvider>
-          <Button
-            style={{
-              backgroundColor: "rgb(3,165,251)",
-              color: "white",
-              width: "130px",
-            }}
-            onClick={handleview}
-          >
-            Submit
-          </Button>
-        </Box>
+        <TakeQuiz
+          minutes={minutes}
+          formattedSeconds={formattedSeconds}
+          buttonColor={buttonColor}
+          setButtonColor={setButtonColor}
+          quiz={quiz}
+          setPoints={setPoits}
+          index={index}
+          length={length}
+          questions={questions}
+          page={page}
+          setPage={setPage}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+          resultView={resultView}
+          setResultView={setResultView}
+          handleView={handleView}
+          handleChange={handleChange}
+          handleClick={handleClick}
+        />
       )}
-      {resultView && <Box>HELLO</Box>}
+      {resultView && (
+        <QuizResult
+          answers={answers}
+          id={id}
+          length={length}
+          score={score}
+          setQuestionaryView={setQuestionaryView}
+          setResultView={setResultView}
+          // setIndex={setIndex}
+          // setPage={setPage}
+          // setSelectedItem={setSelectedItem}
+          // setQuestions={setQuestions}
+          // setPoits={setPoits}
+          // setQuiz={setQuiz}
+          // setScore={setScore}
+          // setAnswers={setAnswers}
+          // setMinutes={setMinutes}
+          // setSeconds={setSeconds}
+          // setButtonColor={setButtonColor}
+        />
+      )}
     </>
   );
 };

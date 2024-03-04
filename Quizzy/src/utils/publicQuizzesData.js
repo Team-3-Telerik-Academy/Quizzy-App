@@ -8,20 +8,20 @@ export const quizzesData = [
     createdOn: "29 February 2024",
     image: htmlCssIcon,
     id: "-Ns49xQme6Xhd1-YCRlS",
-    difficulty: "easy",
+    difficulty: "Easy",
   },
   {
     name: "JavaScript",
     createdOn: "29 February 2024",
     image: javaScriptIcon,
     id: 2,
-    difficulty: "medium",
+    difficulty: "Medium",
   },
   {
     name: "React",
     createdOn: "29 February 2024",
     image: reactIcon,
     id: 3,
-    difficulty: "hard",
+    difficulty: "Hard",
   },
 ];

@@ -55,7 +55,7 @@ const PublicQuizzes = () => {
               key={quiz.id}
               style={{
                 height: "50%",
-                width: "300px",
+                width: "330px",
                 borderRadius: "20px",
                 overflow: "hidden",
                 boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.2)",
@@ -120,9 +120,9 @@ const PublicQuizzes = () => {
                       fontWeight: "bold",
                       color: "white",
                       backgroundColor:
-                        quiz.difficulty === "easy"
+                        quiz.difficulty === "Easy"
                           ? "green"
-                          : quiz.difficulty === "medium"
+                          : quiz.difficulty === "Medium"
                           ? "orange"
                           : "red",
                       borderRadius: "15px",
@@ -142,7 +142,7 @@ const PublicQuizzes = () => {
                     width: "100px",
                     height: "35px",
                     fontWeight: "500",
-                    marginLeft: "30px",
+                    marginLeft: "20px",
                   }}
                 >
                   Start Quiz

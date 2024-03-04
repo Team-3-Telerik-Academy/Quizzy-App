@@ -35,7 +35,7 @@ const theme = createTheme({
 });
 
 export default function SignUp() {
-  const { setContext } = useContext(AppContext);
+  const { setUserCredentials } = useContext(AppContext);
   const navigate = useNavigate();
   const [form, setForm] = useState({
     username: "",
@@ -89,9 +89,7 @@ export default function SignUp() {
           form.phone,
           form.role
         ).then(() => {
-          setContext({
-            user: credential.user,
-          });
+          setUserCredentials(credential.user);
         });
       })
       .then(() => navigate("/"))

@@ -22,13 +22,15 @@ import UserProfile from "./Views/UserProfile/UserProfile";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
-  const [appState, setAppState] = useState({
-    user: null,
-    userData: null,
-  });
+  // const [appState, setAppState] = useState({
+  //   user: null,
+  //   userData: null,
+  // });
+  const [userCredentials, setUserCredentials] = useState(null);
+  const [userData, setUserData] = useState(null);
 
-  if (appState.user !== user) {
-    setAppState({ user });
+  if (userCredentials !== user) {
+    setUserCredentials(user);
   }
 
   // finally retrieve user data if the user is logged (this is also broken and will be fixed in a bit)
@@ -41,16 +43,13 @@ function App() {
           throw new Error("Something went wrong!");
         }
 
-        setAppState({
-          ...appState,
-          userData: snapshot.val()[Object.keys(snapshot.val())[0]],
-        });
+        setUserData(snapshot.val()[Object.keys(snapshot.val())[0]]);
       })
       .catch((e) => alert(e.message));
   }, [user]);
 
   return (
-    <AppContext.Provider value={{ ...appState, setContext: setAppState }}>
+    <AppContext.Provider value={{ userCredentials, setUserCredentials, userData, setUserData}}>
       <Toaster />
       <BrowserRouter>
         {loading && <Loading />}

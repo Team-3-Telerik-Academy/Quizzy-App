@@ -86,7 +86,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const { userData, setAppState } = useContext(AppContext);
+  const { userData, setUserData, setUserCredentials } = useContext(AppContext);
   const navigate = useNavigate();
 
   const onLogout = () => {
@@ -94,10 +94,9 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
       toast.success("You have logged out successfully!", {
         position: "bottom-right",
       });
-      setAppState({
-        user: null,
-        userData: null,
-      });
+      setUserData(null);
+      setUserCredentials(null);
+      navigate("/");
     });
   };
 
@@ -183,7 +182,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             color="inherit"
           >
             <img
-              src={userData?.avatar}
+              src={userData?.image}
               alt={userData?.username}
               style={{ width: "35px", height: "35px", borderRadius: "50%" }}
             />
@@ -211,7 +210,14 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
         open={isMenuOpen}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={() => {handleMenuClose(); navigate('/profile')}}>Profile</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleMenuClose();
+            navigate("/profile");
+          }}
+        >
+          Profile
+        </MenuItem>
         <MenuItem onClick={onLogout}>
           Logout
           <LogoutIcon sx={{ ml: 1 }} />
@@ -235,7 +241,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             color="inherit"
           >
             <img
-              src={userData?.avatar}
+              src={userData?.image}
               alt={userData?.username}
               style={{ width: "35px", height: "35px", borderRadius: "50%" }}
             />

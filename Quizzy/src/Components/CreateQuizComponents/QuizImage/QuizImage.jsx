@@ -31,7 +31,7 @@ const QuizImage = ({ quiz, setQuiz }) => {
     const file = event.target.files[0];
     const storageRef = ref(storage, "createQuizImage/" + userData.username);
 
-    uploadImage(storageRef, file, setQuiz, quiz);
+    uploadImage(storageRef, file, setQuiz, quiz).then((downloadURL) => setQuiz({ ...quiz, image: downloadURL }));
   };
 
   return (

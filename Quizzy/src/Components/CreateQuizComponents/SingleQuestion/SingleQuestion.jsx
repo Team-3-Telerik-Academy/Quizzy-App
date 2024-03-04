@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 
 const SingleQuestion = ({ question, removeQuestion }) => {
   return (
@@ -21,35 +21,49 @@ const SingleQuestion = ({ question, removeQuestion }) => {
         {question.title}
       </Typography>
       <Box margin="15px">
-        {question.answers.map((answer, index) => (
-          <Typography
-            key={index}
-            display="flex"
-            flexDirection="row"
-            justifyContent="center"
-            marginBottom="5px"
-          >
-            <Typography>
-              {String.fromCharCode(97 + index)}. {answer}
-            </Typography>
-            {answer === question.correctAnswer && (
-              <CheckCircleOutlineIcon
-                color="success"
-                style={{ marginLeft: "5px" }}
-              />
-            )}
-          </Typography>
-        ))}
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          {question.answers.map((answer, index) => (
+            <Grid key={index} item xs={6}>
+              <Box
+                style={{
+                  fontFamily: "Monospace",
+                  cursor: "pointer",
+                  borderRadius: "5px",
+
+                  backgroundColor:
+                    answer === question.correctAnswer
+                      ? "rgba(144, 238, 144, 0.7)"
+                      : "initial",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "10px",
+                  boxShadow: "0px 0px 2px black",
+                }}
+              >
+                {String.fromCharCode(97 + index)}. {answer}
+                {answer === question.correctAnswer && (
+                  <CheckCircleOutlineIcon
+                    color="success"
+                    style={{ marginLeft: "5px" }}
+                  />
+                )}
+              </Box>
+            </Grid>
+          ))}
+        </Grid>
       </Box>
-      <Box display="flex" alignItems="center" justifyContent="space-evenly">
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="flex-end"
+        gap="15px"
+        paddingRight="14px"
+      >
         <Box display="flex" alignItems="center" gap="15px">
           <Typography>Points: {question.points}</Typography>
         </Box>
-        <Button
-          variant="contained"
-            color="secondary"
-          onClick={removeQuestion}
-        >
+        <Button variant="contained" color="secondary" onClick={removeQuestion}>
           Remove Question
         </Button>
       </Box>

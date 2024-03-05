@@ -1,81 +1,52 @@
-import {
-  Box,
-  Grid,
-  Paper,
-  Button,
-  Container,
-  CircularProgress,
-  Typography,
-} from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { styled } from "@mui/material/styles";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import time from "..//../Images/time.svg";
 import correct from "..//../Images/correct.svg";
 import incorrect from "..//../Images/incorrect.svg";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "rgba(3,165,251)",
-      contrastText: "#ffffff",
-    },
-  },
-});
-
-// const handleClick = (
-//   navigate,
-//   id,
-//   setQuestionaryView,
-//   setResultView,
-//   setIndex,
-//   setPage,
-//   quiz,
-//   setMinutes,
-//   setSeconds,
-//   setPoits,
-//   setSelectedItem,
-//   setScore
-// ) => {
-//   setQuestionaryView(true);
-//   setResultView(false);
-//   setIndex(0);
-//   setPage(1);
-//   setMinutes(quiz.timer);
-//   setSeconds(59);
-//   setPoits({});
-//   setSelectedItem({});
-//   setScore(0);
-//   return navigate(`/publicQuizzes/${id}`);
-// };
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-}));
+import analytics from "..//../Images/analytics.svg";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 const QuizResult = ({
   score,
   length,
-  answers,
-  id,
-  setQuestionaryView,
-  setResultView,
-  setIndex,
-  setPage,
-  quiz,
-  setMinutes,
-  setSeconds,
-  setPoits,
-  setSelectedItem,
-  setScore,
   correctAns,
   timeTaken,
+  answers,
+  quizTotalPoints,
 }) => {
+  const [correctAnswers, setCorrectAnswers] = useState(
+    Object.values(correctAns).length
+  );
+  const [IncorrectAnswers, setIncorrectAnswers] = useState(
+    length - Object.values(correctAns).length
+  );
+  const [correctAnsPath, setCorrectAnsPath] = useState("/correctAnswers");
+
   const navigate = useNavigate();
+
+  const answersView = (answersCount, type, path) => {
+    if (type === "all") {
+      return navigate(path);
+    } else if (type === "correct") {
+      if (answersCount === 0) {
+        toast.error("Nothing to see, you don't have correct answers.", {
+          position: "bottom-right",
+        });
+        return e.preventDefault();
+      }
+      return navigate(path);
+    } else {
+      if (answersCount === 0) {
+        toast.error("Nothing to see, you don't have correct answers.", {
+          position: "bottom-right",
+        });
+        return e.preventDefault();
+      }
+      return navigate(path);
+    }
+  };
+
   return (
     <>
       <Box
@@ -83,11 +54,21 @@ const QuizResult = ({
           width: "100%",
           height: "100vh",
           display: "flex",
+          backgroundColor: "#F3F4f6",
+          alignItems: "center",
           flexDirection: "column",
-          backgroundColor: "#F3F4f6"
         }}
       >
-        <Container sx={{ marginTop: "50px", display: "flex",gap:'150px' }}>
+        <Container
+          sx={{
+            marginTop: "50px",
+            display: "flex",
+            gap: "100px",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "400px",
+          }}
+        >
           <Box
             sx={{
               boxShadow: 5,
@@ -111,16 +92,23 @@ const QuizResult = ({
               <span style={{ fontSize: "40px" }}>
                 Your score: <br />
               </span>
-              {((score / length) * 100).toFixed(2)}%
+              {((score / quizTotalPoints) * 100).toFixed(2)}%
             </span>
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "15px",
+              height: "250px",
+            }}
+          >
             <Typography sx={{ display: "flex", gap: "10px" }}>
               <img
                 src={correct}
                 style={{ width: "30px", height: "30px" }}
                 alt=""
-              />{" "}
+              />
               <span
                 style={{
                   fontSize: "20px",
@@ -128,7 +116,7 @@ const QuizResult = ({
                   color: "#394E6A",
                 }}
               >
-                {Object.values(correctAns).length} correct answers.
+                {correctAnswers} correct answers.
               </span>
             </Typography>
             <Typography sx={{ display: "flex", gap: "10px" }}>
@@ -136,7 +124,7 @@ const QuizResult = ({
                 src={incorrect}
                 style={{ width: "30px", height: "30px" }}
                 alt=""
-              />{" "}
+              />
               <span
                 style={{
                   fontSize: "20px",
@@ -144,8 +132,7 @@ const QuizResult = ({
                   color: "#394E6A",
                 }}
               >
-                {" "}
-                {length - Object.values(correctAns).length} incorrect answers.
+                {IncorrectAnswers} incorrect answers.
               </span>
             </Typography>
 
@@ -154,7 +141,7 @@ const QuizResult = ({
                 src={time}
                 alt=""
                 style={{ width: "30px", height: "30px" }}
-              />{" "}
+              />
               <span
                 style={{
                   fontSize: "20px",
@@ -165,74 +152,97 @@ const QuizResult = ({
                 {timeTaken}
               </span>
             </Typography>
+            <Typography sx={{ display: "flex", gap: "10px" }}>
+              <img
+                src={analytics}
+                alt=""
+                style={{ width: "30px", height: "30px" }}
+              />
+              <span
+                style={{
+                  fontSize: "20px",
+                  fontFamily: "fantasy",
+                  color: "#394E6A",
+                }}
+              >
+                {score} out of {quizTotalPoints} points.
+              </span>
+            </Typography>
+            <Box sx={{ display: "flex", marginTop: "15px" }}>
+              <Button
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+                variant="contained"
+                onClick={() =>
+                  answersView(correctAnswers, "correct", correctAnsPath)
+                }
+                style={{
+                  backgroundColor: "rgb(3, 165, 251)",
+                  textTransform: "none",
+                  borderRadius: "20px",
+                  width: "155px",
+                  height: "40px",
+                  fontWeight: "500",
+                  textAlign: "center",
+                  transition: "transform 0.2s",
+                }}
+              >
+                Correct Answers
+              </Button>
+              <Button
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+                variant="contained"
+                style={{
+                  backgroundColor: "rgb(3, 165, 251)",
+                  textTransform: "none",
+                  borderRadius: "20px",
+                  width: "155px",
+                  height: "40px",
+                  textAlign: "center",
+                  fontWeight: "500",
+                  marginLeft: "10px",
+                  transition: "transform 0.2s",
+                }}
+              >
+                Incorrect Answers
+              </Button>
+              <Button
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "scale(1.05)";
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+                variant="contained"
+                style={{
+                  backgroundColor: "rgb(3, 165, 251)",
+                  textTransform: "none",
+                  borderRadius: "20px",
+                  width: "155px",
+                  height: "40px",
+                  textAlign: "center",
+                  fontWeight: "500",
+                  marginLeft: "10px",
+                  transition: "transform 0.2s",
+                }}
+              >
+                All answers
+              </Button>
+            </Box>
           </Box>
         </Container>
       </Box>
-
-      {/* <Button
-        onClick={() =>
-          handleClick(
-            navigate,
-            id,
-            setQuestionaryView,
-            setResultView,
-            setIndex,
-            setPage,
-            quiz,
-            setMinutes,
-            setSeconds,
-            setPoits,
-            setSelectedItem,
-            setScore
-          )
-        }
-      >
-        retry
-      </Button> */}
     </>
   );
 };
 
 export default QuizResult;
-
-{
-  /* <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-{Object.values(answers).map((answer) => {
-  if (typeof answer === "string") {
-    return (
-      <Grid item xs={12}>
-        <Item
-          sx={{
-            fontFamily: "Monospace",
-            cursor: "pointer",
-            backgroundColor: "green",
-            color: "#ffffff",
-          }}
-        >
-          {answer}
-        </Item>
-      </Grid>
-    );
-  } else {
-    return answer.map((answer, index) => {
-      return (
-        <Grid item xs={6}>
-          <Item
-            sx={{
-              fontFamily: "Monospace",
-              cursor: "pointer",
-
-              backgroundColor: index === 0 ? "red" : "green",
-
-              color: "#ffffff",
-            }}
-          >
-            <span>{answer}</span>
-          </Item>
-        </Grid>
-      );
-    });
-  }
-})}
-</Grid> */
-}

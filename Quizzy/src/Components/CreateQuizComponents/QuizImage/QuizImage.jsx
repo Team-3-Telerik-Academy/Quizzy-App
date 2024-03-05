@@ -49,7 +49,7 @@ const QuizImage = ({ quiz, setQuiz }) => {
     <>
       {quiz?.image ? (
         <>
-          <Typography variant="h6" color="primary" gutterBottom>
+          <Typography variant="h6" gutterBottom style={{color: 'rgb(3,165,251)'}}>
             Quiz Image:
           </Typography>
           <Box
@@ -81,9 +81,8 @@ const QuizImage = ({ quiz, setQuiz }) => {
             >
               <Button
                 variant="contained"
-                color="primary"
                 onClick={handleUploadClick}
-                style={{ marginTop: "10px" }}
+                style={{ marginTop: "10px", backgroundColor: 'rgb(3,165,251)' }}
               >
                 Change Image
               </Button>
@@ -106,7 +105,7 @@ const QuizImage = ({ quiz, setQuiz }) => {
           alignItems="center"
           gap="15px"
         >
-          <Typography variant="h6" color="primary" gutterBottom>
+          <Typography variant="h6" color="primary" gutterBottom style={{color: 'rgb(3,165,251)'}}>
             Quiz Image:
           </Typography>
           <input
@@ -119,6 +118,7 @@ const QuizImage = ({ quiz, setQuiz }) => {
             variant="contained"
             color="primary"
             onClick={handleUploadClick}
+            style={{ backgroundColor: 'rgb(3,165,251)' }}
           >
             Upload Image
           </Button>

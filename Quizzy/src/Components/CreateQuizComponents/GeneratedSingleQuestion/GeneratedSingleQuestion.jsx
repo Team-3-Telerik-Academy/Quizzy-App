@@ -3,6 +3,24 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+const theme = createTheme({
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'rgb(3,165,251)',
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: 'rgb(3,165,251)',
+          },
+        },
+      },
+    },
+  },
+});
 
 const GeneratedSingleQuestion = ({ question, addQuestion }) => {
   const [newQuestion, setNewQuestion] = useState(question);
@@ -76,8 +94,8 @@ const GeneratedSingleQuestion = ({ question, addQuestion }) => {
       >
         <Box display="flex" alignItems="center" gap="15px">
           <Typography>Choose Points:</Typography>
+          <ThemeProvider theme={theme}>
           <TextField
-            // style={{ width: "18.5vw" }}
             type="number"
             name="points"
             id="points"
@@ -86,9 +104,15 @@ const GeneratedSingleQuestion = ({ question, addQuestion }) => {
               setNewQuestion({ ...newQuestion, points: e.target.value })
             }
             inputProps={{ style: { height: "15px" } }}
+            variant="outlined"
           />
+          </ThemeProvider>
         </Box>
-        <Button variant="contained" color="primary" onClick={handleClick}>
+        <Button
+          variant="contained"
+          onClick={handleClick}
+          style={{ backgroundColor: "rgb(3, 165,251)"}}
+        >
           Add Question
         </Button>
       </Box>

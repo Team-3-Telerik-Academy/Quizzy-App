@@ -33,7 +33,7 @@ const HomeWhenLoggedIn = () => {
           width: "400px",
           height: "auto",
           marginBottom: "20px",
-          borderRadius: '10px'
+          borderRadius: "10px",
         }}
       />
       <Button
@@ -43,6 +43,9 @@ const HomeWhenLoggedIn = () => {
           backgroundColor: "black",
           fontSize: "17px",
           padding: "10px 20px",
+          "&:hover": {
+            backgroundColor: "rgb(3,165,251)",
+          },
         }}
       >
         Start Quiz

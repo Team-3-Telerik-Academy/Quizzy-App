@@ -21,13 +21,29 @@ import {
   FormLabel,
   FormControl,
   Radio,
-  InputLabel,
-  Select,
   MenuItem,
   Container,
   Paper,
 } from "@mui/material";
 import QuizImage from "../../Components/CreateQuizComponents/QuizImage/QuizImage";
+import { styled } from "@mui/system";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "rgb(3,165,251)",
+    },
+  },
+});
+
+const StyledTextField = styled(TextField)({
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "rgb(3,165,251)",
+    },
+  },
+});
 
 const storage = getStorage();
 
@@ -141,14 +157,20 @@ const CreateQuiz = () => {
       );
       const newStorageRef = ref(storage, "quizzesImages/" + quiz.title);
 
-      promise = deleteObject(pastStorageRef).then(() => setQuiz({ ...quiz, image: "" }))
-        .then(() => uploadImage(newStorageRef, quiz.file))
+      promise = deleteObject(pastStorageRef)
+        .then(() => setQuiz({ ...quiz, image: "" }))
+        .then(() => uploadImage(newStorageRef, quiz.file));
     } else {
       promise = Promise.resolve();
     }
 
     promise
-      .then((downloadURL) => getQuizByTitle(quiz.title).then((snapshot) => ({ snapshot, downloadURL })))
+      .then((downloadURL) =>
+        getQuizByTitle(quiz.title).then((snapshot) => ({
+          snapshot,
+          downloadURL,
+        }))
+      )
       .then(({ snapshot, downloadURL }) => {
         if (snapshot.exists()) {
           toast.error(`Quiz with title '${quiz.title}' has already exists!`);
@@ -195,10 +217,15 @@ const CreateQuiz = () => {
     <div style={{ margin: "70px 0" }}>
       <Container maxWidth="md">
         <Paper elevation={3} style={{ padding: "20px", background: "#f5f5f5" }}>
-          <Typography variant="h4" color="primary" align="center" gutterBottom>
+          <Typography
+            variant="h4"
+            align="center"
+            gutterBottom
+            style={{ color: "rgb(3,165,251)" }}
+          >
             Create new Quiz:
           </Typography>
-          <TextField
+          <StyledTextField
             value={quiz.title}
             onChange={updateQuiz("title")}
             type="text"
@@ -206,19 +233,23 @@ const CreateQuiz = () => {
             id="quizTitle"
             placeholder="Quiz Title"
             variant="outlined"
-            color="primary"
             fullWidth
             style={{ marginBottom: "20px" }}
           />
           <QuizImage quiz={quiz} setQuiz={setQuiz} />
-          <Typography variant="h6" color="primary" marginBottom="5px">
+          <Typography
+            variant="h6"
+            style={{ color: "rgb(3,165,251)" }}
+            marginBottom="5px"
+          >
             Active Time For The Quiz:
           </Typography>
           <Box display="flex" justifyContent="space-between">
             <FormControl
               style={{ marginBottom: "15px", flex: 1, marginRight: "10px" }}
             >
-              <Select
+              <StyledTextField
+                select
                 value={quiz.activeNumber}
                 onChange={updateQuiz("activeNumber")}
               >
@@ -227,12 +258,13 @@ const CreateQuiz = () => {
                     {number}
                   </MenuItem>
                 ))}
-              </Select>
+              </StyledTextField>
             </FormControl>
             <FormControl
               style={{ marginBottom: "15px", flex: 1, marginLeft: "10px" }}
             >
-              <Select
+              <StyledTextField
+                select
                 value={quiz.activeTimeUnit}
                 onChange={updateQuiz("activeTimeUnit")}
               >
@@ -241,28 +273,30 @@ const CreateQuiz = () => {
                     {unit.label}
                   </MenuItem>
                 ))}
-              </Select>
+              </StyledTextField>
             </FormControl>
           </Box>
           <FormControl component="fieldset">
-            <FormLabel component="legend">Type:</FormLabel>
-            <RadioGroup
-              style={{ display: "flex", flexDirection: "row" }}
-              name="quizType"
-              value={quiz.type}
-              onChange={updateQuiz("type")}
-            >
-              <FormControlLabel
-                value="public"
-                control={<Radio />}
-                label="Public"
-              />
-              <FormControlLabel
-                value="private"
-                control={<Radio />}
-                label="Private"
-              />
-            </RadioGroup>
+            <ThemeProvider theme={theme}>
+              <FormLabel component="legend">Type:</FormLabel>
+              <RadioGroup
+                style={{ display: "flex", flexDirection: "row" }}
+                name="quizType"
+                value={quiz.type}
+                onChange={updateQuiz("type")}
+              >
+                <FormControlLabel
+                  value="public"
+                  control={<Radio />}
+                  label="Public"
+                />
+                <FormControlLabel
+                  value="private"
+                  control={<Radio />}
+                  label="Private"
+                />
+              </RadioGroup>
+            </ThemeProvider>
             <Box
               id="upload-image"
               marginBottom={2}
@@ -271,53 +305,67 @@ const CreateQuiz = () => {
               flexWrap="wrap"
             >
               {quiz.type === "private" && (
-                <>
+                <ThemeProvider theme={theme}>
                   <FormLabel component="legend" style={{ marginRight: "15px" }}>
                     Choose Users:
                   </FormLabel>
                   {users?.map((user) => (
-                    <FormControlLabel
-                      key={user.username}
-                      control={
-                        <Checkbox
-                          value={user.username}
-                          onChange={(e) =>
-                            setQuiz({
-                              ...quiz,
-                              invitedUsers: e.target.checked
-                                ? [...quiz.invitedUsers, user.username]
-                                : quiz.invitedUsers.filter(
-                                    (el) => el !== user.username
-                                  ),
-                            })
+                    <>
+                      {user.username !== userData.username && (
+                        <FormControlLabel
+                          key={user.username}
+                          control={
+                            <Checkbox
+                              value={user.username}
+                              onChange={(e) =>
+                                setQuiz({
+                                  ...quiz,
+                                  invitedUsers: e.target.checked
+                                    ? [...quiz.invitedUsers, user.username]
+                                    : quiz.invitedUsers.filter(
+                                        (el) => el !== user.username
+                                      ),
+                                })
+                              }
+                            />
                           }
+                          label={user.username}
                         />
-                      }
-                      label={user.username}
-                    />
+                      )}
+                    </>
                   ))}
-                </>
+                </ThemeProvider>
               )}
             </Box>
           </FormControl>
-          <FormControl fullWidth style={{ marginBottom: "15px" }}>
-            <InputLabel>Timer:</InputLabel>
-            <Select value={quiz.timer} onChange={updateQuiz("timer")}>
+          <ThemeProvider theme={theme}>
+            <TextField
+              select
+              fullWidth
+              value={quiz.timer}
+              onChange={updateQuiz("timer")}
+              label="Timer:"
+              variant="outlined"
+              style={{ marginBottom: "15px" }}
+            >
               <MenuItem value="0">No Timer</MenuItem>
               <MenuItem value="30">30 minutes</MenuItem>
               <MenuItem value="60">60 minutes</MenuItem>
               <MenuItem value="90">90 minutes</MenuItem>
               <MenuItem value="120">120 minutes</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel>Category:</InputLabel>
-            <Select
+            </TextField>
+          </ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <TextField
+              select
+              fullWidth
               value={quiz.category}
               onChange={(e) => {
                 updateQuiz("category")(e);
                 setGeneratedQuestions(null);
               }}
+              label="Category:"
+              variant="outlined"
             >
               <MenuItem value="9">General Knowledge</MenuItem>
               <MenuItem value="18">Computers</MenuItem>
@@ -325,31 +373,41 @@ const CreateQuiz = () => {
               <MenuItem value="23">History</MenuItem>
               <MenuItem value="19">Math</MenuItem>
               <MenuItem value="17">Science & Nature</MenuItem>
-            </Select>
-          </FormControl>
+            </TextField>
+          </ThemeProvider>
           <FormControl
             component="fieldset"
             fullWidth
             style={{ marginTop: "15px" }}
           >
-            <FormLabel component="legend">Difficulty:</FormLabel>
-            <RadioGroup
-              style={{ display: "flex", flexDirection: "row" }}
-              name="difficulty"
-              value={quiz.difficulty}
-              onChange={(e) => {
-                updateQuiz("difficulty")(e);
-                setGeneratedQuestions(null);
-              }}
-            >
-              <FormControlLabel value="easy" control={<Radio />} label="Easy" />
-              <FormControlLabel
-                value="medium"
-                control={<Radio />}
-                label="Medium"
-              />
-              <FormControlLabel value="hard" control={<Radio />} label="Hard" />
-            </RadioGroup>
+            <ThemeProvider theme={theme}>
+              <FormLabel component="legend">Difficulty:</FormLabel>
+              <RadioGroup
+                style={{ display: "flex", flexDirection: "row" }}
+                name="difficulty"
+                value={quiz.difficulty}
+                onChange={(e) => {
+                  updateQuiz("difficulty")(e);
+                  setGeneratedQuestions(null);
+                }}
+              >
+                <FormControlLabel
+                  value="easy"
+                  control={<Radio />}
+                  label="Easy"
+                />
+                <FormControlLabel
+                  value="medium"
+                  control={<Radio />}
+                  label="Medium"
+                />
+                <FormControlLabel
+                  value="hard"
+                  control={<Radio />}
+                  label="Hard"
+                />
+              </RadioGroup>
+            </ThemeProvider>
           </FormControl>
           <div id="quiz-questions">
             {showQuizForm ? (
@@ -360,9 +418,11 @@ const CreateQuiz = () => {
             ) : (
               <>
                 <Button
-                  style={{ marginTop: "10px" }}
+                  style={{
+                    marginTop: "10px",
+                    backgroundColor: "rgb(3, 165, 251)",
+                  }}
                   variant="contained"
-                  color="primary"
                   onClick={() => setShowQuizForm(true)}
                 >
                   Write Question Manually
@@ -370,9 +430,11 @@ const CreateQuiz = () => {
                 <br />
                 {!generatedQuestions && (
                   <Button
-                    style={{ marginTop: "10px" }}
+                    style={{
+                      marginTop: "10px",
+                      backgroundColor: "rgb(3, 165, 251)",
+                    }}
                     variant="contained"
-                    color="primary"
                     onClick={generateQuestions}
                   >
                     Generate Me Example Questions
@@ -428,11 +490,11 @@ const CreateQuiz = () => {
         </Typography>
         <Button
           variant="contained"
-          color="primary"
           onClick={handleAddQuiz}
           sx={{
             fontSize: "20px",
             padding: "10px",
+            backgroundColor: "rgb(3, 165, 251)",
           }}
         >
           Create Quiz

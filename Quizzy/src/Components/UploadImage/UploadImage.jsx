@@ -71,10 +71,12 @@ const UploadImage = ({ prop, fn, value }) => {
 
   return (
     <>
-      <Typography variant="h6" color="primary" gutterBottom>
-        {value === "quizImage"
-          ? "Quiz Image:"
-          : value === "userImage" && "User Photo:"}
+      <Typography variant="h5" gutterBottom>
+        {value === "quizImage" ? (
+          <strong>Quiz Image:</strong>
+        ) : (
+          value === "userImage" && <strong>User Photo:</strong>
+        )}
       </Typography>
       <Box
         id="upload-image"

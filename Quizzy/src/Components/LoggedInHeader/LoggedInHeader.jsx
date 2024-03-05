@@ -1,15 +1,11 @@
 import { useContext, useState } from "react";
 import {
-  styled,
-  alpha,
-  InputBase,
   Box,
   Menu,
   MenuItem,
   IconButton,
   Switch,
   Badge,
-  AppBar as MuiAppBar,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -29,59 +25,12 @@ import toast from "react-hot-toast";
 import AppContext from "../../Context/AppContext";
 import QuizzyLogo from "..//..//Images/logo.png";
 import { useNavigate } from "react-router-dom";
-
-const drawerWidth = 240;
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-  backgroundColor: "rgb(3, 165, 251)",
-}));
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": { backgroundColor: alpha(theme.palette.common.white, 0.25) },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: { marginLeft: theme.spacing(3), width: "auto" },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: { width: "30ch" },
-  },
-}));
+import {
+  AppBar,
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "./loggedInHeaderStyle";
 
 const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -142,9 +91,6 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             }}
           />
         </Typography>
-        {/* <Typography variant="h6" noWrap component="div">
-          Quizzy
-        </Typography> */}
         <Search>
           <SearchIconWrapper>
             <SearchIcon />

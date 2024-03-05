@@ -28,7 +28,7 @@ const LoggedInMain = ({ children }) => {
           <CssBaseline />
           <LoggedInHeader open={open} handleDrawerOpen={handleDrawerOpen} />
           <DrawerComponent open={open} handleDrawerClose={handleDrawerClose} />
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Box component="main" sx={{ flexGrow: 1, p: 3 }} style={{padding: '0'}}>
             <br />
             {children}
           </Box>

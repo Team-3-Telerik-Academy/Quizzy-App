@@ -75,7 +75,7 @@ const GeneratedSingleQuestion = ({ question, addQuestion }) => {
         justifyContent="space-between"
       >
         <Box display="flex" alignItems="center" gap="15px">
-          <Typography>Points:</Typography>
+          <Typography>Choose Points:</Typography>
           <TextField
             // style={{ width: "18.5vw" }}
             type="number"

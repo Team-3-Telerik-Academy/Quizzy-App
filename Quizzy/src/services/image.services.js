@@ -7,7 +7,10 @@ import {
 export const moveFile = async (srcRef, destRef, fn, form) => {
   const url = await getDownloadURL(srcRef);
   const snapshot = await uploadBytes(destRef, url);
-  fn({ ...form, image: '' });
+  const imageUrl = await getDownloadURL(snapshot.ref);
+  fn({ ...form, image: imageUrl });
+
+  console.log(imageUrl);
 
   await deleteObject(srcRef);
 

@@ -1,6 +1,5 @@
 import {
   Button,
-  TextField,
   Grid,
   Container,
   Typography,
@@ -25,6 +24,7 @@ import signUpBackground from "../../Images/sign-up-background.jpg";
 import toast from "react-hot-toast";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { validateData } from "./validations";
+import SignUpFormField from "../../Components/SignUpFormField/SignUpFormField";
 
 const theme = createTheme({
   palette: {
@@ -158,98 +158,12 @@ export default function SignUp() {
               noValidate
             >
               <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    value={form.username}
-                    onChange={updateForm("username")}
-                    autoComplete="username"
-                    name="username"
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    autoFocus
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    value={form.firstName}
-                    onChange={updateForm("firstName")}
-                    autoComplete="fname"
-                    name="firstName"
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="firstName"
-                    label="First Name"
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    value={form.lastName}
-                    onChange={updateForm("lastName")}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="lname"
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    value={form.email}
-                    onChange={updateForm("email")}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    value={form.phone}
-                    onChange={updateForm("phone")}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="phoneNumber"
-                    label="Phone Number"
-                    name="phoneNumber"
-                    autoComplete="tel"
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    value={form.password}
-                    onChange={updateForm("password")}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    size="small"
-                    style={{ borderRadius: "10px", marginBottom: "5px" }}
-                  />
-                </Grid>
+                <SignUpFormField value={form.username} onChange={updateForm('username')} name="username" label="Username" />
+                <SignUpFormField value={form.firstName} onChange={updateForm('firstName')} name="firstName" label="First Name" />
+                <SignUpFormField value={form.lastName} onChange={updateForm('lastName')} name="lastName" label="Last Name" />
+                <SignUpFormField value={form.email} onChange={updateForm('email')} name="email" label="Email" />
+                <SignUpFormField value={form.phone} onChange={updateForm('phone')} name="phone" label="Phone" />
+                <SignUpFormField value={form.password} onChange={updateForm('password')} name="password" label="Password" />
                 <Grid
                   item
                   xs={12}

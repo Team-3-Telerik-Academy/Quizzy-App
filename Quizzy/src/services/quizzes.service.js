@@ -12,6 +12,33 @@ import {
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
+export const fromQuizzesDocument = (snapshot) => {
+    try {
+      const quizzesDocument = snapshot.val();
+  
+      if (!quizzesDocument) {
+        throw new Error("Snapshot value is null or undefined");
+      }
+  
+      return Object.keys(quizzesDocument).map((key) => {
+        const quiz = quizzesDocument[key];
+  
+        if (!quiz) {
+          throw new Error(`Quiz with key ${key} is null or undefined`);
+        }
+  
+        return {
+          ...quiz,
+          id: key,
+          createdOn: new Date(quiz.createdOn),
+        };
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
 export const getQuizById = async (id) => {
     try {
         const result = await get(ref(db, `quizzes/${id}`));
@@ -39,6 +66,20 @@ export const getQuizByTitle = async (title) => {
     }
 };
 
+export const getQuizzesByAuthor = async (username) => {
+    try {
+      const snapshot = await get(
+        query(ref(db, "quizzes"), orderByChild("author"), equalTo(username))
+      );
+  
+      if (!snapshot.exists()) return [];
+  
+      return fromQuizzesDocument(snapshot);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 export const addQuiz = async (title, questions, image, difficulty, timer, totalPoints, type, category, invitedUsers, username, activeTimeInMinutes) => {
     let realCategory;
 
@@ -47,6 +88,8 @@ export const addQuiz = async (title, questions, image, difficulty, timer, totalP
     if (category === '23') realCategory = 'History'
     if (category === '19') realCategory = 'Math'
     if (category === '17') realCategory = 'Science & Nature'
+    if (category === '18') realCategory = 'Computers'
+    // if (category === '22') realCategory = 'Art'
 
     // const questionsObject = questions.reduce((obj, question) => {
     //     obj[question.title] = question;
@@ -67,7 +110,7 @@ export const addQuiz = async (title, questions, image, difficulty, timer, totalP
             timer,
             totalPoints,
             type,
-            category: realCategory,
+            category,
             invitedUsers: invitedUsersObject,
             author: username,
             activeTimeInMinutes,

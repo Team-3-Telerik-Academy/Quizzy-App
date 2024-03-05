@@ -11,7 +11,6 @@ const HomeWhenLoggedIn = () => {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        // justifyContent: "center",
         alignItems: "center",
         textAlign: "center",
         marginTop: "100px",

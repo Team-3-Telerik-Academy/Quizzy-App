@@ -19,6 +19,7 @@ import CreateQuiz from "./Views/CreateQuiz/CreateQuiz";
 import HomeWhenLoggedIn from "./Views/HomeWhenLoggedIn/HomeWhenLoggedIn";
 import NotFound from "./Views/NotFound/NotFound";
 import UserProfile from "./Views/UserProfile/UserProfile";
+import CorrectAnswers from "./Views/CorrectAnswers/CorrectAnswers";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -49,7 +50,9 @@ function App() {
   }, [user]);
 
   return (
-    <AppContext.Provider value={{ userCredentials, setUserCredentials, userData, setUserData}}>
+    <AppContext.Provider
+      value={{ userCredentials, setUserCredentials, userData, setUserData }}
+    >
       <Toaster />
       <BrowserRouter>
         {loading && <Loading />}
@@ -94,6 +97,7 @@ function App() {
           <Route path="/aboutUs" element={<AboutUs />} />
           <Route path="/publicQuizzes" element={<PublicQuizzes />} />
           <Route path="/publicQuizzes/:id" element={<PublicQuizView />} />
+          <Route path="/correctAnswers" element={<CorrectAnswers />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

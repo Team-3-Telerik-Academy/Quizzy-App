@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
+import { useEffect, useState } from "react";
 // import toast from "react-hot-toast"
 const theme = createTheme({
   palette: {
@@ -30,25 +31,17 @@ const TakeQuiz = ({
   minutes,
   formattedSeconds,
   buttonColor,
-  setButtonColor,
   quiz,
   index,
   length,
   questions,
   page,
-  setPage,
   selectedItem,
-  setSelectedItem,
-  resultView,
-  setResultView,
-  setPoints,
   handleView,
   handleChange,
   handleClick,
-  setCorrectAns,
-  resultMinutes,
-  resultSeconds,
-  setTimeTaken,
+  quizTotalPoints,
+  questionPoint,
 }) => {
   return (
     <>
@@ -164,10 +157,9 @@ const TakeQuiz = ({
                     onClick={() =>
                       handleClick(
                         question,
-                        question,
                         questions[index].correctAnswer,
                         page,
-                        setCorrectAns
+                        questionPoint
                       )
                     }
                   >

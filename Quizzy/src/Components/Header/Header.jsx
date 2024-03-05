@@ -23,27 +23,39 @@ const Header = () => {
           <img
             src={QuizzyLogo}
             alt=""
-            style={{ width: "100px", height: "65px", marginTop: "10px" }}
+            style={{ width: "100px", height: "55px", marginTop: "10px" }}
           />
         </Typography>
         <Box style={{ marginLeft: "100px" }}>
           <Button
             onClick={() => navigate("/")}
             color="inherit"
-            style={{ fontSize: "15px", textTransform: "none" }}
+            style={{
+              fontSize: "15px",
+              textTransform: "none",
+              fontWeight: "bold",
+            }}
           >
             Home
           </Button>
           <Button
             color="inherit"
-            style={{ fontSize: "15px", textTransform: "none" }}
+            style={{
+              fontSize: "15px",
+              textTransform: "none",
+              fontWeight: "bold",
+            }}
             onClick={() => navigate("/aboutUs")}
           >
             About Us
           </Button>
           <Button
             color="inherit"
-            style={{ fontSize: "15px", textTransform: "none" }}
+            style={{
+              fontSize: "15px",
+              textTransform: "none",
+              fontWeight: "bold",
+            }}
             onClick={() => navigate("/publicQuizzes")}
           >
             Public Quizzes

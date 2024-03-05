@@ -1,6 +1,5 @@
 import {
   Button,
-  TextField,
   Grid,
   Container,
   Typography,
@@ -8,6 +7,8 @@ import {
   Box,
   Radio,
   RadioGroup,
+  Checkbox,
+  FormGroup,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Alert from "@mui/material/Alert";
@@ -25,6 +26,7 @@ import signUpBackground from "../../Images/sign-up-background.jpg";
 import toast from "react-hot-toast";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { validateData } from "./validations";
+import SignUpFormField from "../../Components/SignUpFormField/SignUpFormField";
 
 const theme = createTheme({
   palette: {
@@ -126,7 +128,7 @@ export default function SignUp() {
             width: "30vw",
             position: "absolute",
             left: "200px",
-            bottom: "80px",
+            bottom: "35px",
           }}
         >
           <div
@@ -158,98 +160,48 @@ export default function SignUp() {
               noValidate
             >
               <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    value={form.username}
-                    onChange={updateForm("username")}
-                    autoComplete="username"
-                    name="username"
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    autoFocus
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    value={form.firstName}
-                    onChange={updateForm("firstName")}
-                    autoComplete="fname"
-                    name="firstName"
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="firstName"
-                    label="First Name"
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    value={form.lastName}
-                    onChange={updateForm("lastName")}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="lastName"
-                    label="Last Name"
-                    name="lastName"
-                    autoComplete="lname"
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    value={form.email}
-                    onChange={updateForm("email")}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    value={form.phone}
-                    onChange={updateForm("phone")}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    id="phoneNumber"
-                    label="Phone Number"
-                    name="phoneNumber"
-                    autoComplete="tel"
-                    size="small"
-                    style={{ borderRadius: "10px" }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    value={form.password}
-                    onChange={updateForm("password")}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    size="small"
-                    style={{ borderRadius: "10px", marginBottom: "5px" }}
-                  />
-                </Grid>
+                <SignUpFormField
+                  value={form.username}
+                  onChange={updateForm("username")}
+                  name="username"
+                  label="Username"
+                  type="text"
+                />
+                <SignUpFormField
+                  value={form.firstName}
+                  onChange={updateForm("firstName")}
+                  name="firstName"
+                  label="First Name"
+                  type="text"
+                />
+                <SignUpFormField
+                  value={form.lastName}
+                  onChange={updateForm("lastName")}
+                  name="lastName"
+                  label="Last Name"
+                  type="text"
+                />
+                <SignUpFormField
+                  value={form.email}
+                  onChange={updateForm("email")}
+                  name="email"
+                  label="Email"
+                  type="email"
+                />
+                <SignUpFormField
+                  value={form.phone}
+                  onChange={updateForm("phone")}
+                  name="phone"
+                  label="Phone"
+                  type="tel"
+                />
+                <SignUpFormField
+                  value={form.password}
+                  onChange={updateForm("password")}
+                  name="password"
+                  label="Password"
+                  type="password"
+                />
                 <Grid
                   item
                   xs={12}
@@ -258,28 +210,39 @@ export default function SignUp() {
                   <Box display="flex" alignItems="center">
                     <Typography
                       variant="subtitle1"
-                      style={{ marginRight: "10px", marginTop: "0" }}
+                      style={{
+                        marginRight: "10px",
+                        marginTop: "0",
+                        fontSize: "1.2em",
+                      }}
                     >
                       Role:
                     </Typography>
-                    <RadioGroup
-                      aria-label="role"
-                      name="role"
-                      value={form.role}
-                      onChange={updateForm("role")}
-                      row
-                    >
+                    <FormGroup aria-label="role" name="role" row>
                       <FormControlLabel
-                        value="teacher"
-                        control={<Radio color="primary" />}
-                        label="Teacher"
+                        // style={{ color: "#C2C3C4" }}
+                        control={
+                          <Checkbox
+                            checked={form.role.includes("educator")}
+                            onChange={updateForm("role")}
+                            value="educator"
+                            color="primary"
+                          />
+                        }
+                        label="Educator"
                       />
                       <FormControlLabel
-                        value="student"
-                        control={<Radio color="primary" />}
+                        control={
+                          <Checkbox
+                            checked={form.role.includes("student")}
+                            onChange={updateForm("role")}
+                            value="student"
+                            color="primary"
+                          />
+                        }
                         label="Student"
                       />
-                    </RadioGroup>
+                    </FormGroup>
                   </Box>
                 </Grid>
                 <Grid

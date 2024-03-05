@@ -20,6 +20,7 @@ import HomeWhenLoggedIn from "./Views/HomeWhenLoggedIn/HomeWhenLoggedIn";
 import NotFound from "./Views/NotFound/NotFound";
 import UserProfile from "./Views/UserProfile/UserProfile";
 import CorrectAnswers from "./Views/CorrectAnswers/CorrectAnswers";
+import MyQuizzes from "./Views/MyQuizzes/MyQuizzes";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -88,14 +89,22 @@ function App() {
               </LoggedInMain>
             }
           />
+          <Route
+            path="/myQuizzes"
+            element={
+              <LoggedInMain>
+                <MyQuizzes />
+              </LoggedInMain>
+            }
+          />
           {/* <Route path="/quizzes" element={<Quizzes />} />
           <Route path="/quiz/:id" element={<Quiz />} />
-          <Route path="/myQuizzes" element={<MyQuizzes />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/messenger" element={<Messenger />} />
           <Route path="/liveBattle" element={<LiveBattle />} /> */}
           <Route path="/aboutUs" element={<AboutUs />} />
           <Route path="/publicQuizzes" element={<PublicQuizzes />} />
+          {/* takeQuiz/:id for path to be universal */}
           <Route path="/publicQuizzes/:id" element={<PublicQuizView />} />
           <Route path="/correctAnswers" element={<CorrectAnswers />} />
           <Route path="*" element={<NotFound />} />

@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { addQuiz, getQuizByTitle } from "../../services/quizzes.service";
 import AppContext from "../../Context/AppContext";
-import { getStorage, ref } from "firebase/storage";
-import { moveFile } from "../../services/image.services";
+import { deleteObject, getStorage, ref } from "firebase/storage";
+import { uploadImage } from "../../services/image.services";
 import { getQuizQuestions } from "../../services/request-service";
 import GeneratedSingleQuestion from "../../Components/CreateQuizComponents/GeneratedSingleQuestion/GeneratedSingleQuestion";
 import SingleQuestion from "../../Components/CreateQuizComponents/SingleQuestion/SingleQuestion";
@@ -69,21 +69,20 @@ const CreateQuiz = () => {
     generated: false,
     activeNumber: 1,
     activeTimeUnit: "minutes",
+    file: null,
   });
-
-  useEffect(() => {
-    if (quiz.category && quiz.difficulty) {
-      getQuizQuestions(quiz.category, quiz.difficulty).then(
-        setGeneratedQuestions
-      );
-    }
-  }, [quiz.category, quiz.difficulty]);
 
   useEffect(() => {
     if (quiz.type === "private") {
       getAllUsers().then(setUsers);
     }
   }, [quiz.type]);
+
+  const generateQuestions = () => {
+    getQuizQuestions(quiz.category, quiz.difficulty).then(
+      setGeneratedQuestions
+    );
+  };
 
   const addGeneratedQuestion = (question) => {
     setQuiz({
@@ -142,14 +141,15 @@ const CreateQuiz = () => {
       );
       const newStorageRef = ref(storage, "quizzesImages/" + quiz.title);
 
-      promise = moveFile(pastStorageRef, newStorageRef, setQuiz, quiz);
+      promise = deleteObject(pastStorageRef).then(() => setQuiz({ ...quiz, image: "" }))
+        .then(() => uploadImage(newStorageRef, quiz.file))
     } else {
       promise = Promise.resolve();
     }
 
     promise
-      .then(() => getQuizByTitle(quiz.title))
-      .then((snapshot) => {
+      .then((downloadURL) => getQuizByTitle(quiz.title).then((snapshot) => ({ snapshot, downloadURL })))
+      .then(({ snapshot, downloadURL }) => {
         if (snapshot.exists()) {
           toast.error(`Quiz with title '${quiz.title}' has already exists!`);
           throw new Error(
@@ -159,7 +159,7 @@ const CreateQuiz = () => {
         return addQuiz(
           quiz.title,
           quiz.questions,
-          quiz.image,
+          downloadURL,
           quiz.difficulty,
           quiz.timer,
           quiz.totalPoints,
@@ -185,14 +185,15 @@ const CreateQuiz = () => {
           generated: false,
           activeNumber: 1,
           activeTimeUnit: "minutes",
+          file: null,
         });
         setGeneratedQuestions(null);
       });
   };
 
   return (
-    <>
-      <Container maxWidth="md" style={{ marginTop: "40px" }}>
+    <div style={{ margin: "70px 0" }}>
+      <Container maxWidth="md">
         <Paper elevation={3} style={{ padding: "20px", background: "#f5f5f5" }}>
           <Typography variant="h4" color="primary" align="center" gutterBottom>
             Create new Quiz:
@@ -210,7 +211,9 @@ const CreateQuiz = () => {
             style={{ marginBottom: "20px" }}
           />
           <QuizImage quiz={quiz} setQuiz={setQuiz} />
-          <Typography variant="h6" color="primary" marginBottom="5px">Active Time For The Quiz:</Typography>
+          <Typography variant="h6" color="primary" marginBottom="5px">
+            Active Time For The Quiz:
+          </Typography>
           <Box display="flex" justifyContent="space-between">
             <FormControl
               style={{ marginBottom: "15px", flex: 1, marginRight: "10px" }}
@@ -309,9 +312,15 @@ const CreateQuiz = () => {
           </FormControl>
           <FormControl fullWidth>
             <InputLabel>Category:</InputLabel>
-            <Select value={quiz.category} onChange={updateQuiz("category")}>
+            <Select
+              value={quiz.category}
+              onChange={(e) => {
+                updateQuiz("category")(e);
+                setGeneratedQuestions(null);
+              }}
+            >
               <MenuItem value="9">General Knowledge</MenuItem>
-              <MenuItem value="25">Art</MenuItem>
+              <MenuItem value="18">Computers</MenuItem>
               <MenuItem value="22">Geography</MenuItem>
               <MenuItem value="23">History</MenuItem>
               <MenuItem value="19">Math</MenuItem>
@@ -328,7 +337,10 @@ const CreateQuiz = () => {
               style={{ display: "flex", flexDirection: "row" }}
               name="difficulty"
               value={quiz.difficulty}
-              onChange={updateQuiz("difficulty")}
+              onChange={(e) => {
+                updateQuiz("difficulty")(e);
+                setGeneratedQuestions(null);
+              }}
             >
               <FormControlLabel value="easy" control={<Radio />} label="Easy" />
               <FormControlLabel
@@ -346,14 +358,27 @@ const CreateQuiz = () => {
                 cancelQuestion={() => setShowQuizForm(false)}
               />
             ) : (
-              <Button
-                style={{ marginTop: "10px" }}
-                variant="contained"
-                color="primary"
-                onClick={() => setShowQuizForm(true)}
-              >
-                Write Question Manually
-              </Button>
+              <>
+                <Button
+                  style={{ marginTop: "10px" }}
+                  variant="contained"
+                  color="primary"
+                  onClick={() => setShowQuizForm(true)}
+                >
+                  Write Question Manually
+                </Button>
+                <br />
+                {!generatedQuestions && (
+                  <Button
+                    style={{ marginTop: "10px" }}
+                    variant="contained"
+                    color="primary"
+                    onClick={generateQuestions}
+                  >
+                    Generate Me Example Questions
+                  </Button>
+                )}
+              </>
             )}
           </div>
           {quiz?.questions?.length > 0 && (
@@ -413,7 +438,7 @@ const CreateQuiz = () => {
           Create Quiz
         </Button>
       </Box>
-    </>
+    </div>
   );
 };
 

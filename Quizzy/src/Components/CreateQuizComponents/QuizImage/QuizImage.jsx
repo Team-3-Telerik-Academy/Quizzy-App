@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Box, Button, Typography } from "@mui/material";
-import { useContext, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import AppContext from "../../../Context/AppContext";
 import { deleteImage, uploadImage } from "../../../services/image.services";
 import { getStorage, ref } from "firebase/storage";
@@ -8,7 +8,17 @@ import { getStorage, ref } from "firebase/storage";
 const storage = getStorage();
 
 const QuizImage = ({ quiz, setQuiz }) => {
-  const {userData } = useContext(AppContext);
+  const { userData } = useContext(AppContext);
+
+  useEffect(() => {
+    if (quiz.file) {
+      const storageRef = ref(storage, "createQuizImage/" + userData.username);
+
+      uploadImage(storageRef, quiz.file).then((downloadURL) =>
+        setQuiz({ ...quiz, image: downloadURL })
+      );
+    }
+  }, [quiz.file]);
 
   const fileInput = useRef();
 
@@ -29,9 +39,10 @@ const QuizImage = ({ quiz, setQuiz }) => {
     }
 
     const file = event.target.files[0];
-    const storageRef = ref(storage, "createQuizImage/" + userData.username);
+    setQuiz({ ...quiz, file: file });
+    // const storageRef = ref(storage, "createQuizImage/" + userData.username);
 
-    uploadImage(storageRef, file, setQuiz, quiz).then((downloadURL) => setQuiz({ ...quiz, image: downloadURL }));
+    // uploadImage(storageRef, file).then((downloadURL) => setQuiz({ ...quiz, image: downloadURL }));
   };
 
   return (

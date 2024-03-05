@@ -4,19 +4,6 @@ import {
   deleteObject,
 } from "firebase/storage";
 
-export const moveFile = async (srcRef, destRef, fn, form) => {
-  const url = await getDownloadURL(srcRef);
-  const snapshot = await uploadBytes(destRef, url);
-  const imageUrl = await getDownloadURL(snapshot.ref);
-  fn({ ...form, image: imageUrl });
-
-  console.log(imageUrl);
-
-  await deleteObject(srcRef);
-
-  return snapshot;
-}
-
 export const deleteImage = (imageRef) => {
 
   deleteObject(imageRef)

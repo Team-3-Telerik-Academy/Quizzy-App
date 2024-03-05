@@ -1,7 +1,7 @@
 import { Grid, TextField } from "@mui/material";
 import PropTypes from "prop-types";
 
-const SignUpFormField = ({ value, onChange, name, label }) => {
+const SignUpFormField = ({ value, onChange, name, label, type }) => {
   return (
     <Grid item xs={12}>
       <TextField
@@ -17,6 +17,7 @@ const SignUpFormField = ({ value, onChange, name, label }) => {
         autoFocus
         size="small"
         style={{ borderRadius: "10px" }}
+        type={type}
       />
     </Grid>
   );
@@ -27,6 +28,7 @@ SignUpFormField.propTypes = {
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default SignUpFormField;

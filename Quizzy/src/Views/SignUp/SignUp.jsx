@@ -7,6 +7,8 @@ import {
   Box,
   Radio,
   RadioGroup,
+  Checkbox,
+  FormGroup,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Alert from "@mui/material/Alert";
@@ -126,7 +128,7 @@ export default function SignUp() {
             width: "30vw",
             position: "absolute",
             left: "200px",
-            bottom: "80px",
+            bottom: "35px",
           }}
         >
           <div
@@ -158,12 +160,48 @@ export default function SignUp() {
               noValidate
             >
               <Grid container spacing={2}>
-                <SignUpFormField value={form.username} onChange={updateForm('username')} name="username" label="Username" />
-                <SignUpFormField value={form.firstName} onChange={updateForm('firstName')} name="firstName" label="First Name" />
-                <SignUpFormField value={form.lastName} onChange={updateForm('lastName')} name="lastName" label="Last Name" />
-                <SignUpFormField value={form.email} onChange={updateForm('email')} name="email" label="Email" />
-                <SignUpFormField value={form.phone} onChange={updateForm('phone')} name="phone" label="Phone" />
-                <SignUpFormField value={form.password} onChange={updateForm('password')} name="password" label="Password" />
+                <SignUpFormField
+                  value={form.username}
+                  onChange={updateForm("username")}
+                  name="username"
+                  label="Username"
+                  type="text"
+                />
+                <SignUpFormField
+                  value={form.firstName}
+                  onChange={updateForm("firstName")}
+                  name="firstName"
+                  label="First Name"
+                  type="text"
+                />
+                <SignUpFormField
+                  value={form.lastName}
+                  onChange={updateForm("lastName")}
+                  name="lastName"
+                  label="Last Name"
+                  type="text"
+                />
+                <SignUpFormField
+                  value={form.email}
+                  onChange={updateForm("email")}
+                  name="email"
+                  label="Email"
+                  type="email"
+                />
+                <SignUpFormField
+                  value={form.phone}
+                  onChange={updateForm("phone")}
+                  name="phone"
+                  label="Phone"
+                  type="tel"
+                />
+                <SignUpFormField
+                  value={form.password}
+                  onChange={updateForm("password")}
+                  name="password"
+                  label="Password"
+                  type="password"
+                />
                 <Grid
                   item
                   xs={12}
@@ -172,28 +210,39 @@ export default function SignUp() {
                   <Box display="flex" alignItems="center">
                     <Typography
                       variant="subtitle1"
-                      style={{ marginRight: "10px", marginTop: "0" }}
+                      style={{
+                        marginRight: "10px",
+                        marginTop: "0",
+                        fontSize: "1.2em",
+                      }}
                     >
                       Role:
                     </Typography>
-                    <RadioGroup
-                      aria-label="role"
-                      name="role"
-                      value={form.role}
-                      onChange={updateForm("role")}
-                      row
-                    >
+                    <FormGroup aria-label="role" name="role" row>
                       <FormControlLabel
-                        value="teacher"
-                        control={<Radio color="primary" />}
-                        label="Teacher"
+                        // style={{ color: "#C2C3C4" }}
+                        control={
+                          <Checkbox
+                            checked={form.role.includes("educator")}
+                            onChange={updateForm("role")}
+                            value="educator"
+                            color="primary"
+                          />
+                        }
+                        label="Educator"
                       />
                       <FormControlLabel
-                        value="student"
-                        control={<Radio color="primary" />}
+                        control={
+                          <Checkbox
+                            checked={form.role.includes("student")}
+                            onChange={updateForm("role")}
+                            value="student"
+                            color="primary"
+                          />
+                        }
                         label="Student"
                       />
-                    </RadioGroup>
+                    </FormGroup>
                   </Box>
                 </Grid>
                 <Grid

@@ -46,7 +46,7 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
             icon: <Quiz />,
             click: () => navigate("/quizzes"),
           },
-          ...(userData?.role === "teacher"
+          ...(userData?.role === "educator"
             ? [
                 {
                   text: "Create Quiz",

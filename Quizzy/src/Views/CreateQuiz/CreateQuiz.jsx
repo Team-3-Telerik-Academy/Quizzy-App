@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { addQuiz, getQuizByTitle } from "../../services/quizzes.service";
 import AppContext from "../../Context/AppContext";
 import { deleteObject, getStorage, ref } from "firebase/storage";
-import { moveFile, uploadImage } from "../../services/image.services";
+import { uploadImage } from "../../services/image.services";
 import { getQuizQuestions } from "../../services/request-service";
 import GeneratedSingleQuestion from "../../Components/CreateQuizComponents/GeneratedSingleQuestion/GeneratedSingleQuestion";
 import SingleQuestion from "../../Components/CreateQuizComponents/SingleQuestion/SingleQuestion";
@@ -71,18 +71,6 @@ const CreateQuiz = () => {
     activeTimeUnit: "minutes",
     file: null,
   });
-
-  // useEffect(() => {
-  //   if (quiz.category && quiz.difficulty) {
-  //     getQuizQuestions(quiz.category, quiz.difficulty).then(
-  //       setGeneratedQuestions
-  //     );
-  //   }
-  // }, [quiz.category, quiz.difficulty]);
-
-  useEffect(() => {
-    console.log(quiz.file);
-  }, [quiz.file])
 
   useEffect(() => {
     if (quiz.type === "private") {
@@ -168,7 +156,6 @@ const CreateQuiz = () => {
             `Quiz with title '${quiz.title}' has already exists!`
           );
         }
-        console.log(downloadURL);
         return addQuiz(
           quiz.title,
           quiz.questions,
@@ -333,7 +320,6 @@ const CreateQuiz = () => {
               }}
             >
               <MenuItem value="9">General Knowledge</MenuItem>
-              {/* <MenuItem value="25">Art</MenuItem> */}
               <MenuItem value="18">Computers</MenuItem>
               <MenuItem value="22">Geography</MenuItem>
               <MenuItem value="23">History</MenuItem>

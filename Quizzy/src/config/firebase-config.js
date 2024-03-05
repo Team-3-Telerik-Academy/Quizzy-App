@@ -3,14 +3,13 @@ import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAJL-A1KCgT8HHVsw7GqQNZly-UAkh9Hig",
-  authDomain: "quizzy-application-f0713.firebaseapp.com",
-  projectId: "quizzy-application-f0713",
-  storageBucket: "quizzy-application-f0713.appspot.com",
-  messagingSenderId: "502954704886",
-  appId: "1:502954704886:web:99f3ed6c93927faa0e11d7",
-  databaseURL:
-    "https://quizzy-application-f0713-default-rtdb.europe-west1.firebasedatabase.app/",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  databaseURL: import.meta.env.VITE_DATABASE_URL,
 };
 
 const app = initializeApp(firebaseConfig);

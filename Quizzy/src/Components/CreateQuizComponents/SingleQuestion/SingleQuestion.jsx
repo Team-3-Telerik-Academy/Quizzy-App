@@ -17,11 +17,14 @@ const SingleQuestion = ({ question, removeQuestion }) => {
         padding: "15px",
       }}
     >
-      <Typography variant="h5" style={{ color: "rgb(3, 165, 251)" }}>
+      <Typography
+        variant="h5"
+        style={{ color: "rgb(3, 165, 251)", overflowWrap: "break-word" }}
+      >
         {question.title}
       </Typography>
       <Box margin="15px">
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           {question.answers.map((answer, index) => (
             <Grid key={index} item xs={6}>
               <Box

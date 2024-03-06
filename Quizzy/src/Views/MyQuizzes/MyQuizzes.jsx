@@ -2,10 +2,13 @@ import Quizzes from "../../Components/Quizzes/Quizzes";
 import { useState, useContext, useEffect } from "react";
 import AppContext from "../../Context/AppContext";
 import { getQuizzesByAuthor } from "../../services/quizzes.service";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const MyQuizzes = () => {
   const [quizzes, setQuizzes] = useState(null);
   const { userData } = useContext(AppContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (userData) {
@@ -15,7 +18,12 @@ const MyQuizzes = () => {
 
   return (
     <div
-      style={{ backgroundColor: "#F3F4F6", height: "100vh", margin: "40px 0" }}
+      style={{
+        backgroundColor: "#F3F4F6",
+        height: "100vh",
+        marginTop: "40px",
+        overflow: "auto",
+      }}
     >
       <div
         style={{
@@ -24,11 +32,34 @@ const MyQuizzes = () => {
           textAlign: "center",
         }}
       >
-        <h1 style={{ color: "darkblue", fontWeight: "bold", fontSize: "2em" }}>
+        <h1 style={{ color: "rgb(3,165,251)", fontWeight: "bold", fontSize: "2em" }}>
           My Amazing Quizzes
         </h1>
       </div>
-      {quizzes && <Quizzes quizzes={quizzes} />}
+      {quizzes?.length > 0 ? (
+        <Quizzes quizzes={quizzes} />
+      ) : (
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <h2
+            style={{ color: "rgb(3,165,251)", fontWeight: "bold", fontSize: "1.5em" }}
+          >
+            You haven&apos;t created any quizzes yet!
+          </h2>
+          <p style={{ fontSize: "1.2em" }}>
+            Get started by clicking the{" "}
+            <Button
+              size="small"
+              variant="contained"
+              style={{ margin: "0 5px", backgroundColor: "rgb(3, 165, 251)" }}
+              onClick={() => navigate("/createQuiz")}
+            >
+              Create Quiz
+            </Button>{" "}
+            button. <br /> Share your knowledge and challenge your friends or
+            students with your own quizzes!
+          </p>
+        </div>
+      )}
     </div>
   );
 };

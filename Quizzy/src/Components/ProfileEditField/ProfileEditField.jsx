@@ -3,11 +3,18 @@ import PropTypes from "prop-types";
 import { styled } from "@mui/system";
 
 const InfoText = styled(Typography)({
-    margin: "1em 0",
+  margin: "1em 0",
 });
 
 const InfoInput = styled(TextField)({
-    marginBottom: "1em",
+  marginBottom: "1em",
+  paddingTop: "7px",
+  marginRight: "-10px",
+  '& .MuiOutlinedInput-root': {
+    '&.Mui-focused fieldset': {
+      borderColor: 'rgb(3, 165, 251)',
+    },
+  },
 });
 
 const ProfileEditField = ({
@@ -32,7 +39,6 @@ const ProfileEditField = ({
             type="text"
             value={value}
             onChange={onChange}
-            style={{ paddingTop: "7px", marginRight: "-10px" }}
             inputProps={{ style: { padding: "7px" } }}
           />
         ) : (
@@ -51,7 +57,11 @@ const ProfileEditField = ({
             Done
           </Button>
         ) : (
-          <Button variant="contained" onClick={onEdit}>
+          <Button
+            variant="contained"
+            onClick={onEdit}
+            style={{ backgroundColor: "rgb(3, 165, 251)" }}
+          >
             Edit
           </Button>
         )}

@@ -113,6 +113,7 @@ const UploadImage = ({ prop, fn, value }) => {
             variant="contained"
             color="primary"
             onClick={handleUploadClick}
+            style={{backgroundColor: 'rgb(3, 165, 251)'}}
           >
             Change Image
           </Button>

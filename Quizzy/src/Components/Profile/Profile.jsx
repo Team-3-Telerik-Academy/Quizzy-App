@@ -57,7 +57,7 @@ const Profile = () => {
               alignItems: "center",
               marginBottom: "10px",
               boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.2)",
-              padding: '0px 5px 0px 5px'
+              padding: "0px 5px 0px 5px",
             }}
           >
             <img
@@ -77,6 +77,7 @@ const Profile = () => {
                 marginTop: "90px",
                 fontFamily: "Georgia, serif",
                 fontSize: "35px",
+                color: "rgb(3,165,251)",
               }}
             >
               {owner.name}
@@ -115,7 +116,7 @@ const Profile = () => {
                 width: "230px",
               }}
             >
-              <span style={{ marginTop: "7px", fontSize: "25px" }}>
+              <span style={{ marginTop: "7px", fontSize: "25px" ,color: "rgb(3,165,251)"}}>
                 Contact details
               </span>
 
@@ -145,7 +146,7 @@ const Profile = () => {
               >
                 <img
                   src={mailIcon}
-                  style={{ width: "18px", height:'18px', marginRight: "7px" }}
+                  style={{ width: "18px", height: "18px", marginRight: "7px" }}
                   alt=""
                 />
                 {owner.email}

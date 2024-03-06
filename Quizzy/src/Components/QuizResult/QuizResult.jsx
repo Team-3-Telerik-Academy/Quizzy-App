@@ -21,31 +21,8 @@ const QuizResult = ({
   const [IncorrectAnswers, setIncorrectAnswers] = useState(
     length - Object.values(correctAns).length
   );
-  const [correctAnsPath, setCorrectAnsPath] = useState("/correctAnswers");
 
   const navigate = useNavigate();
-
-  const answersView = (answersCount, type, path) => {
-    if (type === "all") {
-      return navigate(path);
-    } else if (type === "correct") {
-      if (answersCount === 0) {
-        toast.error("Nothing to see, you don't have correct answers.", {
-          position: "bottom-right",
-        });
-        return e.preventDefault();
-      }
-      return navigate(path);
-    } else {
-      if (answersCount === 0) {
-        toast.error("Nothing to see, you don't have correct answers.", {
-          position: "bottom-right",
-        });
-        return e.preventDefault();
-      }
-      return navigate(path);
-    }
-  };
 
   return (
     <>
@@ -92,7 +69,7 @@ const QuizResult = ({
               <span style={{ fontSize: "40px" }}>
                 Your score: <br />
               </span>
-              {((score / quizTotalPoints) * 100).toFixed(2)}%
+              {((score / quizTotalPoints) * 100).toFixed(2)} %
             </span>
           </Box>
           <Box
@@ -177,65 +154,19 @@ const QuizResult = ({
                   e.currentTarget.style.transform = "scale(1)";
                 }}
                 variant="contained"
-                onClick={() =>
-                  answersView(correctAnswers, "correct", correctAnsPath)
-                }
+                onClick={() => navigate("/resultDetails")}
                 style={{
                   backgroundColor: "rgb(3, 165, 251)",
                   textTransform: "none",
                   borderRadius: "20px",
-                  width: "155px",
+                  width: "200px",
                   height: "40px",
                   fontWeight: "500",
                   textAlign: "center",
                   transition: "transform 0.2s",
                 }}
               >
-                Correct Answers
-              </Button>
-              <Button
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = "scale(1.05)";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
-                variant="contained"
-                style={{
-                  backgroundColor: "rgb(3, 165, 251)",
-                  textTransform: "none",
-                  borderRadius: "20px",
-                  width: "155px",
-                  height: "40px",
-                  textAlign: "center",
-                  fontWeight: "500",
-                  marginLeft: "10px",
-                  transition: "transform 0.2s",
-                }}
-              >
-                Incorrect Answers
-              </Button>
-              <Button
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = "scale(1.05)";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
-                variant="contained"
-                style={{
-                  backgroundColor: "rgb(3, 165, 251)",
-                  textTransform: "none",
-                  borderRadius: "20px",
-                  width: "155px",
-                  height: "40px",
-                  textAlign: "center",
-                  fontWeight: "500",
-                  marginLeft: "10px",
-                  transition: "transform 0.2s",
-                }}
-              >
-                All answers
+                Review Your Answers
               </Button>
             </Box>
           </Box>

@@ -25,7 +25,7 @@ const ProfileHeader = () => {
             alt={userData?.username}
           />
         )}
-        <Typography variant="h4" marginLeft="17px">
+        <Typography  variant="h4" marginLeft="17px">
           {userData?.username}
         </Typography>
       </Box>

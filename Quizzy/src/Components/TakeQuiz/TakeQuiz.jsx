@@ -8,8 +8,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
-import { useEffect, useState } from "react";
-// import toast from "react-hot-toast"
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -75,7 +74,7 @@ const TakeQuiz = ({
               fontFamily: "cursive",
               color: "#394E6A",
               fontSize: "17px",
-              minWidth: "660px",
+              minWidth: "45%",
               marginBottom: "5px",
             }}
           >
@@ -87,7 +86,7 @@ const TakeQuiz = ({
         <Box
           sx={{
             boxShadow: 4,
-            width: "650px",
+            width: "45%",
             height: "auto",
             display: "flex",
             flexDirection: "column",

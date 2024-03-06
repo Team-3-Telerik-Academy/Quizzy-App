@@ -38,7 +38,6 @@ export const fromQuizzesDocument = (snapshot) => {
   }
 };
 
-
 export const getQuizById = async (id) => {
   try {
     const result = await get(ref(db, `quizzes/${id}`));
@@ -61,6 +60,15 @@ export const getQuizByTitle = async (title) => {
   try {
     const result = await get(query(ref(db, `quizzes`), orderByChild('title'), equalTo(title)));
     return result;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getAllPublicQuizzes = async () => {
+  try {
+    const result = await get(query(ref(db, `quizzes`), orderByChild('type'), equalTo('public')));
+    return fromQuizzesDocument(result);
   } catch (error) {
     console.error(error);
   }
@@ -113,6 +121,8 @@ export const addQuiz = async (title, questions, image, difficulty, timer, totalP
       status: 'active',
     });
 
+    const createdQuizzes = await get(ref(db, `users/${username}/createdQuizzes`));
+    await update(ref(db, `users/${username}`), { 'createdQuizzes': createdQuizzes.val() + 1});
     return getQuizById(result.key);
   } catch (error) {
     console.error(error);

@@ -95,6 +95,11 @@ const CreateQuiz = () => {
   }, [quiz.type]);
 
   const generateQuestions = () => {
+    if (!quiz.category || !quiz.difficulty) {
+      toast.error("Please select category and difficulty first!");
+      return;
+    }
+
     getQuizQuestions(quiz.category, quiz.difficulty).then(
       setGeneratedQuestions
     );

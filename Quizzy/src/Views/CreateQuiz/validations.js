@@ -50,5 +50,10 @@ export const validateQuestion = (question) => {
         return true;
     }
 
+    if (question.points < 1) {
+        toast.error("The question points must be at least 1!");
+        return true;
+    }
+
     return false;
 }

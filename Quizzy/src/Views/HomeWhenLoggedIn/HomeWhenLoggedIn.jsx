@@ -2,8 +2,11 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import home from "../../Images/test.jpg";
+import { useNavigate } from "react-router-dom";
 
 const HomeWhenLoggedIn = () => {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
@@ -25,7 +28,6 @@ const HomeWhenLoggedIn = () => {
       >
         Welcome to Quizzy! Ready to test your knowledge?
       </Typography>
-
       <img
         src={home}
         alt="Cool Quiz"
@@ -37,6 +39,7 @@ const HomeWhenLoggedIn = () => {
         }}
       />
       <Button
+      onClick={() => navigate("/quizzes")}
         variant="contained"
         sx={{
           color: "white",

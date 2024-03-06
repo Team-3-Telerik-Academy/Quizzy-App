@@ -45,7 +45,7 @@ const ProfileHeader = () => {
           }}
         >
           Created quizzes: <br />
-          {userData?.quizzes ? Object.keys(userData.quizzes).length : 0}
+          {userData?.createdQuizzes}
         </Typography>
         <Typography
           variant="body1"
@@ -55,7 +55,7 @@ const ProfileHeader = () => {
             paddingRight: "20px",
           }}
         >
-          Taken quizzes: <br /> {userData?.takenQuizzes || 0}
+          Taken quizzes: <br /> {userData?.takenQuizzes ? Object.keys(userData.takenQuizzes).length : 0}
         </Typography>
         <Typography
           variant="body1"

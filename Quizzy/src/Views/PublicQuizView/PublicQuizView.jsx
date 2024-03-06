@@ -1,12 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 // import { quizzesData } from "../PublicQuizzes/PublicQuizzes";
 import { getQuizById } from "../../services/quizzes.service";
 import toast from "react-hot-toast";
 import TakeQuiz from "../../Components/TakeQuiz/TakeQuiz";
 import QuizResult from "../../Components/QuizResult/QuizResult";
+import { db } from "../../config/firebase-config";
+import { get, ref, update } from "firebase/database";
+import AppContext from "../../Context/AppContext";
+import LoggedInMain from "../../Components/LoggedInMain/LoggedInMain";
 
 const PublicQuizView = () => {
+  const { userData } = useContext(AppContext);
   const { id } = useParams();
   const [index, setIndex] = useState(0);
   const [page, setPage] = useState(1);
@@ -29,6 +34,22 @@ const PublicQuizView = () => {
   const [resultSeconds, setResultSeconds] = useState(0);
   const [quizTotalPoints, setQuizTotalPoints] = useState(0);
   const [questionPoints, setQuestionPoints] = useState(0);
+
+  useEffect(() => {
+    if (resultView && userData) {
+      get(ref(db, `users/${userData.username}/totalPoints`))
+        .then((totalPoints) => {
+          update(ref(db, `users/${userData.username}`), {
+            totalPoints: totalPoints.val() + score,
+          });
+        })
+        .then(() =>
+          update(ref(db, `users/${userData.username}/takenQuizzes/${id}`), {
+            score,
+          })
+        );
+    }
+  }, [score]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -130,6 +151,12 @@ const PublicQuizView = () => {
 
   return (
     <>
+      {userData && (
+        <LoggedInMain>
+          <br />
+          <br />
+        </LoggedInMain>
+      )}
       {questionaryView && (
         <TakeQuiz
           minutes={minutes} //

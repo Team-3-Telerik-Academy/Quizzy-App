@@ -20,7 +20,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const ResultDetails = () => {
+const ResultDetails = ({ answers }) => {
   return (
     <Box
       sx={{
@@ -41,41 +41,91 @@ const ResultDetails = () => {
       <Box
         sx={{
           width: "100%",
-          height: "auto",
+          height: "100vh",
           display: "flex",
           flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-around",
+          justifyContent: "center",
+          marginTop: "25px",
+          gap: "50px",
         }}
       >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "center",
+            textAlign: "center",
             height: "auto",
           }}
         >
           <Typography
             variant="h4"
-            sx={{ fontFamily: "fantasy", color: "rgb(3,165,251)" }}
+            sx={{
+              fontFamily: "fantasy",
+              color: "rgb(3,165,251)",
+              marginBottom: "2px",
+            }}
           >
             Correct Answers
           </Typography>
-          <Box
+
+          {Object.values(answers).map((answer, index) => {
+            if (typeof answer === "string") {
+              return (
+                <Item
+                  key={answer}
+                  sx={{
+                    marginBottom: "7px",
+                    backgroundColor: "#00C853",
+                    color: "white",
+                  }}
+                >
+                  Question {`${index + 1}: ${answer}`}
+                </Item>
+              );
+            }
+          })}
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+
+            height: "auto",
+            textAlign: "center",
+          }}
+        >
+          <Typography
+            variant="h4"
             sx={{
-              boxShadow: "4",
-              width: "auto",
-              height: "auto",
-              display: "flex",
-              alignItems: "center",
               fontFamily: "fantasy",
-              backgroundColor: "white",
-              gap: "5px",
-              borderRadius: "15px",
-              padding: "10px",
+              color: "rgb(3,165,251)",
+              marginBottom: "2px",
             }}
-          >//// map thru the answers</Box>
+          >
+            Incorrect Answers
+          </Typography>
+
+          {Object.values(answers).map((answer, questionIndex) => {
+            if (typeof answer === "object") {
+              return answer.map((incorrectAns, incorrectAnsIndex) => {
+                if (incorrectAnsIndex === 0) {
+                  return (
+                    <Item
+                      key={answer}
+                      sx={{
+                        marginBottom: "7px",
+                        backgroundColor: " #E91E63",
+                        color: "white",
+                      }}
+                    >
+                      Question {`${questionIndex + 1}: ${incorrectAns}`}
+                    </Item>
+                  );
+                }
+              });
+            }
+          })}
         </Box>
       </Box>
     </Box>

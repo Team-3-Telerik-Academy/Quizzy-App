@@ -14,17 +14,11 @@ const AboutUs = () => {
         
       }}
     >
-      <Typography
-        component="h1"
-        variant="h2"
-        style={{ marginTop: "30px", fontFamily: "Georgia, serif" }}
-      >
-        About us
-      </Typography>
+      
       <Typography
         component="h2"
         variant="h4"
-        style={{ marginTop: "20px", 
+        style={{ marginTop: "30px", 
         fontFamily: "Georgia, serif", 
         marginBottom: '30px' }}
       >

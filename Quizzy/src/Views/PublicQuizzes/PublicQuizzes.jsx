@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { quizzesData } from "../../utils/publicQuizzesData";
 
 const PublicQuizzes = () => {
+  ////use Quizzes component and make useeffect for taking data from database
+  // import getAllPublicQuizzes from quizzes services
   const navigate = useNavigate();
   return (
     <div
@@ -117,14 +119,16 @@ const PublicQuizzes = () => {
                   <span
                     style={{
                       marginLeft: "5px",
-                      fontWeight: "bold",
-                      color: "white",
-                      backgroundColor:
+                      fontFamily: 'Georgia',
+                      fontWeight:'normal',
+                      fontSize:'18px',
+                      color:
                         quiz.difficulty === "Easy"
                           ? "green"
                           : quiz.difficulty === "Medium"
                           ? "orange"
                           : "red",
+
                       borderRadius: "15px",
                       padding: "7px",
                     }}

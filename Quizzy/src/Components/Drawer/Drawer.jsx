@@ -80,6 +80,11 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
             icon: <Games />,
             click: () => navigate("/liveBattle"),
           },
+          {
+            text: "Admin",
+            icon: <Games />,
+            click: () => navigate("/adminPanel"),
+          }
         ].map((item) => (
           <ListItem
             onClick={item.click}

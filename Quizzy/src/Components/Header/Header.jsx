@@ -31,9 +31,8 @@ const Header = () => {
             onClick={() => navigate("/")}
             color="inherit"
             style={{
-              fontSize: "15px",
+              fontSize: "16px",
               textTransform: "none",
-              fontWeight: "bold",
             }}
           >
             Home
@@ -41,9 +40,8 @@ const Header = () => {
           <Button
             color="inherit"
             style={{
-              fontSize: "15px",
+              fontSize: "16px",
               textTransform: "none",
-              fontWeight: "bold",
             }}
             onClick={() => navigate("/aboutUs")}
           >
@@ -52,9 +50,8 @@ const Header = () => {
           <Button
             color="inherit"
             style={{
-              fontSize: "15px",
+              fontSize: "16px",
               textTransform: "none",
-              fontWeight: "bold",
             }}
             onClick={() => navigate("/publicQuizzes")}
           >

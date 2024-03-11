@@ -64,8 +64,8 @@ const Profile = () => {
               src={owner.image}
               alt=""
               style={{
-                width: "120px",
-                height: "120px",
+                width: "110px",
+                height: "110px",
                 borderRadius: "50%",
                 position: "absolute",
                 top: "4%",

@@ -23,6 +23,8 @@ import MyQuizzes from "./Views/MyQuizzes/MyQuizzes";
 import ResultDetails from "./Views/ResultDetails/ResultDetails";
 import EditQuiz from "./Views/EditQuiz/EditQuiz";
 import QuizzesView from "./Views/QuizzesView/QuizzesView";
+import AdminPanel from "./Views/AdminPanel/AdminPanel";
+import AdminMain from "./Components/AdminMain/AdminMain";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -115,6 +117,16 @@ function App() {
               </LoggedInMain>
             }
           />
+
+          <Route
+            path="/adminUsers"
+            element={
+              <AdminMain>
+                <NotFound />
+              </AdminMain>
+            }
+          />
+
           {/* 
           <Route path="/quiz/:id" element={<Quiz />} />
           <Route path="/friends" element={<Friends />} />
@@ -122,6 +134,7 @@ function App() {
           <Route path="/messenger" element={<Messenger />} />
           <Route path="/liveBattle" element={<LiveBattle />} /> */}
           <Route path="/aboutUs" element={<AboutUs />} />
+          <Route path="/adminPanel" element={<AdminPanel />} />
           <Route path="/publicQuizzes" element={<PublicQuizzes />} />
           {/* takeQuiz/:id for path to be universal */}
           <Route path="/publicQuizzes/:id" element={<PublicQuizView />} />

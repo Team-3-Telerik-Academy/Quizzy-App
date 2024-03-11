@@ -163,22 +163,16 @@ const PublicQuizView = () => {
           formattedSeconds={formattedSeconds} //
           buttonColor={buttonColor} //
           quiz={quiz} //
-          setPoints={setPoits}
           index={index} //
           length={length} //
           questions={questions} //
           page={page} //
-          setPage={setPage}
           selectedItem={selectedItem} //
           setSelectedItem={setSelectedItem}
-          resultView={resultView}
           setResultView={setResultView}
           handleView={handleView} //
           handleChange={handleChange} //
           handleClick={handleClick} //
-          resultMinutes={resultMinutes}
-          resultSeconds={resultSeconds}
-          setTimeTaken={setTimeTaken}
           quizTotalPoints={quizTotalPoints} //
           questionPoint={questionPoints} //
         />

@@ -1,7 +1,4 @@
 import { Button, Typography } from "@mui/material";
-import brainIcon from "..//..//Images/brain-icon.svg";
-import testIcon from "..//..//Images/test-icon.svg";
-import starIcon from "..//..//Images/star-icon.svg";
 import { useNavigate } from "react-router-dom";
 import quizMainLogo from "..//..//Images/quiz-main-pic.png";
 
@@ -49,9 +46,6 @@ const Home = () => {
         <br />
         and <br />
         every answer becomes a constellation in the vast sky of knowledge.
-        <img src={starIcon} style={{ width: "35px", height: "30px" }} alt="" />
-        <img src={brainIcon} style={{ width: "35px", height: "30px" }} alt="" />
-        <img src={testIcon} style={{ width: "35px", height: "30px" }} alt="" />
       </Typography>
       <Button
         onClick={() => navigate("/signUp")}
@@ -68,7 +62,11 @@ const Home = () => {
       >
         Get started
       </Button>
-      <img src={quizMainLogo} alt="" style={{marginTop:'15px' ,height:'370px',width:'500px'}} />
+      <img
+        src={quizMainLogo}
+        alt=""
+        style={{ marginTop: "15px", height: "300px", width: "500px" }}
+      />
     </div>
   );
 };

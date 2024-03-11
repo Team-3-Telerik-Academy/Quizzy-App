@@ -39,7 +39,7 @@ const TakeQuiz = ({
   handleView,
   handleChange,
   handleClick,
-  quizTotalPoints,
+  // quizTotalPoints,
   questionPoint,
 }) => {
   return (

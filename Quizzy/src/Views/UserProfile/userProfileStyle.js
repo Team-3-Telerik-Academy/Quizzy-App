@@ -4,7 +4,7 @@ import { styled } from "@mui/system";
 export const UserProfileBox = styled(Box)({
     backgroundColor: "white",
     color: "black",
-    marginTop: "35px",
+    marginTop: "25px",
     boxShadow: "0 0 10px 0 rgba(0,0,0,0.7)",
 });
 

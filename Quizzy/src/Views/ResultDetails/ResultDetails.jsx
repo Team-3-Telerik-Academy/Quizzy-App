@@ -1,5 +1,5 @@
 import { Box, Typography, Paper } from "@mui/material";
-
+import { useLocation } from 'react-router-dom';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 
@@ -20,7 +20,10 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const ResultDetails = ({ answers }) => {
+const ResultDetails = () => {
+const location = useLocation();
+const answers = location.state.answers;
+
   return (
     <Box
       sx={{
@@ -67,7 +70,6 @@ const ResultDetails = ({ answers }) => {
           >
             Correct Answers
           </Typography>
-
           {Object.values(answers).map((answer, index) => {
             if (typeof answer === "string") {
               return (
@@ -85,12 +87,10 @@ const ResultDetails = ({ answers }) => {
             }
           })}
         </Box>
-
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-
             height: "auto",
             textAlign: "center",
           }}
@@ -105,7 +105,6 @@ const ResultDetails = ({ answers }) => {
           >
             Incorrect Answers
           </Typography>
-
           {Object.values(answers).map((answer, questionIndex) => {
             if (typeof answer === "object") {
               return answer.map((incorrectAns, incorrectAnsIndex) => {

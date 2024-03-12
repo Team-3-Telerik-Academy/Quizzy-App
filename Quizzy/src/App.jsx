@@ -26,6 +26,8 @@ import QuizzesView from "./Views/QuizzesView/QuizzesView";
 import AdminPanel from "./Views/AdminPanel/AdminPanel";
 import AdminMain from "./Components/AdminMain/AdminMain";
 import CreateQuizSuccess from "./Views/CreateQuizSuccess/CreateQuizSuccess";
+import TakenQuizzes from "./Views/TakenQuizzes/TakenQuizzes";
+import QuizResult from "./Components/QuizResult/QuizResult";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -136,8 +138,26 @@ function App() {
               </LoggedInMain>
             }
           />
+
+          <Route
+            path="/takenQuizzes"
+            element={
+              <LoggedInMain>
+                <TakenQuizzes />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/takenQuizzes/details"
+            element={
+              <LoggedInMain>
+                <br />
+                <ResultDetails />
+              </LoggedInMain>
+            }
+          />
           {/* 
-          <Route path="/takenQuizzes" element={<TakenQuizzes />} />
+          
           <Route path="/scoreboard" element={<Scoreboard />} />
           <Route path="/quiz/:id" element={<Quiz />} />
           <Route path="/friends" element={<Friends />} />
@@ -148,7 +168,32 @@ function App() {
           <Route path="/publicQuizzes" element={<PublicQuizzes />} />
           {/* takeQuiz/:id for path to be universal */}
           <Route path="/publicQuizzes/:id" element={<PublicQuizView />} />
-          <Route path="/resultDetails" element={<ResultDetails />} />
+          <Route
+            path="/quizResult"
+            element={
+              userData ? (
+                <LoggedInMain>
+                  <br />
+                  <QuizResult />
+                </LoggedInMain>
+              ) : (
+                <QuizResult />
+              )
+            }
+          />
+          <Route
+            path="/resultDetails"
+            element={
+              userData ? (
+                <LoggedInMain>
+                  <br />
+                  <ResultDetails />
+                </LoggedInMain>
+              ) : (
+                <ResultDetails />
+              )
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

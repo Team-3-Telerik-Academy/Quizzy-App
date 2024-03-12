@@ -84,7 +84,7 @@ const EditQuiz = () => {
   }, []);
 
   return (
-    <Box style={{ margin: "70px 50px" }}>
+    <Box style={{ margin: "55px 50px" }}>
       <Typography
         variant="h4"
         style={{ textAlign: "center", color: "rgb(3,165,251)" }}
@@ -109,7 +109,10 @@ const EditQuiz = () => {
                   height: "40px",
                   fontWeight: "500",
                 }}
-                onClick={() => {deleteQuiz(id, userData.username); navigate("/myQuizzes")}}
+                onClick={() => {
+                  deleteQuiz(id, userData.username);
+                  navigate("/myQuizzes");
+                }}
               >
                 Delete Quiz
               </Button>

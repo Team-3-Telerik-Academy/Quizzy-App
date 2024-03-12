@@ -28,12 +28,10 @@ const QuizzesView = () => {
     if (userData) {
       getAllPublicQuizzes().then((result) => {
         if (userData.takenQuizzes) {
-          const ids = result.map((quiz) => quiz.id);
-          setQuizzes(
-            Object.keys(userData.takenQuizzes).filter(
-              (quiz) => !ids.includes(quiz)
-            )
+          const takenQuizzes = Object.keys(userData.takenQuizzes).map(
+            (takenQuizId) => userData.takenQuizzes[takenQuizId].id
           );
+          setQuizzes(result.filter((quiz) => !takenQuizzes.includes(quiz.id)));
         } else {
           setQuizzes(result);
         }
@@ -53,8 +51,8 @@ const QuizzesView = () => {
       <div
         style={{
           backgroundColor: "#F3F4F6",
-          height: "100%",
-          marginTop: "40px",
+          height: "90.9vh",
+          marginTop: "20px",
           overflow: "auto",
         }}
       >
@@ -75,7 +73,8 @@ const QuizzesView = () => {
             Challenge Yourself: Take a Quiz Today
           </h1>
         </div>
-        {(ongoingQuizzes !== null || finishedQuizzes !== null) && (ongoingQuizzes?.length > 0 || finishedQuizzes.length > 0) ? (
+        {(ongoingQuizzes !== null || finishedQuizzes !== null) &&
+        (ongoingQuizzes?.length > 0 || finishedQuizzes.length > 0) ? (
           <>
             <div
               style={{
@@ -106,9 +105,7 @@ const QuizzesView = () => {
               </h2>
             ) : (
               page === 1 &&
-              ongoingQuizzes.length > 0 && (
-                <Quizzes quizzes={ongoingQuizzes} />
-              )
+              ongoingQuizzes.length > 0 && <Quizzes quizzes={ongoingQuizzes} />
             )}
             {page === 2 && finishedQuizzes.length === 0 ? (
               <h2

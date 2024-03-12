@@ -6,8 +6,7 @@ import { Box, Typography } from "@mui/material";
 const HeaderBox = styled(Box)({
   borderBottom: "2px solid rgba(0, 0, 0, 0.25)",
   backgroundColor: "white",
-  marginTop: "2.5em",
-  padding: "1em 2em",
+  padding: "1.2em 2em",
   display: "flex",
   justifyContent: "space-between",
 });
@@ -25,7 +24,7 @@ const ProfileHeader = () => {
             alt={userData?.username}
           />
         )}
-        <Typography  variant="h4" marginLeft="17px">
+        <Typography variant="h4" marginLeft="17px">
           {userData?.username}
         </Typography>
       </Box>
@@ -55,7 +54,10 @@ const ProfileHeader = () => {
             paddingRight: "20px",
           }}
         >
-          Taken quizzes: <br /> {userData?.takenQuizzes ? Object.keys(userData.takenQuizzes).length : 0}
+          Taken quizzes: <br />{" "}
+          {userData?.takenQuizzes
+            ? Object.keys(userData.takenQuizzes).length
+            : 0}
         </Typography>
         <Typography
           variant="body1"

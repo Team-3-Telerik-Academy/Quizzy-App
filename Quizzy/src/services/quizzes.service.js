@@ -9,8 +9,10 @@ import {
   update,
   set,
   remove,
+  child,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
+import { add } from "date-fns";
 
 export const fromQuizzesDocument = (snapshot) => {
   try {
@@ -98,6 +100,11 @@ export const addQuiz = async (title, questions, image, difficulty, timer, totalP
   if (category === '19') realCategory = 'Math'
   if (category === '17') realCategory = 'Science & Nature'
 
+  const activeDate = add(new Date(), {
+    minutes: activeTimeInMinutes,
+  });
+
+
   const invitedUsersObject = invitedUsers.reduce((obj, user) => {
     obj[user] = true;
     return obj;
@@ -115,26 +122,67 @@ export const addQuiz = async (title, questions, image, difficulty, timer, totalP
       category: realCategory,
       invitedUsers: invitedUsersObject,
       author: username,
-      activeTimeInMinutes,
+      ongoingTill: activeDate.toString(),
       createdOn: new Date().toString(),
       takenBy: {},
-      status: 'active',
+      status: 'Ongoing',
     });
 
     const createdQuizzes = await get(ref(db, `users/${username}/createdQuizzes`));
-    await update(ref(db, `users/${username}`), { 'createdQuizzes': createdQuizzes.val() + 1});
+    await update(ref(db, `users/${username}`), { 'createdQuizzes': createdQuizzes.val() + 1 });
     return getQuizById(result.key);
   } catch (error) {
     console.error(error);
   }
 };
 
-export const updateQuizInfo = async (id, prop, value) => {
+export const deleteQuiz = async (quizId, username) => {
+  try {
+    await remove(ref(db, `quizzes/${quizId}`));
+
+    const createdQuizzes = await get(ref(db, `users/${username}/createdQuizzes`));
+    await update(ref(db, `users/${username}`), { 'createdQuizzes': createdQuizzes.val() - 1 });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateQuizInfo = async (id, prop, value, callback) => {
   const quizRef = ref(db, `quizzes/${id}`);
-  await update(quizRef, { [prop]: value });
+
+  if (prop === 'type' && value === 'public') {
+    await update(quizRef, { [prop]: value, invitedUsers: null });
+  } else {
+    await update(quizRef, { [prop]: value });
+  }
 
   onValue(quizRef, (snapshot) => {
-    const updatedQuiz = snapshot.val();
-    console.log(updatedQuiz);
+    callback({ ...snapshot.val(), id: id });
+  });
+};
+
+export const inviteUser = async (quizId, username, callback) => {
+  const quizRef = ref(db, `quizzes/${quizId}`);
+  const invitedUsersRef = child(quizRef, 'invitedUsers');
+
+  await update(invitedUsersRef, {
+    [username]: true
+  });
+
+  onValue(quizRef, (snapshot) => {
+    callback({ ...snapshot.val(), id: quizId });
+  });
+};
+
+export const removeUser = async (quizId, username, callback) => {
+  const quizRef = ref(db, `quizzes/${quizId}`);
+  const invitedUsersRef = child(quizRef, 'invitedUsers');
+
+  await update(invitedUsersRef, {
+    [username]: null
+  });
+
+  onValue(quizRef, (snapshot) => {
+    callback({ ...snapshot.val(), id: quizId });
   });
 };

@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import { Drawer, DrawerHeader } from "./drawerStyle";
+import { MilitaryTech, Scoreboard } from "@mui/icons-material";
 
 const DrawerComponent = ({ open, handleDrawerClose }) => {
   const { userData } = useContext(AppContext);
@@ -47,9 +48,14 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
             click: () => navigate("/quizzes"),
           },
           {
-            text: "Taken Quizzes / Results",
-            icon: <Quiz />,
+            text: "Taken Quizzes",
+            icon: <MilitaryTech/>,
             click: () => navigate("/takenQuizzes"),
+          },
+          {
+            text: "Scoreboard",
+            icon: <Scoreboard/>,
+            click: () => navigate("/scoreboard"),
           },
           ...(userData?.role === "educator"
             ? [

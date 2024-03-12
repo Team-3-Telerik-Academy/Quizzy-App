@@ -24,10 +24,14 @@ import {
   MenuItem,
   Container,
   Paper,
+  Dialog,
+  DialogContent,
+  CircularProgress,
 } from "@mui/material";
 import QuizImage from "../../Components/CreateQuizComponents/QuizImage/QuizImage";
 import { styled } from "@mui/system";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -68,10 +72,12 @@ const convertToMinutes = (number, timeUnit) => {
 };
 
 const CreateQuiz = () => {
+  const navigate = useNavigate();
   const { userData } = useContext(AppContext);
   const [users, setUsers] = useState(null);
   const [showQuizForm, setShowQuizForm] = useState(false);
   const [generatedQuestions, setGeneratedQuestions] = useState(null);
+  const [creatingQuiz, setCreatingQuiz] = useState(false);
   const [quiz, setQuiz] = useState({
     title: "",
     image: "",
@@ -183,6 +189,7 @@ const CreateQuiz = () => {
             `Quiz with title '${quiz.title}' has already exists!`
           );
         }
+        setCreatingQuiz(true);
         return addQuiz(
           quiz.title,
           quiz.questions,
@@ -196,29 +203,35 @@ const CreateQuiz = () => {
           userData.username,
           activeTimeInMinutes
         );
-      })
-      .then(() => {
-        toast.success("Quiz has been successfully created!");
-        setQuiz({
-          title: "",
-          image: "",
-          type: "",
-          category: "",
-          difficulty: "",
-          timer: "0",
-          totalPoints: 0,
-          invitedUsers: [],
-          questions: [],
-          generated: false,
-          activeNumber: 1,
-          activeTimeUnit: "minutes",
-          file: null,
-        });
-        setGeneratedQuestions(null);
-      });
+      }).then(() => navigate('/createQuizSuccess'));
+      // .then(() => {
+      //   toast.success("Quiz has been successfully created!");
+      //   setQuiz({
+      //     title: "",
+      //     image: "",
+      //     type: "",
+      //     category: "",
+      //     difficulty: "",
+      //     timer: "0",
+      //     totalPoints: 0,
+      //     invitedUsers: [],
+      //     questions: [],
+      //     generated: false,
+      //     activeNumber: 1,
+      //     activeTimeUnit: "minutes",
+      //     file: null,
+      //   });
+      //   setGeneratedQuestions(null);
+      // });
   };
 
   return (
+    <>
+    <Dialog open={creatingQuiz}>
+  <DialogContent>
+    <CircularProgress />
+  </DialogContent>
+</Dialog>
     <div style={{ margin: "70px 0" }}>
       <Container maxWidth="md">
         <Paper elevation={3} style={{ padding: "20px", background: "#f5f5f5" }}>
@@ -506,6 +519,7 @@ const CreateQuiz = () => {
         </Button>
       </Box>
     </div>
+    </>
   );
 };
 

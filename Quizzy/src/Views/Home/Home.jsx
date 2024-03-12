@@ -11,7 +11,8 @@ const Home = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        height: "100vh",
+        height: "100%",
+        overflow: "hidden",
       }}
     >
       <Typography
@@ -65,7 +66,7 @@ const Home = () => {
       <img
         src={quizMainLogo}
         alt=""
-        style={{ marginTop: "15px", height: "300px", width: "500px" }}
+        style={{ marginTop: "15px", height: "318px", width: "440px" }}
       />
     </div>
   );

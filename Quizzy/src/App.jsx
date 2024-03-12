@@ -25,6 +25,7 @@ import EditQuiz from "./Views/EditQuiz/EditQuiz";
 import QuizzesView from "./Views/QuizzesView/QuizzesView";
 import AdminPanel from "./Views/AdminPanel/AdminPanel";
 import AdminMain from "./Components/AdminMain/AdminMain";
+import CreateQuizSuccess from "./Views/CreateQuizSuccess/CreateQuizSuccess";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -127,10 +128,19 @@ function App() {
             }
           />
 
+          <Route
+            path="/createQuizSuccess"
+            element={
+              <LoggedInMain>
+                <CreateQuizSuccess />
+              </LoggedInMain>
+            }
+          />
           {/* 
+          <Route path="/takenQuizzes" element={<TakenQuizzes />} />
+          <Route path="/scoreboard" element={<Scoreboard />} />
           <Route path="/quiz/:id" element={<Quiz />} />
           <Route path="/friends" element={<Friends />} />
-          <Route path="/takenQuizzes" element={<TakenQuizzes />} />
           <Route path="/messenger" element={<Messenger />} />
           <Route path="/liveBattle" element={<LiveBattle />} /> */}
           <Route path="/aboutUs" element={<AboutUs />} />

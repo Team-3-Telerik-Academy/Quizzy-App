@@ -13,8 +13,8 @@ import {
   RightInfoBox,
   UserProfileBox,
 } from "./userProfileStyle";
-import ProfileEditField from "../../Components/ProfileEditField/ProfileEditField";
 import ProfileHeader from "../../Components/ProfileHeader/ProfileHeader";
+import EditField from "../../Components/EditField/EditField";
 
 const UserProfile = () => {
   const { userData, setUserData } = useContext(AppContext);
@@ -101,7 +101,7 @@ const UserProfile = () => {
                 <strong>Email:</strong> <br /> {userData?.email}
               </InfoText>
               <Divider />
-              <ProfileEditField
+              <EditField
                 label="First Name"
                 value={profileInfo.firstName}
                 isEditing={editProfile.firstName}
@@ -117,7 +117,7 @@ const UserProfile = () => {
                 onSave={handleFirstNameChange}
               />
               <Divider />
-              <ProfileEditField
+              <EditField
                 label="Last Name"
                 value={profileInfo.lastName}
                 isEditing={editProfile.lastName}
@@ -133,7 +133,7 @@ const UserProfile = () => {
                 onSave={handleLastNameChange}
               />
               <Divider />
-              <ProfileEditField
+              <EditField
                 label="Phone"
                 value={profileInfo.phone}
                 isEditing={editProfile.phone}

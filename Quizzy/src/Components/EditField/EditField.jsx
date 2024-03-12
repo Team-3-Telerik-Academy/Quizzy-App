@@ -17,7 +17,7 @@ const InfoInput = styled(TextField)({
   },
 });
 
-const ProfileEditField = ({
+const EditField = ({
   label,
   value,
   isEditing,
@@ -70,7 +70,7 @@ const ProfileEditField = ({
   </InfoText>
 );
 
-ProfileEditField.propTypes = {
+EditField.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   isEditing: PropTypes.bool.isRequired,
@@ -79,4 +79,4 @@ ProfileEditField.propTypes = {
   onSave: PropTypes.func.isRequired,
 };
 
-export default ProfileEditField;
+export default EditField;

@@ -32,12 +32,14 @@ const Profile = () => {
       className="profile_component"
       style={{
         backgroundColor: "#F3F4f6",
-        height: "100vh",
+        height: "100%",
         width: "100%",
         display: "flex",
         justifyContent: "center",
         position: "relative",
         gap: "30px",
+        overflow: "hidden",
+        paddingBottom: "17.5px",
         // alignItems: "center",
       }}
     >
@@ -116,7 +118,13 @@ const Profile = () => {
                 width: "230px",
               }}
             >
-              <span style={{ marginTop: "7px", fontSize: "25px" ,color: "rgb(3,165,251)"}}>
+              <span
+                style={{
+                  marginTop: "7px",
+                  fontSize: "25px",
+                  color: "rgb(3,165,251)",
+                }}
+              >
                 Contact details
               </span>
 

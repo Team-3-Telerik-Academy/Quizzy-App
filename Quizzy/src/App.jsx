@@ -26,6 +26,8 @@ import QuizzesView from "./Views/QuizzesView/QuizzesView";
 import AdminPanel from "./Views/AdminPanel/AdminPanel";
 import AdminMain from "./Components/AdminMain/AdminMain";
 import CreateQuizSuccess from "./Views/CreateQuizSuccess/CreateQuizSuccess";
+import AdminHome from "./Views/AdminHome/AdminHome";
+import AdminUsers from "./Views/AdminUsers/AdminUsers";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -120,10 +122,19 @@ function App() {
           />
 
           <Route
+            path="/adminHome"
+            element={
+              <AdminMain>
+                <AdminHome />
+              </AdminMain>
+            }
+          />
+
+          <Route
             path="/adminUsers"
             element={
               <AdminMain>
-                <NotFound />
+                <AdminUsers />
               </AdminMain>
             }
           />

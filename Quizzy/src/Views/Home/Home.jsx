@@ -21,7 +21,7 @@ const Home = () => {
         style={{
           marginTop: "30px",
           fontWeight: "bold",
-          color: "#353535",
+          color: "#394E6A",
           textAlign: "center",
           fontFamily: "Georgia, serif",
           marginBottom: "5px",

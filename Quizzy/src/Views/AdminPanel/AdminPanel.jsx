@@ -9,6 +9,8 @@ import { Drawer, DrawerHeader } from "./drawerStyle";
 import AdminHeader from "../../Components/AdminHeader/AdminHeader";
 import { useContext } from "react";
 import AppContext from "../../Context/AppContext";
+import HomeIcon from "@mui/icons-material/Home";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const AdminPanel = () => {
   const navigate = useNavigate();
@@ -22,31 +24,36 @@ const AdminPanel = () => {
       <List>
         {[
           {
-            text: "Test1",
-            //   icon:
-            //   click: () => navigate("/")
+            text: "Admin Home",
+            icon: <HomeIcon />,
+            click: () => navigate("/adminHome"),
           },
           {
-            text: "Quizzes",
-            // icon: ,
-            click: () => navigate(""),
+            text: "Exit Admin Panel",
+            icon: <LogoutIcon />,
+            click: () => navigate("/"),
           },
-          {
-            text: "Test2",
-            // icon: ,
-            // click: () => navigate(""),
-          },
+          // {
+          //   text: "Users",
+          //   icon: <PeopleIcon />,
+          //   click: () => navigate(""),
+          // },
+          // {
+          //   text: "Blocked Users",
+          //   icon: <BlockIcon />,
+          //   click: () => navigate(""),
+          // },
 
-          {
-            text: "Test3",
-            // icon: ,
-            // click: () => navigate(""),
-          },
-          {
-            text: "Test4",
-            // icon:
-            // click: () => navigate(""),
-          },
+          // {
+          //   text: "Private Quizzes",
+          //   icon: <LockIcon />,
+          //   click: () => navigate(""),
+          // },
+          // {
+          //   text: "Public Quizzes",
+          //   icon: <LockOpenIcon />,
+          //   click: () => navigate(""),
+          // },
         ].map((item) => (
           <ListItem
             onClick={item.click}

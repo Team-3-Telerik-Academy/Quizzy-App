@@ -20,7 +20,7 @@ const closedMixin = (theme) => ({
   overflowX: "hidden",
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(20)} + 1px)`,
+    width: `calc(${theme.spacing(26)} + 1px)`,
   },
 });
 

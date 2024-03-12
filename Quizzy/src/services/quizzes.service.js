@@ -60,7 +60,9 @@ export const getQuizById = async (id) => {
 
 export const getQuizByTitle = async (title) => {
   try {
-    const result = await get(query(ref(db, `quizzes`), orderByChild('title'), equalTo(title)));
+    const result = await get(
+      query(ref(db, `quizzes`), orderByChild("title"), equalTo(title))
+    );
     return result;
   } catch (error) {
     console.error(error);
@@ -69,7 +71,20 @@ export const getQuizByTitle = async (title) => {
 
 export const getAllPublicQuizzes = async () => {
   try {
-    const result = await get(query(ref(db, `quizzes`), orderByChild('type'), equalTo('public')));
+    const result = await get(
+      query(ref(db, `quizzes`), orderByChild("type"), equalTo("public"))
+    );
+    return fromQuizzesDocument(result);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getAllPrivateQuizzes = async () => {
+  try {
+    const result = await get(
+      query(ref(db, `quizzes`), orderByChild("type"), equalTo("private"))
+    );
     return fromQuizzesDocument(result);
   } catch (error) {
     console.error(error);
@@ -90,20 +105,31 @@ export const getQuizzesByAuthor = async (username) => {
   }
 };
 
-export const addQuiz = async (title, questions, image, difficulty, timer, totalPoints, type, category, invitedUsers, username, activeTimeInMinutes) => {
+export const addQuiz = async (
+  title,
+  questions,
+  image,
+  difficulty,
+  timer,
+  totalPoints,
+  type,
+  category,
+  invitedUsers,
+  username,
+  activeTimeInMinutes
+) => {
   let realCategory;
 
-  if (category === '9') realCategory = 'General Knowledge'
-  if (category === '18') realCategory = 'Computers'
-  if (category === '22') realCategory = 'Geography'
-  if (category === '23') realCategory = 'History'
-  if (category === '19') realCategory = 'Math'
-  if (category === '17') realCategory = 'Science & Nature'
+  if (category === "9") realCategory = "General Knowledge";
+  if (category === "18") realCategory = "Computers";
+  if (category === "22") realCategory = "Geography";
+  if (category === "23") realCategory = "History";
+  if (category === "19") realCategory = "Math";
+  if (category === "17") realCategory = "Science & Nature";
 
   const activeDate = add(new Date(), {
     minutes: activeTimeInMinutes,
   });
-
 
   const invitedUsersObject = invitedUsers.reduce((obj, user) => {
     obj[user] = true;
@@ -114,7 +140,9 @@ export const addQuiz = async (title, questions, image, difficulty, timer, totalP
     const result = await push(ref(db, "quizzes"), {
       title,
       questions,
-      image: image || 'https://firebasestorage.googleapis.com/v0/b/quizzy-application-f0713.appspot.com/o/quiz-main-pic.png?alt=media&token=c1fa864d-d5c8-4d63-a759-d06f32413f9d',
+      image:
+        image ||
+        "https://firebasestorage.googleapis.com/v0/b/quizzy-application-f0713.appspot.com/o/quiz-main-pic.png?alt=media&token=c1fa864d-d5c8-4d63-a759-d06f32413f9d",
       difficulty,
       timer,
       totalPoints,
@@ -125,11 +153,15 @@ export const addQuiz = async (title, questions, image, difficulty, timer, totalP
       ongoingTill: activeDate.toString(),
       createdOn: new Date().toString(),
       takenBy: {},
-      status: 'Ongoing',
+      status: "Ongoing",
     });
 
-    const createdQuizzes = await get(ref(db, `users/${username}/createdQuizzes`));
-    await update(ref(db, `users/${username}`), { 'createdQuizzes': createdQuizzes.val() + 1 });
+    const createdQuizzes = await get(
+      ref(db, `users/${username}/createdQuizzes`)
+    );
+    await update(ref(db, `users/${username}`), {
+      createdQuizzes: createdQuizzes.val() + 1,
+    });
     return getQuizById(result.key);
   } catch (error) {
     console.error(error);
@@ -140,8 +172,12 @@ export const deleteQuiz = async (quizId, username) => {
   try {
     await remove(ref(db, `quizzes/${quizId}`));
 
-    const createdQuizzes = await get(ref(db, `users/${username}/createdQuizzes`));
-    await update(ref(db, `users/${username}`), { 'createdQuizzes': createdQuizzes.val() - 1 });
+    const createdQuizzes = await get(
+      ref(db, `users/${username}/createdQuizzes`)
+    );
+    await update(ref(db, `users/${username}`), {
+      createdQuizzes: createdQuizzes.val() - 1,
+    });
   } catch (error) {
     console.error(error);
   }
@@ -150,7 +186,7 @@ export const deleteQuiz = async (quizId, username) => {
 export const updateQuizInfo = async (id, prop, value, callback) => {
   const quizRef = ref(db, `quizzes/${id}`);
 
-  if (prop === 'type' && value === 'public') {
+  if (prop === "type" && value === "public") {
     await update(quizRef, { [prop]: value, invitedUsers: null });
   } else {
     await update(quizRef, { [prop]: value });
@@ -163,10 +199,10 @@ export const updateQuizInfo = async (id, prop, value, callback) => {
 
 export const inviteUser = async (quizId, username, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
-  const invitedUsersRef = child(quizRef, 'invitedUsers');
+  const invitedUsersRef = child(quizRef, "invitedUsers");
 
   await update(invitedUsersRef, {
-    [username]: true
+    [username]: true,
   });
 
   onValue(quizRef, (snapshot) => {
@@ -176,10 +212,10 @@ export const inviteUser = async (quizId, username, callback) => {
 
 export const removeUser = async (quizId, username, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
-  const invitedUsersRef = child(quizRef, 'invitedUsers');
+  const invitedUsersRef = child(quizRef, "invitedUsers");
 
   await update(invitedUsersRef, {
-    [username]: null
+    [username]: null,
   });
 
   onValue(quizRef, (snapshot) => {

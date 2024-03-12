@@ -218,7 +218,6 @@ export default function SignUp() {
                     </Typography>
                     <FormGroup aria-label="role" name="role" row>
                       <FormControlLabel
-                        // style={{ color: "#C2C3C4" }}
                         control={
                           <Checkbox
                             checked={form.role.includes("educator")}

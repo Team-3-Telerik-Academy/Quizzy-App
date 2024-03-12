@@ -21,6 +21,7 @@ import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import { Drawer, DrawerHeader } from "./drawerStyle";
 import { MilitaryTech, Scoreboard } from "@mui/icons-material";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const DrawerComponent = ({ open, handleDrawerClose }) => {
   const { userData } = useContext(AppContext);
@@ -49,12 +50,12 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
           },
           {
             text: "Taken Quizzes",
-            icon: <MilitaryTech/>,
+            icon: <MilitaryTech />,
             click: () => navigate("/takenQuizzes"),
           },
           {
             text: "Scoreboard",
-            icon: <Scoreboard/>,
+            icon: <Scoreboard />,
             click: () => navigate("/scoreboard"),
           },
           ...(userData?.role === "educator"
@@ -88,9 +89,9 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
           },
           {
             text: "Admin",
-            icon: <Games />,
-            click: () => navigate("/adminPanel"),
-          }
+            icon: <AdminPanelSettingsIcon />,
+            click: () => navigate("/adminHome"),
+          },
         ].map((item) => (
           <ListItem
             onClick={item.click}

@@ -105,6 +105,19 @@ export const getQuizzesByAuthor = async (username) => {
   }
 };
 
+export const getTakenQuizzesByUser = async (username) => {
+  try {
+    const result = await get(ref(db, `users/${username}/takenQuizzes`));
+    if (result.val()) {
+      return fromQuizzesDocument(result);
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const addQuiz = async (
   title,
   questions,

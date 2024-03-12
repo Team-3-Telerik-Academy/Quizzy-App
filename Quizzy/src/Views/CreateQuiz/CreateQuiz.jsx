@@ -232,7 +232,7 @@ const CreateQuiz = () => {
     <CircularProgress />
   </DialogContent>
 </Dialog>
-    <div style={{ margin: "70px 0" }}>
+    <div style={{ margin: "60px 0" }}>
       <Container maxWidth="md">
         <Paper elevation={3} style={{ padding: "20px", background: "#f5f5f5" }}>
           <Typography

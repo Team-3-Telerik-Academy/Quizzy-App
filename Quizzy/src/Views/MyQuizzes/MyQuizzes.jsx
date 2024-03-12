@@ -51,7 +51,7 @@ const MyQuizzes = () => {
           style={{
             backgroundColor: "#F3F4F6",
             height: "90.8vh",
-            marginTop: "40px",
+            marginTop: "20px",
             overflow: "auto",
           }}
         >

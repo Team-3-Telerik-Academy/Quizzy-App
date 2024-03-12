@@ -1,25 +1,23 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-// import { quizzesData } from "../PublicQuizzes/PublicQuizzes";
+import { useNavigate, useParams } from "react-router-dom";
 import { getQuizById } from "../../services/quizzes.service";
 import toast from "react-hot-toast";
 import TakeQuiz from "../../Components/TakeQuiz/TakeQuiz";
-import QuizResult from "../../Components/QuizResult/QuizResult";
 import { db } from "../../config/firebase-config";
-import { get, ref, update } from "firebase/database";
+import { get, push, ref, update } from "firebase/database";
 import AppContext from "../../Context/AppContext";
 import LoggedInMain from "../../Components/LoggedInMain/LoggedInMain";
+import { updateUserInfo } from "../../services/users.service";
 
 const PublicQuizView = () => {
-  const { userData } = useContext(AppContext);
+  const { userData, setUserData } = useContext(AppContext);
   const { id } = useParams();
   const [index, setIndex] = useState(0);
   const [page, setPage] = useState(1);
-  const [questionaryView, setQuestionaryView] = useState(true);
   const [resultView, setResultView] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [questions, setQuestions] = useState([]);
-  const [points, setPoits] = useState({});
+  const [points, setPoints] = useState({});
   const [quiz, setQuiz] = useState({});
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -27,29 +25,60 @@ const PublicQuizView = () => {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(59);
   const [buttonColor, setButtonColor] = useState("rgb(3,165,251)");
-  // reset this in Quiz Result
   const [correctAns, setCorrectAns] = useState({});
   const [timeTaken, setTimeTaken] = useState("");
   const [resultMinutes, setResultMinutes] = useState(0);
   const [resultSeconds, setResultSeconds] = useState(0);
   const [quizTotalPoints, setQuizTotalPoints] = useState(0);
   const [questionPoints, setQuestionPoints] = useState(0);
+  const [sentToDb, setSentToDb] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (resultView && userData) {
+    if (resultView) {
+      navigate("/quizResult", {
+        state: {
+          answers: answers,
+          length: length,
+          score: score,
+          correctAns: correctAns,
+          timeTaken: timeTaken,
+          quizTotalPoints: quizTotalPoints,
+        },
+      });
+    }
+  }, [resultView]);
+
+  useEffect(() => {
+    if (resultView && userData && !sentToDb) {
       get(ref(db, `users/${userData.username}/totalPoints`))
         .then((totalPoints) => {
-          update(ref(db, `users/${userData.username}`), {
-            totalPoints: totalPoints.val() + score,
-          });
+          updateUserInfo(
+            userData.username,
+            "totalPoints",
+            totalPoints.val() + score,
+            setUserData
+          );
         })
         .then(() =>
-          update(ref(db, `users/${userData.username}/takenQuizzes/${id}`), {
+          push(ref(db, `users/${userData.username}/takenQuizzes`), {
+            id,
+            quizTitle: quiz.title,
             score,
+            correctAns,
+            timeTaken,
+            answers,
+            takenOn: new Date().toString(),
           })
-        );
+        )
+        .then(() =>
+          update(ref(db, `quizzes/${id}/takenBy`), {
+            [userData.username]: true,
+          })
+        )
+        .then(() => setSentToDb(true));
     }
-  }, [score]);
+  }, [resultView]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -109,10 +138,10 @@ const PublicQuizView = () => {
     setButtonColor("rgb(3,165,251)");
 
     if (question === answer) {
-      setPoits({ ...points, [page]: questionPoint });
+      setPoints({ ...points, [page]: questionPoint });
       setCorrectAns({ ...correctAns, [page]: 1 });
     } else {
-      setPoits({ ...points, [page]: 0 });
+      setPoints({ ...points, [page]: 0 });
     }
 
     if (question === answer) {
@@ -137,15 +166,13 @@ const PublicQuizView = () => {
         setButtonColor("rgb(3,165,251)");
       }, 270);
     } else {
-      setQuestionaryView(false);
-      setResultView(true);
       setScore(Object.values(points).reduce((acc, point) => acc + point));
       setTimeTaken(
         resultMinutes > 1
           ? `${resultMinutes} minutes  ${resultSeconds} seconds`
           : `${resultMinutes} minute  ${resultSeconds} seconds`
       );
-      // setTimeTaken(`${resultMinutes} ${resultSeconds}`);
+      setResultView(true);
     }
   };
 
@@ -157,37 +184,24 @@ const PublicQuizView = () => {
           <br />
         </LoggedInMain>
       )}
-      {questionaryView && (
-        <TakeQuiz
-          minutes={minutes} //
-          formattedSeconds={formattedSeconds} //
-          buttonColor={buttonColor} //
-          quiz={quiz} //
-          index={index} //
-          length={length} //
-          questions={questions} //
-          page={page} //
-          selectedItem={selectedItem} //
-          setSelectedItem={setSelectedItem}
-          setResultView={setResultView}
-          handleView={handleView} //
-          handleChange={handleChange} //
-          handleClick={handleClick} //
-          quizTotalPoints={quizTotalPoints} //
-          questionPoint={questionPoints} //
-        />
-      )}
-
-      {resultView && (
-        <QuizResult
-          answers={answers}
-          length={length}
-          score={score}
-          correctAns={correctAns}
-          timeTaken={timeTaken}
-          quizTotalPoints={quizTotalPoints}
-        />
-      )}
+      <TakeQuiz
+        minutes={minutes}
+        formattedSeconds={formattedSeconds}
+        buttonColor={buttonColor}
+        quiz={quiz}
+        index={index}
+        length={length}
+        questions={questions}
+        page={page}
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        setResultView={setResultView}
+        handleView={handleView}
+        handleChange={handleChange}
+        handleClick={handleClick}
+        quizTotalPoints={quizTotalPoints}
+        questionPoint={questionPoints}
+      />
     </>
   );
 };

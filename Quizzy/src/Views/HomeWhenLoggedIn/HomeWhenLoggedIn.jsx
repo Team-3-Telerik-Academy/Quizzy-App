@@ -23,6 +23,7 @@ const HomeWhenLoggedIn = () => {
         variant="h4"
         sx={{
           color: "rgb(3, 165, 251)",
+          fontFamily: "Fantasy",
           marginBottom: "20px",
         }}
       >

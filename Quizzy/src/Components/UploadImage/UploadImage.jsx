@@ -12,9 +12,6 @@ const storage = getStorage();
 const UploadImage = ({ prop, fn, value }) => {
   const { userData } = useContext(AppContext);
 
-  console.log(prop);
-  console.log(prop.id);
-
   const defaultUserImage =
     "https://firebasestorage.googleapis.com/v0/b/quizzy-application-f0713.appspot.com/o/user.png?alt=media&token=c1fa864d-d5c8-4d63-a759-d06f32413f9d";
 
@@ -58,7 +55,6 @@ const UploadImage = ({ prop, fn, value }) => {
     const file = event.target.files[0];
     const storageRef = ref(storage, path + fileName);
 
-    //add for quiz
     if (
       prop?.image &&
       value === "quizImage" &&
@@ -110,7 +106,7 @@ const UploadImage = ({ prop, fn, value }) => {
         <img
           src={prop.image}
           alt={prop.title}
-          style={{ width: "200px", height: "200px" }}
+          style={{ width: "210px", height: "190px" }}
         />
         <Box
           id="upload-image"

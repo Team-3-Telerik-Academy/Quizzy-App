@@ -5,17 +5,17 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
 import Quizzes from "../../Components/Quizzes/Quizzes";
-import { styled } from '@mui/system';
+import { styled } from "@mui/system";
 
 const StyledButton = styled(Button)({
-  color: '#fff',
-  padding: '10px',
-  borderRadius: '0px',
-  '&:active': {
-    backgroundColor: 'black',
+  color: "#fff",
+  padding: "10px",
+  borderRadius: "0px",
+  "&:active": {
+    backgroundColor: "black",
   },
-  '&:focus': {
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  "&:focus": {
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
   },
 });
 
@@ -64,7 +64,8 @@ const MyQuizzes = () => {
           >
             <h1
               style={{
-                color: "rgb(3,165,251)",
+                color: "#394E6A",
+                fontFamily: "Fantasy",
                 fontWeight: "bold",
                 fontSize: "2em",
               }}
@@ -82,14 +83,10 @@ const MyQuizzes = () => {
                   gap: "50px",
                 }}
               >
-                <StyledButton
-                  onClick={() => setPage(1)}
-                >
+                <StyledButton onClick={() => setPage(1)}>
                   Ongoing Quizzes
                 </StyledButton>
-                <StyledButton
-                  onClick={() => setPage(2)}
-                >
+                <StyledButton onClick={() => setPage(2)}>
                   Finished Quizzes
                 </StyledButton>
               </div>

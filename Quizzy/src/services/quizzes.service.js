@@ -145,7 +145,7 @@ export const addQuiz = async (
   });
 
   const invitedUsersObject = invitedUsers.reduce((obj, user) => {
-    obj[user] = true;
+    obj[user] = 'pending';
     return obj;
   }, {});
 
@@ -161,13 +161,15 @@ export const addQuiz = async (
       totalPoints,
       type,
       category: realCategory,
-      invitedUsers: invitedUsersObject,
+      // invitedUsers: invitedUsersObject,
       author: username,
       ongoingTill: activeDate.toString(),
       createdOn: new Date().toString(),
       takenBy: {},
       status: "Ongoing",
     });
+
+    await invitedUsers.map(user => inviteUserToAQuiz(result.key, title, user, username, () => { }));
 
     const createdQuizzes = await get(
       ref(db, `users/${username}/createdQuizzes`)
@@ -200,6 +202,17 @@ export const updateQuizInfo = async (id, prop, value, callback) => {
   const quizRef = ref(db, `quizzes/${id}`);
 
   if (prop === "type" && value === "public") {
+    const snapshot = await get(quizRef);
+    const invitedUsers = snapshot.val().invitedUsers;
+    const quizTitle = snapshot.val().title;
+
+    if (invitedUsers) {
+      for (const username of Object.keys(invitedUsers)) {
+        const userQuizInvitationsRef = ref(db, `users/${username}/quizInvitations`);
+        await update(userQuizInvitationsRef, { [quizTitle]: null });
+      }
+    }
+
     await update(quizRef, { [prop]: value, invitedUsers: null });
   } else {
     await update(quizRef, { [prop]: value });
@@ -210,12 +223,17 @@ export const updateQuizInfo = async (id, prop, value, callback) => {
   });
 };
 
-export const inviteUser = async (quizId, username, callback) => {
+export const inviteUserToAQuiz = async (quizId, quizTitle, username, sender, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
   const invitedUsersRef = child(quizRef, "invitedUsers");
+  const userRef = child(ref(db, `users/${username}`), 'quizInvitations');
 
   await update(invitedUsersRef, {
-    [username]: true,
+    [username]: 'pending',
+  });
+
+  await update(userRef, {
+    [quizTitle]: sender,
   });
 
   onValue(quizRef, (snapshot) => {
@@ -223,12 +241,18 @@ export const inviteUser = async (quizId, username, callback) => {
   });
 };
 
-export const removeUser = async (quizId, username, callback) => {
+export const removeUserQuizInvitation = async (quizId, quizTitle, username, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
   const invitedUsersRef = child(quizRef, "invitedUsers");
+  const userRef = ref(db, `users/${username}`);
+  const userQuizInvitationsRef = child(userRef, 'quizInvitations');
 
   await update(invitedUsersRef, {
     [username]: null,
+  });
+
+  await update(userQuizInvitationsRef, {
+    [quizTitle]: null,
   });
 
   onValue(quizRef, (snapshot) => {

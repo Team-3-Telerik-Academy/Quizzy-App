@@ -7,6 +7,7 @@ import {
   query,
   equalTo,
   orderByChild,
+  child,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
@@ -17,6 +18,18 @@ export const getAllUsers = async () => {
   );
 
   return arrayOfAllUsers;
+};
+
+export const getAllUsersSortedByScore = async () => {
+  const snapshot = await get(query(ref(db, "users"), orderByChild('totalPoints')));
+  const users = [];
+  snapshot.forEach((childSnapshot) => {
+    users.push({
+      ...childSnapshot.val(),
+      key: childSnapshot.key,
+    });
+  });
+  return users.sort((a, b) => b.totalPoints - a.totalPoints);
 };
 
 export const getUserByUsername = (username) => {
@@ -48,6 +61,8 @@ export const createUserUsername = (
     takenQuizzes: {},
     totalPoints: 0,
     isBlocked: false,
+    quizInvitations: {},
+    groupInvitations: {},
   });
 };
 
@@ -104,5 +119,37 @@ export const createBlockedUsers = async (
 export const updateUserInfo = async (username, prop, value, fn) => {
   const userRef = ref(db, `users/${username}`);
   await update(userRef, { [prop]: value });
+  listenForUserChanges(username, fn);
+};
+
+export const acceptInvitation = async (username, prop, value, id, fn) => {
+  const userRef = ref(db, `users/${username}`);
+  await update(child(userRef, prop), { [value]: null });
+
+  // to write for groups
+  if (prop === "quizInvitations") {
+    const quizRef = ref(db, `quizzes/${id}`);
+    const invitedUsersRef = child(quizRef, "invitedUsers");
+    await update(invitedUsersRef, {
+      [username]: 'accepted',
+    });
+  }
+
+  listenForUserChanges(username, fn);
+};
+
+export const declineInvitation = async (username, prop, value, id, fn) => {
+  const userRef = ref(db, `users/${username}`);
+  await update(child(userRef, prop), { [value]: null });
+
+  // to write for groups
+  if (prop === "quizInvitations") {
+    const quizRef = ref(db, `quizzes/${id}`);
+    const invitedUsersRef = child(quizRef, "invitedUsers");
+    await update(invitedUsersRef, {
+      [username]: 'declined',
+    });
+  }
+
   listenForUserChanges(username, fn);
 };

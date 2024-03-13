@@ -1,7 +1,8 @@
-import { useContext } from "react";
-import AppContext from "../../Context/AppContext";
 import { styled } from "@mui/system";
 import { Box, Typography } from "@mui/material";
+import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
+import { getAllUsersSortedByScore } from "../../services/users.service";
 
 const HeaderBox = styled(Box)({
   borderBottom: "2px solid rgba(0, 0, 0, 0.25)",
@@ -11,12 +12,29 @@ const HeaderBox = styled(Box)({
   justifyContent: "space-between",
 });
 
-const ProfileHeader = () => {
-  const { userData } = useContext(AppContext);
+const ProfileHeader = ({ userData }) => {
+  const [rank, setRank] = useState("unknown");
+
+  useEffect(() => {
+    getAllUsersSortedByScore().then((users) => {
+      const user = users.find((user) => user.username === userData.username);
+      if (user) {
+        setRank(users.indexOf(user) + 1);
+      }
+    });
+  }, []);
 
   return (
     <HeaderBox>
-      <Box>
+      <Box
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          marginLeft: "15px",
+        }}
+      >
         {userData?.image && (
           <img
             style={{ width: "100px", height: "100px", borderRadius: "50%" }}
@@ -24,28 +42,29 @@ const ProfileHeader = () => {
             alt={userData?.username}
           />
         )}
-        <Typography variant="h4" marginLeft="17px">
-          {userData?.username}
-        </Typography>
+        <Typography variant="h4">{userData?.username}</Typography>
       </Box>
       <Box
         style={{
           display: "flex",
           alignItems: "flex-end",
           gap: "20px",
+          textAlign: "center",
         }}
       >
-        <Typography
-          variant="body1"
-          style={{
-            fontWeight: "bold",
-            borderRight: "2px solid rgba(0, 0, 0, 0.25)",
-            paddingRight: "20px",
-          }}
-        >
-          Created quizzes: <br />
-          {userData?.createdQuizzes}
-        </Typography>
+        {userData?.role === "educator" && (
+          <Typography
+            variant="body1"
+            style={{
+              fontWeight: "bold",
+              borderRight: "2px solid rgba(0, 0, 0, 0.25)",
+              paddingRight: "20px",
+            }}
+          >
+            Created quizzes: <br />
+            {userData?.createdQuizzes}
+          </Typography>
+        )}
         <Typography
           variant="body1"
           style={{
@@ -67,7 +86,7 @@ const ProfileHeader = () => {
             paddingRight: "20px",
           }}
         >
-          Rank / Scoreboard Place: <br /> {userData?.rank || 0}
+          Scoreboard Place: <br /> {rank}
         </Typography>
         <Typography variant="body1" style={{ fontWeight: "bold" }}>
           Joined on: <br />
@@ -75,8 +94,6 @@ const ProfileHeader = () => {
             year: "numeric",
             month: "numeric",
             day: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
           })}
         </Typography>
         {userData?.isBlocked && (
@@ -87,6 +104,10 @@ const ProfileHeader = () => {
       </Box>
     </HeaderBox>
   );
+};
+
+ProfileHeader.propTypes = {
+  userData: PropTypes.object.isRequired,
 };
 
 export default ProfileHeader;

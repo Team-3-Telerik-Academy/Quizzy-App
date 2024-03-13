@@ -30,6 +30,7 @@ import AdminHome from "./Views/AdminHome/AdminHome";
 import AdminUsers from "./Views/AdminUsers/AdminUsers";
 import TakenQuizzes from "./Views/TakenQuizzes/TakenQuizzes";
 import QuizResult from "./Components/QuizResult/QuizResult";
+import Scoreboard from "./Views/Scoreboard/Scoreboard";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -91,7 +92,7 @@ function App() {
             }
           />
           <Route
-            path="/profile"
+            path="/profile/:username"
             element={
               <LoggedInMain>
                 <UserProfile />
@@ -119,6 +120,15 @@ function App() {
             element={
               <LoggedInMain>
                 <QuizzesView />
+              </LoggedInMain>
+            }
+          />
+
+          <Route
+            path="/scoreboard"
+            element={
+              <LoggedInMain>
+                <Scoreboard />
               </LoggedInMain>
             }
           />
@@ -169,7 +179,7 @@ function App() {
           />
           {/* 
           
-          <Route path="/scoreboard" element={<Scoreboard />} />
+          
           <Route path="/quiz/:id" element={<Quiz />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/messenger" element={<Messenger />} />

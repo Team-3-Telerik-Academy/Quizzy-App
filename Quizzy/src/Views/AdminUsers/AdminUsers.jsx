@@ -4,8 +4,10 @@ import { Box, Button, Typography } from "@mui/material";
 import { handleAdmin } from "../../services/users.service";
 import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AdminUsers = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
 
   const { userData } = useContext(AppContext);
@@ -69,7 +71,7 @@ const AdminUsers = () => {
                   display: "flex",
                   alignItems: "center",
                   transition: "transform 0.2s",
-                  cursor: "pointer",
+                  // cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.transform = "scale(1.05)";
@@ -79,11 +81,13 @@ const AdminUsers = () => {
                 }}
               >
                 <img
+                onClick={() => navigate(`/profile/${user.username}`)}
                   src={user.image}
                   style={{
                     width: "40px",
                     borderRadius: "20px",
                     height: "40px",
+                    cursor: "pointer",
                   }}
                   alt=""
                 />

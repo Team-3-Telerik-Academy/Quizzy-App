@@ -93,11 +93,18 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
             icon: <Games />,
             click: () => navigate("/liveBattle"),
           },
-          {
-            text: "Admin",
-            icon: <AdminPanelSettingsIcon />,
-            click: () => navigate("/adminHome"),
-          },
+          userData.isAdmin
+            ? {
+                text: "Admin",
+                icon: <AdminPanelSettingsIcon />,
+                click: () => navigate("/adminHome"),
+              }
+            : [],
+          // {
+          //   text: "Admin",
+          //   icon: <AdminPanelSettingsIcon />,
+          //   click: () => navigate("/adminHome"),
+          // },
         ].map((item) => (
           <ListItem
             onClick={item.click}

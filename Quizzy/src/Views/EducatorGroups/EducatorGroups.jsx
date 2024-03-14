@@ -116,10 +116,11 @@ const EducatorGroups = () => {
                   marginBottom: "15px",
                   marginLeft: "15px",
                   marginTop: "10px",
-                  transition: "transform 0.2s",
+                  transition: "transform 0.3s",
+                  cursor:'pointer'
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.transform = "scale(1.05)";
+                  e.currentTarget.style.transform = "scale(0.9)";
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.transform = "scale(1)";

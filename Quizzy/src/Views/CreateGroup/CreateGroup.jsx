@@ -23,7 +23,7 @@ import { styled } from "@mui/system";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { getAllUsers } from "../../services/users.service";
-import QuizImage from "../../Components/QuizImage/QuizImage";
+import QuizImage from "../../Components/CreateImage/CreateImage";
 import { addGroup, getGroupByTitle } from "../../services/groups.services";
 
 const theme = createTheme({
@@ -70,6 +70,7 @@ const CreateGroup = () => {
 
   const handleAddGroup = () => {
     if (validateGroup(group)) return;
+    setCreatingGroup(true);
 
     let promise;
 
@@ -101,7 +102,6 @@ const CreateGroup = () => {
             `Group with title '${group.title}' has already exists!`
           );
         }
-        setCreatingGroup(true);
         return addGroup(
           group.title,
           downloadURL,

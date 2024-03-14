@@ -121,12 +121,22 @@ export const acceptInvitation = async (username, prop, value, id, fn) => {
   const userRef = ref(db, `users/${username}`);
   await update(child(userRef, prop), { [value]: null });
 
-  // to write for groups
+  // to write for friends
   if (prop === "quizInvitations") {
     const quizRef = ref(db, `quizzes/${id}`);
     const invitedUsersRef = child(quizRef, "invitedUsers");
     await update(invitedUsersRef, {
       [username]: 'accepted',
+    });
+  } else if (prop === "groupInvitations") {
+    const groupRef = ref(db, `groups/${id}`);
+    const invitedUsersRef = child(groupRef, "invitedUsers");
+    const membersRef = child(groupRef, "members");
+    await update(invitedUsersRef, {
+      [username]: 'accepted',
+    });
+    await update(membersRef, {
+      [username]: "member",
     });
   }
 
@@ -137,10 +147,16 @@ export const declineInvitation = async (username, prop, value, id, fn) => {
   const userRef = ref(db, `users/${username}`);
   await update(child(userRef, prop), { [value]: null });
 
-  // to write for groups
+  // to write for friends
   if (prop === "quizInvitations") {
     const quizRef = ref(db, `quizzes/${id}`);
     const invitedUsersRef = child(quizRef, "invitedUsers");
+    await update(invitedUsersRef, {
+      [username]: 'declined',
+    });
+  } else if (prop === "groupInvitations") {
+    const groupRef = ref(db, `groups/${id}`);
+    const invitedUsersRef = child(groupRef, "invitedUsers");
     await update(invitedUsersRef, {
       [username]: 'declined',
     });

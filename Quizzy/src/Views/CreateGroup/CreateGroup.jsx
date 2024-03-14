@@ -108,10 +108,11 @@ const CreateGroup = () => {
           group.description,
           group.invitedUsers,
           userData.username,
+          userData.email
         );
       })
       .then()
-      .then(() => navigate('/CreateSuccess/Group'));
+      .then(() => navigate("/CreateSuccess/Group"));
   };
 
   return (

@@ -25,7 +25,6 @@ import EditQuiz from "./Views/EditQuiz/EditQuiz";
 import QuizzesView from "./Views/QuizzesView/QuizzesView";
 import AdminPanel from "./Views/AdminPanel/AdminPanel";
 import AdminMain from "./Components/AdminMain/AdminMain";
-import CreateQuizSuccess from "./Views/CreateQuizSuccess/CreateQuizSuccess";
 import AdminHome from "./Views/AdminHome/AdminHome";
 import AdminUsers from "./Views/AdminUsers/AdminUsers";
 import TakenQuizzes from "./Views/TakenQuizzes/TakenQuizzes";
@@ -35,6 +34,8 @@ import AdminEducators from "./Views/AdminEducators/AdminEducators";
 import Scoreboard from "./Views/Scoreboard/Scoreboard";
 import AdminStudents from "./Views/AdminStudents/AdminStudents";
 import EducatorGroups from "./Views/EducatorGroups/EducatorGroups";
+import CreateGroup from "./Views/CreateGroup/CreateGroup";
+import CreateSuccessView from "./Views/CreateSuccessView/CreateSuccessView";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -192,10 +193,10 @@ function App() {
           />
 
           <Route
-            path="/createQuizSuccess"
+            path="/CreateSuccess/:value"
             element={
               <LoggedInMain>
-                <CreateQuizSuccess />
+                <CreateSuccessView />
               </LoggedInMain>
             }
           />
@@ -217,9 +218,15 @@ function App() {
               </LoggedInMain>
             }
           />
+          <Route
+            path="/createGroup"
+            element={
+              <LoggedInMain>
+                <CreateGroup />
+              </LoggedInMain>
+            }
+          />
           {/* 
-          
-          
           <Route path="/quiz/:id" element={<Quiz />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/messenger" element={<Messenger />} />

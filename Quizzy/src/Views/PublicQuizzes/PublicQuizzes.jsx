@@ -1,12 +1,15 @@
-import unlocked from "..//..//Images/unlocked.svg";
-import { Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { quizzesData } from "../../utils/publicQuizzesData";
+import { useEffect, useState } from "react";
+import { getAllPublicQuizzes } from "../../services/quizzes.service";
+import QuizCarousel from "../../Components/QuizCarousel/QuizCarousel";
+import { Typography } from "@mui/material";
 
 const PublicQuizzes = () => {
-  ////use Quizzes component and make useeffect for taking data from database
-  // import getAllPublicQuizzes from quizzes services
-  const navigate = useNavigate();
+  const [quizzes, setQuizzes] = useState(null);
+
+  useEffect(() => {
+    getAllPublicQuizzes().then(result => setQuizzes(result.filter((quiz) => quiz.status === "Ongoing")));
+  }, []);
+
   return (
     <div
       style={{
@@ -47,114 +50,11 @@ const PublicQuizzes = () => {
           gap: "20px",
           width: "100%",
           justifyContent: "center",
-          height: "100vh",
+          height: "100%",
           backgroundColor: "#F3F4f6",
         }}
       >
-        {quizzesData.map((quiz) => {
-          return (
-            <div
-              key={quiz.id}
-              style={{
-                height: "50%",
-                width: "330px",
-                borderRadius: "20px",
-                overflow: "hidden",
-                boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.2)",
-                transition: "transform 0.2s",
-                display: "flex",
-                flexDirection: "column",
-                marginTop: "25px",
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = "scale(1.05)";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-              }}
-            >
-              <img
-                src={quiz.image}
-                alt=""
-                style={{ width: "100%", height: "200px" }}
-              />
-              <img
-                src={unlocked}
-                alt=""
-                style={{ width: "25px", marginLeft: "15px", marginTop: "15px" }}
-              />
-              <span
-                style={{
-                  width: "150px",
-                  marginLeft: "15px",
-                  marginTop: "13px",
-                  fontWeight: "bold",
-                }}
-              >
-                {quiz.name} Quiz
-              </span>
-
-              <span
-                style={{
-                  width: "150px",
-                  marginLeft: "15px",
-                  marginTop: "13px",
-                  marginBottom: "7px",
-                  fontWeight: "bold",
-                  flexGrow: "1",
-                }}
-              >
-                {quiz.createdOn}
-              </span>
-              <div
-                style={{
-                  width: "100%",
-                  marginBottom: "15px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <span style={{ marginLeft: "15px", fontWeight: "bold" }}>
-                  Difficulty:
-                  <span
-                    style={{
-                      marginLeft: "5px",
-                      fontFamily: 'Georgia',
-                      fontWeight:'normal',
-                      fontSize:'18px',
-                      color:
-                        quiz.difficulty === "Easy"
-                          ? "green"
-                          : quiz.difficulty === "Medium"
-                          ? "orange"
-                          : "red",
-
-                      borderRadius: "15px",
-                      padding: "7px",
-                    }}
-                  >
-                    {quiz.difficulty}
-                  </span>
-                </span>
-                <Button
-                  variant="contained"
-                  onClick={() => navigate(`/publicQuizzes/${quiz.id}`)}
-                  style={{
-                    backgroundColor: "rgb(3, 165, 251)",
-                    textTransform: "none",
-                    borderRadius: "20px",
-                    width: "100px",
-                    height: "35px",
-                    fontWeight: "500",
-                    marginLeft: "20px",
-                  }}
-                >
-                  Start Quiz
-                </Button>
-              </div>
-            </div>
-          );
-        })}
+        {quizzes && <QuizCarousel quizzes={quizzes} />}
       </div>
     </div>
   );

@@ -40,7 +40,7 @@ const HomeWhenLoggedIn = () => {
         }}
       />
       <Button
-      onClick={() => navigate("/quizzes")}
+        onClick={() => navigate("/quizzes")}
         variant="contained"
         sx={{
           color: "white",

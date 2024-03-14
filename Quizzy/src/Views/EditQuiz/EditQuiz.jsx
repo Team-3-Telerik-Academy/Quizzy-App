@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  addQuestionToAQuiz,
   deleteQuiz,
   getQuizById,
   inviteUserToAQuiz,
@@ -14,7 +15,7 @@ import {
   Divider,
   FormControl,
   FormControlLabel,
-  MenuItem,
+  Pagination,
   TextField,
   Typography,
 } from "@mui/material";
@@ -23,6 +24,10 @@ import UploadImage from "../../Components/UploadImage/UploadImage";
 import AppContext from "../../Context/AppContext";
 import { getAllUsers } from "../../services/users.service";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { styled } from "@mui/system";
+import toast from "react-hot-toast";
+import SingleQuestion from "../../Components/CreateQuizComponents/SingleQuestion/SingleQuestion";
+import WriteQuestionManually from "../../Components/CreateQuizComponents/WriteQuestionManually/WriteQuestionManually";
 
 const theme = createTheme({
   palette: {
@@ -32,21 +37,29 @@ const theme = createTheme({
   },
 });
 
-const numbers = Array.from({ length: 60 }, (_, i) => i + 1);
+const StyledFormControl = styled(FormControl)({
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "rgb(3,165,251)",
+    },
+  },
+});
 
-const timeUnits = [
-  { value: "minutes", label: "Minutes" },
-  { value: "hours", label: "Hours" },
-  { value: "days", label: "Days" },
-  { value: "weeks", label: "Weeks" },
-];
+const StyledCheckbox = styled(Checkbox)({
+  "&.Mui-checked": {
+    color: "rgb(3,165,251)",
+  },
+});
 
 const EditQuiz = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { userData } = useContext(AppContext);
+  const [showNewQuestionForm, setShowNewQuestionForm] = useState(false);
+  const [questionsPage, setQuestionsPage] = useState(1);
   const [users, setUsers] = useState(null);
   const [quiz, setQuiz] = useState(null);
+  const [questions, setQuestions] = useState(null);
   const [quizInfo, setQuizInfo] = useState({
     title: "",
     category: "",
@@ -54,6 +67,9 @@ const EditQuiz = () => {
     image: "",
     activeTimeInMinutes: "",
     timer: "",
+    ongoingTill: new Date(
+      new Date().setDate(new Date().getDate() + 1)
+    ).toLocaleDateString("en-CA"),
   });
 
   const [editQuiz, setEditQuiz] = useState({
@@ -63,6 +79,7 @@ const EditQuiz = () => {
     image: false,
     activeTimeInMinutes: false,
     timer: false,
+    ongoingTill: false,
   });
 
   useEffect(() => {
@@ -82,6 +99,82 @@ const EditQuiz = () => {
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (quiz) {
+      setQuestions(
+        Object.keys(quiz.questions).map((questionKey) => {
+          if (questionKey) {
+            const question = quiz.questions[questionKey];
+            return {
+              ...question,
+              id: questionKey,
+            };
+          }
+        })
+      );
+    }
+  }, [quiz]);
+
+  // to be moved in another file
+  const validateData = (prop) => {
+    if (prop === "timer") {
+      if (!quizInfo.timer) {
+        toast.error("Timer cannot be empty!");
+        return false;
+      }
+
+      if (isNaN(quizInfo.timer)) {
+        toast.error("Timer must be a number!");
+        return false;
+      }
+
+      if (parseInt(quizInfo.timer) < 0) {
+        toast.error("Timer cannot be negative!");
+        return false;
+      }
+
+      return true;
+    }
+
+    if (prop === "ongoingTill") {
+      if (new Date(quizInfo.ongoingTill) < new Date()) {
+        toast.error("Date must be in the future!");
+        return false;
+      }
+
+      if (!quizInfo.ongoingTill) {
+        toast.error("Date cannot be empty!");
+        return false;
+      }
+
+      return true;
+    }
+
+    if (prop === "title") {
+      if (quizInfo.title.length < 3 || quizInfo.title.length > 30) {
+        toast.error("The quiz title must be between 3 and 30 characters!");
+        return false;
+      }
+
+      return true;
+    }
+  };
+
+  const handleQuestionsPageChange = (event, value) => {
+    setQuestionsPage(value);
+  };
+
+  const removeQuestion = (id) => {
+    updateQuizInfo(quiz.id, `questions/${id}`, null, setQuiz);
+  };
+
+  const addQuestion = (question) => {
+    addQuestionToAQuiz(quiz.id, question, setQuiz).then(() => {
+      setQuestionsPage(1);
+      setShowNewQuestionForm(false);
+    });
+  };
 
   return (
     <Box style={{ margin: "55px 50px" }}>
@@ -134,8 +227,10 @@ const EditQuiz = () => {
                   });
                 }}
                 onSave={() => {
-                  updateQuizInfo(id, "title", quizInfo.title, quizInfo);
-                  setEditQuiz({ ...editQuiz, title: false });
+                  if (validateData("title")) {
+                    updateQuizInfo(id, "title", quizInfo.title, setQuizInfo);
+                    setEditQuiz({ ...editQuiz, title: false });
+                  }
                 }}
               />
               <Divider />
@@ -179,7 +274,7 @@ const EditQuiz = () => {
                 <ThemeProvider theme={theme}>
                   <Divider />
                   <Typography variant="body1" style={{ marginTop: "15px" }}>
-                    <strong>Choose Users:</strong>
+                    <strong>Invite Users:</strong>
                   </Typography>
                   {users?.map((user) => (
                     <>
@@ -226,7 +321,7 @@ const EditQuiz = () => {
                         style={{ marginBottom: "10px" }}
                         key={user}
                         control={
-                          <Checkbox
+                          <StyledCheckbox
                             value={user}
                             checked={true}
                             onChange={(e) => {
@@ -274,7 +369,7 @@ const EditQuiz = () => {
                         : quiz.difficulty === "medium"
                         ? "hard"
                         : "easy",
-                      setQuiz
+                      setQuizInfo
                     );
                   }}
                 >
@@ -282,56 +377,87 @@ const EditQuiz = () => {
                 </Button>
               </Typography>
               <Divider />
-              <Typography variant="body1" style={{ margin: "15px 0" }}>
-                <strong>Active Time For The Quiz:</strong>
-              </Typography>
-              <Box display="flex" justifyContent="space-between">
-                <FormControl
-                  style={{ marginBottom: "15px", flex: 1, marginRight: "10px" }}
-                >
-                  <TextField
-                    select
-                    value={quizInfo.activeTimeInMinutes}
-                    // onChange={updateQuiz("activeNumber")}
-                  >
-                    {numbers.map((number) => (
-                      <MenuItem key={number} value={number}>
-                        {number}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </FormControl>
-                <FormControl
-                  style={{ marginBottom: "15px", flex: 1, marginLeft: "10px" }}
-                >
-                  <TextField
-                    select
-                    value={quizInfo.activeTimeInMinutes}
-                    // onChange={updateQuiz("activeTimeUnit")}
-                  >
-                    {timeUnits.map((unit) => (
-                      <MenuItem key={unit.value} value={unit.value}>
-                        {unit.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </FormControl>
-              </Box>
-              {/* <EditField
-                label="Active Time In Minutes"
-                value={quizInfo.activeTimeInMinutes}
-                isEditing={editQuiz.activeTimeInMinutes}
-                onEdit={() =>
-                  setEditQuiz({ ...editQuiz, activeTimeInMinutes: true })
-                }
-                onChange={(e) => {
-                  setQuizInfo({
-                    ...quizInfo,
-                    activeTimeInMinutes: e.target.value,
-                  });
+              <Typography
+                variant="body1"
+                style={{
+                  margin: "15px 0",
+                  lineHeight: "30px",
                 }}
-                // onSave={handlePhoneChange}
-              /> */}
+              >
+                <strong>Active Till:</strong> <br />
+                {quiz?.ongoingTill &&
+                  (editQuiz.ongoingTill ? (
+                    <Box display="flex" justifyContent="space-between">
+                      <StyledFormControl style={{ margin: "5px 0", flex: 1 }}>
+                        <TextField
+                          style={{ width: "30%" }}
+                          type="date"
+                          value={quizInfo.ongoingTill}
+                          onChange={(e) =>
+                            setQuizInfo({
+                              ...quizInfo,
+                              ongoingTill: e.target.value,
+                            })
+                          }
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                        />
+                      </StyledFormControl>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        style={{ height: "80%", marginTop: "15px" }}
+                        onClick={() => {
+                          if (validateData("ongoingTill")) {
+                            updateQuizInfo(
+                              id,
+                              "ongoingTill",
+                              new Date(
+                                new Date(quizInfo.ongoingTill).setHours(
+                                  0,
+                                  0,
+                                  0,
+                                  0
+                                )
+                              ).toString(),
+                              setQuizInfo
+                            );
+                            setEditQuiz({ ...editQuiz, ongoingTill: false });
+                          }
+                        }}
+                      >
+                        Done
+                      </Button>
+                    </Box>
+                  ) : (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center" }}>
+                        {new Date(quiz.ongoingTill).toLocaleString("bg-BG", {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </span>
+                      <Button
+                        variant="contained"
+                        style={{ backgroundColor: "rgb(3, 165, 251)" }}
+                        onClick={() =>
+                          setEditQuiz({ ...editQuiz, ongoingTill: true })
+                        }
+                      >
+                        Edit
+                      </Button>
+                    </div>
+                  ))}
+              </Typography>
               <Divider />
               <EditField
                 label="Timer (in minutes)"
@@ -345,15 +471,71 @@ const EditQuiz = () => {
                   });
                 }}
                 onSave={() => {
-                  updateQuizInfo(id, "timer", quizInfo.timer, quizInfo);
-                  setEditQuiz({ ...editQuiz, timer: false });
+                  if (validateData("timer")) {
+                    updateQuizInfo(
+                      id,
+                      "timer",
+                      quizInfo.timer || "0",
+                      setQuizInfo
+                    );
+                    setEditQuiz({ ...editQuiz, timer: false });
+                  }
                 }}
               />
               <Divider />
-              {quiz?.questions && (
-                <Typography variant="body1" style={{ margin: "15px 0" }}>
-                  <strong>Questions:</strong>
-                </Typography>
+              {showNewQuestionForm && (
+                <WriteQuestionManually
+                  addQuestion={addQuestion}
+                  cancelQuestion={() => setShowNewQuestionForm(false)}
+                />
+              )}
+              {questions && (
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography variant="body1" style={{ margin: "15px 0" }}>
+                      <strong>Questions:</strong>
+                    </Typography>
+                    <Button
+                      variant="contained"
+                      style={{
+                        backgroundColor: "rgb(3, 165, 251)",
+                        height: "90%",
+                      }}
+                      onClick={() => setShowNewQuestionForm(true)}
+                    >
+                      Add New Question
+                    </Button>
+                  </div>
+                  <SingleQuestion
+                    key={[...questions].reverse()[questionsPage - 1].title}
+                    question={[...questions].reverse()[questionsPage - 1]}
+                    removeQuestion={() =>
+                      removeQuestion(
+                        [...questions].reverse()[questionsPage - 1].id
+                      )
+                    }
+                  />
+                  <Pagination
+                    count={questions.length}
+                    page={questionsPage}
+                    onChange={handleQuestionsPageChange}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginTop: "20px",
+                      "& .MuiPaginationItem-page.Mui-selected": {
+                        backgroundColor: "rgb(0, 165, 251)",
+                        color: "white",
+                      },
+                    }}
+                  />
+                </>
               )}
             </Box>
           </Box>

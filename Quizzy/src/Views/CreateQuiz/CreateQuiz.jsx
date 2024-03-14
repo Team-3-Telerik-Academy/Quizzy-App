@@ -27,8 +27,9 @@ import {
   Dialog,
   DialogContent,
   CircularProgress,
+  Pagination,
 } from "@mui/material";
-import QuizImage from "../../Components/CreateQuizComponents/QuizImage/QuizImage";
+import QuizImage from "../../Components/QuizImage/QuizImage";
 import { styled } from "@mui/system";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -49,31 +50,21 @@ const StyledTextField = styled(TextField)({
   },
 });
 
+const StyledFormControl = styled(FormControl)({
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "rgb(3,165,251)",
+    },
+  },
+});
+
 const storage = getStorage();
-
-const numbers = Array.from({ length: 60 }, (_, i) => i + 1);
-
-const timeUnits = [
-  { value: "minutes", label: "Minutes" },
-  { value: "hours", label: "Hours" },
-  { value: "days", label: "Days" },
-  { value: "weeks", label: "Weeks" },
-];
-
-const convertToMinutes = (number, timeUnit) => {
-  const multipliers = {
-    minutes: 1,
-    hours: 60,
-    days: 24 * 60,
-    weeks: 7 * 24 * 60,
-  };
-
-  return number * multipliers[timeUnit];
-};
 
 const CreateQuiz = () => {
   const navigate = useNavigate();
   const { userData } = useContext(AppContext);
+  const [generatedQuestionsPage, setGeneratedQuestionsPage] = useState(1);
+  const [questionsPage, setQuestionsPage] = useState(1);
   const [users, setUsers] = useState(null);
   const [showQuizForm, setShowQuizForm] = useState(false);
   const [generatedQuestions, setGeneratedQuestions] = useState(null);
@@ -92,6 +83,9 @@ const CreateQuiz = () => {
     activeNumber: 1,
     activeTimeUnit: "minutes",
     file: null,
+    ongoingTill: new Date(
+      new Date().setDate(new Date().getDate() + 1)
+    ).toLocaleDateString("en-CA"),
   });
 
   useEffect(() => {
@@ -99,6 +93,14 @@ const CreateQuiz = () => {
       getAllUsers().then(setUsers);
     }
   }, [quiz.type]);
+
+  const handleQuestionsPageChange = (event, value) => {
+    setQuestionsPage(value);
+  };
+
+  const handleGeneratedQuestionsPageChange = (event, value) => {
+    setGeneratedQuestionsPage(value);
+  };
 
   const generateQuestions = () => {
     if (!quiz.category || !quiz.difficulty) {
@@ -153,10 +155,6 @@ const CreateQuiz = () => {
   };
 
   const handleAddQuiz = () => {
-    const activeTimeInMinutes = convertToMinutes(
-      quiz.activeNumber,
-      quiz.activeTimeUnit
-    );
     if (validateQuiz(quiz)) return;
 
     let promise;
@@ -201,11 +199,11 @@ const CreateQuiz = () => {
           quiz.category,
           quiz.invitedUsers,
           userData.username,
-          activeTimeInMinutes
+          quiz.ongoingTill
         );
       })
       .then()
-      .then(() => navigate("/createQuizSuccess"));
+      .then(() => navigate('/CreateSuccess/Quiz'));
   };
 
   return (
@@ -240,45 +238,25 @@ const CreateQuiz = () => {
               fullWidth
               style={{ marginBottom: "20px" }}
             />
-            <QuizImage quiz={quiz} setQuiz={setQuiz} />
+            <QuizImage prop={quiz} fn={setQuiz} value='quiz' />
             <Typography
               variant="h6"
               style={{ color: "rgb(3,165,251)" }}
               marginBottom="5px"
             >
-              Active Time For The Quiz:
+              Active Till:
             </Typography>
             <Box display="flex" justifyContent="space-between">
-              <FormControl
-                style={{ marginBottom: "15px", flex: 1, marginRight: "10px" }}
-              >
-                <StyledTextField
-                  select
-                  value={quiz.activeNumber}
-                  onChange={updateQuiz("activeNumber")}
-                >
-                  {numbers.map((number) => (
-                    <MenuItem key={number} value={number}>
-                      {number}
-                    </MenuItem>
-                  ))}
-                </StyledTextField>
-              </FormControl>
-              <FormControl
-                style={{ marginBottom: "15px", flex: 1, marginLeft: "10px" }}
-              >
-                <StyledTextField
-                  select
-                  value={quiz.activeTimeUnit}
-                  onChange={updateQuiz("activeTimeUnit")}
-                >
-                  {timeUnits.map((unit) => (
-                    <MenuItem key={unit.value} value={unit.value}>
-                      {unit.label}
-                    </MenuItem>
-                  ))}
-                </StyledTextField>
-              </FormControl>
+              <StyledFormControl style={{ marginBottom: "15px", flex: 1 }}>
+                <TextField
+                  type="date"
+                  value={quiz.ongoingTill}
+                  onChange={updateQuiz("ongoingTill")}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </StyledFormControl>
             </Box>
             <FormControl component="fieldset">
               <ThemeProvider theme={theme}>
@@ -314,7 +292,7 @@ const CreateQuiz = () => {
                       component="legend"
                       style={{ marginRight: "15px" }}
                     >
-                      Choose Users:
+                      Invite Users:
                     </FormLabel>
                     {users?.map((user) => (
                       <>
@@ -450,34 +428,62 @@ const CreateQuiz = () => {
                 </>
               )}
             </div>
-            {quiz?.questions?.length > 0 && (
-              <>
-                <hr />
-                <Typography variant="h4" marginTop="15px">
-                  Added Questions:
-                </Typography>
-                {[...quiz.questions].reverse().map((question) => (
-                  <SingleQuestion
-                    key={question.title}
-                    question={question}
-                    removeQuestion={() => removeQuestion(question)}
-                  />
-                ))}
-              </>
-            )}
             {generatedQuestions && (
               <>
                 <hr />
                 <Typography variant="h4" marginTop="15px">
                   Generated Questions:
                 </Typography>
-                {generatedQuestions.map((question) => (
-                  <GeneratedSingleQuestion
-                    key={question.title}
-                    question={question}
-                    addQuestion={addGeneratedQuestion}
-                  />
-                ))}
+                <GeneratedSingleQuestion
+                  key={generatedQuestions[generatedQuestionsPage - 1].title}
+                  question={generatedQuestions[generatedQuestionsPage - 1]}
+                  addQuestion={addGeneratedQuestion}
+                />
+                <Pagination
+                  count={generatedQuestions.length}
+                  page={generatedQuestionsPage}
+                  onChange={handleGeneratedQuestionsPageChange}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "20px",
+                    "& .MuiPaginationItem-page.Mui-selected": {
+                      backgroundColor: "rgb(0, 165, 251)",
+                      color: "white",
+                    },
+                  }}
+                />
+              </>
+            )}
+            {quiz?.questions?.length > 0 && (
+              <>
+                <hr />
+                <Typography variant="h4" marginTop="15px">
+                  Added Questions:
+                </Typography>
+                <SingleQuestion
+                  key={[...quiz.questions].reverse()[questionsPage - 1].title}
+                  question={[...quiz.questions].reverse()[questionsPage - 1]}
+                  removeQuestion={() =>
+                    removeQuestion(
+                      [...quiz.questions].reverse()[questionsPage - 1]
+                    )
+                  }
+                />
+                <Pagination
+                  count={quiz.questions.length}
+                  page={questionsPage}
+                  onChange={handleQuestionsPageChange}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "20px",
+                    "& .MuiPaginationItem-page.Mui-selected": {
+                      backgroundColor: "rgb(0, 165, 251)",
+                      color: "white",
+                    },
+                  }}
+                />
               </>
             )}
           </Paper>

@@ -1,11 +1,11 @@
 import { useState, useContext, useEffect } from "react";
 import AppContext from "../../Context/AppContext";
 import { getQuizzesByAuthor } from "../../services/quizzes.service";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
-import Quizzes from "../../Components/Quizzes/Quizzes";
 import { styled } from "@mui/system";
+import QuizCarousel from "../../Components/QuizCarousel/QuizCarousel";
 
 const StyledButton = styled(Button)({
   color: "#fff",
@@ -62,16 +62,16 @@ const MyQuizzes = () => {
               textAlign: "center",
             }}
           >
-            <h1
-              style={{
+            <Typography
+              variant="h4"
+              sx={{
                 color: "#394E6A",
                 fontFamily: "Fantasy",
-                fontWeight: "bold",
-                fontSize: "2em",
+                margin: "20px 0",
               }}
             >
               My Amazing Quizzes
-            </h1>
+            </Typography>
           </div>
           {ongoingQuizzes?.length > 0 || finishedQuizzes.length > 0 ? (
             <>
@@ -105,7 +105,7 @@ const MyQuizzes = () => {
               ) : (
                 page === 1 &&
                 ongoingQuizzes.length > 0 && (
-                  <Quizzes quizzes={ongoingQuizzes} value="author" />
+                  <QuizCarousel quizzes={ongoingQuizzes} value="author" />
                 )
               )}
               {page === 2 && finishedQuizzes.length === 0 ? (
@@ -123,7 +123,7 @@ const MyQuizzes = () => {
               ) : (
                 page === 2 &&
                 finishedQuizzes.length > 0 && (
-                  <Quizzes quizzes={finishedQuizzes} value="author" />
+                  <QuizCarousel quizzes={finishedQuizzes} value="author" />
                 )
               )}
             </>

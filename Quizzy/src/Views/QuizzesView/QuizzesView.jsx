@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { getAllPublicQuizzes } from "../../services/quizzes.service";
-import Quizzes from "../../Components/Quizzes/Quizzes";
 import AppContext from "../../Context/AppContext";
 import { styled } from "@mui/system";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
+import QuizCarousel from "../../Components/QuizCarousel/QuizCarousel";
 
 const StyledButton = styled(Button)({
   color: "#fff",
@@ -63,16 +63,16 @@ const QuizzesView = () => {
             textAlign: "center",
           }}
         >
-          <h1
-            style={{
+          <Typography
+            variant="h4"
+            sx={{
               color: "#394E6A",
               fontFamily: "Fantasy",
-              fontWeight: "bold",
-              fontSize: "2em",
+              margin: "20px 0",
             }}
           >
             Challenge Yourself: Take a Quiz Today
-          </h1>
+          </Typography>
         </div>
         {(ongoingQuizzes !== null || finishedQuizzes !== null) &&
         (ongoingQuizzes?.length > 0 || finishedQuizzes.length > 0) ? (
@@ -106,7 +106,9 @@ const QuizzesView = () => {
               </h2>
             ) : (
               page === 1 &&
-              ongoingQuizzes.length > 0 && <Quizzes quizzes={ongoingQuizzes} />
+              ongoingQuizzes.length > 0 && (
+                <QuizCarousel quizzes={ongoingQuizzes} />
+              )
             )}
             {page === 2 && finishedQuizzes.length === 0 ? (
               <h2
@@ -123,7 +125,7 @@ const QuizzesView = () => {
             ) : (
               page === 2 &&
               finishedQuizzes.length > 0 && (
-                <Quizzes quizzes={finishedQuizzes} />
+                <QuizCarousel quizzes={finishedQuizzes} />
               )
             )}
           </>

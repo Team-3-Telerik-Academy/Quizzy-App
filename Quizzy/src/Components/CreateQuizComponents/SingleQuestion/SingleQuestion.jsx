@@ -32,7 +32,6 @@ const SingleQuestion = ({ question, removeQuestion }) => {
                   fontFamily: "Monospace",
                   cursor: "pointer",
                   borderRadius: "5px",
-
                   backgroundColor:
                     answer === question.correctAnswer
                       ? "rgba(144, 238, 144, 0.7)"

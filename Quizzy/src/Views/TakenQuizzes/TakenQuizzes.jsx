@@ -11,6 +11,7 @@ import {
   Paper,
   Button,
   Pagination,
+  Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -55,16 +56,23 @@ const TakenQuizzes = () => {
         overflow: "auto",
       }}
     >
-      <h1
-        style={{
+      <Typography
+        variant="h4"
+        sx={{
           color: "#394E6A",
           fontFamily: "Fantasy",
-          marginBottom: "0px",
+          marginTop: "20px",
         }}
       >
         Taken Quizzes
-      </h1>
-      <span style={{ marginBottom: "15px", color: "rgb(3, 165, 251)" }}>
+      </Typography>
+      <span
+        style={{
+          marginBottom: "15px",
+          color: "rgb(3, 165, 251)",
+          fontSize: "16px",
+        }}
+      >
         <strong>Here are the quizzes you have taken:</strong>
       </span>
       <div
@@ -220,10 +228,16 @@ const TakenQuizzes = () => {
             />
           </>
         ) : (
-          <h2 style={{display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+          <h2
+            style={{
+              display: "flex",
+              height: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             You haven&apos;t taken any quizzes yet.
           </h2>
-        
         )}
       </div>
     </div>

@@ -198,8 +198,6 @@ function App() {
             }
           />
           {/* 
-          
-          
           <Route path="/quiz/:id" element={<Quiz />} />
           <Route path="/friends" element={<Friends />} />
           <Route path="/messenger" element={<Messenger />} />

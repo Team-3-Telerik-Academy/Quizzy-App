@@ -13,10 +13,10 @@ const QuizImage = ({ quiz, setQuiz }) => {
   useEffect(() => {
     if (quiz.file) {
       const storageRef = ref(storage, "createQuizImage/" + userData.username);
-
-      uploadImage(storageRef, quiz.file).then((downloadURL) =>
-        setQuiz({ ...quiz, image: downloadURL })
-      );
+  
+      uploadImage(storageRef, quiz.file)
+        .then((downloadURL) => setQuiz({ ...quiz, image: downloadURL }))
+        .catch((error) => console.error(error));
     }
   }, [quiz.file]);
 
@@ -40,16 +40,17 @@ const QuizImage = ({ quiz, setQuiz }) => {
 
     const file = event.target.files[0];
     setQuiz({ ...quiz, file: file });
-    // const storageRef = ref(storage, "createQuizImage/" + userData.username);
-
-    // uploadImage(storageRef, file).then((downloadURL) => setQuiz({ ...quiz, image: downloadURL }));
   };
 
   return (
     <>
       {quiz?.image ? (
         <>
-          <Typography variant="h6" gutterBottom style={{color: 'rgb(3,165,251)'}}>
+          <Typography
+            variant="h6"
+            gutterBottom
+            style={{ color: "rgb(3,165,251)" }}
+          >
             Quiz Image:
           </Typography>
           <Box
@@ -82,7 +83,7 @@ const QuizImage = ({ quiz, setQuiz }) => {
               <Button
                 variant="contained"
                 onClick={handleUploadClick}
-                style={{ marginTop: "10px", backgroundColor: 'rgb(3,165,251)' }}
+                style={{ marginTop: "10px", backgroundColor: "rgb(3,165,251)" }}
               >
                 Change Image
               </Button>
@@ -105,7 +106,12 @@ const QuizImage = ({ quiz, setQuiz }) => {
           alignItems="center"
           gap="15px"
         >
-          <Typography variant="h6" color="primary" gutterBottom style={{color: 'rgb(3,165,251)'}}>
+          <Typography
+            variant="h6"
+            color="primary"
+            gutterBottom
+            style={{ color: "rgb(3,165,251)" }}
+          >
             Quiz Image:
           </Typography>
           <input
@@ -118,7 +124,7 @@ const QuizImage = ({ quiz, setQuiz }) => {
             variant="contained"
             color="primary"
             onClick={handleUploadClick}
-            style={{ backgroundColor: 'rgb(3,165,251)' }}
+            style={{ backgroundColor: "rgb(3,165,251)" }}
           >
             Upload Image
           </Button>

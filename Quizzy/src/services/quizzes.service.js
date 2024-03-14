@@ -7,12 +7,10 @@ import {
   equalTo,
   orderByChild,
   update,
-  set,
   remove,
   child,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
-import { add } from "date-fns";
 
 export const fromQuizzesDocument = (snapshot) => {
   try {
@@ -129,7 +127,7 @@ export const addQuiz = async (
   category,
   invitedUsers,
   username,
-  activeTimeInMinutes
+  ongoingTill,
 ) => {
   let realCategory;
 
@@ -140,19 +138,9 @@ export const addQuiz = async (
   if (category === "19") realCategory = "Math";
   if (category === "17") realCategory = "Science & Nature";
 
-  const activeDate = add(new Date(), {
-    minutes: activeTimeInMinutes,
-  });
-
-  const invitedUsersObject = invitedUsers.reduce((obj, user) => {
-    obj[user] = 'pending';
-    return obj;
-  }, {});
-
   try {
     const result = await push(ref(db, "quizzes"), {
       title,
-      questions,
       image:
         image ||
         "https://firebasestorage.googleapis.com/v0/b/quizzy-application-f0713.appspot.com/o/quiz-main-pic.png?alt=media&token=c1fa864d-d5c8-4d63-a759-d06f32413f9d",
@@ -161,13 +149,14 @@ export const addQuiz = async (
       totalPoints,
       type,
       category: realCategory,
-      // invitedUsers: invitedUsersObject,
       author: username,
-      ongoingTill: activeDate.toString(),
+      ongoingTill: new Date(new Date(ongoingTill).setHours(0, 0, 0, 0)).toString(),
       createdOn: new Date().toString(),
       takenBy: {},
       status: "Ongoing",
     });
+
+    await questions.map((question) => addQuestionToAQuiz(result.key, question, () => { }));
 
     await invitedUsers.map(user => inviteUserToAQuiz(result.key, title, user, username, () => { }));
 
@@ -220,6 +209,15 @@ export const updateQuizInfo = async (id, prop, value, callback) => {
 
   onValue(quizRef, (snapshot) => {
     callback({ ...snapshot.val(), id: id });
+  });
+};
+
+export const addQuestionToAQuiz = async (quizId, question, callback) => {
+  const quizRef = ref(db, `quizzes/${quizId}`);
+  push(ref(db, `quizzes/${quizId}/questions`), question).then(() => {
+    onValue(quizRef, (snapshot) => {
+      callback({ ...snapshot.val(), id: quizId });
+    });
   });
 };
 

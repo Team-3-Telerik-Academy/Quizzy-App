@@ -8,6 +8,7 @@ import {
   TableCell,
   TableContainer,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
@@ -50,9 +51,16 @@ const Scoreboard = () => {
             overflow: "auto",
           }}
         >
-          <h1 style={{ color: "#394E6A", fontFamily: "Fantasy" }}>
+          <Typography
+            variant="h4"
+            sx={{
+              color: "#394E6A",
+              fontFamily: "Fantasy",
+              margin: "20px 0",
+            }}
+          >
             Scoreboard
-          </h1>
+          </Typography>
           <div
             style={{
               backgroundColor: "#F3F4F6",

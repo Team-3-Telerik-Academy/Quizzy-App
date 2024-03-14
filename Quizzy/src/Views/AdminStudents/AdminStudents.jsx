@@ -5,7 +5,7 @@ import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-const AdminEducators = () => {
+const AdminStudents = () => {
   const [users, setUsers] = useState([]);
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
@@ -14,10 +14,10 @@ const AdminEducators = () => {
     getAllUsers()
       .then((users) => {
         return users.filter((user) => {
-          return user.role === "educator";
+          return user.role === "student";
         });
       })
-      .then((educators) => setUsers(educators));
+      .then((students) => setUsers(students));
   }, []);
 
   return (
@@ -43,7 +43,7 @@ const AdminEducators = () => {
       >
         <span>
           {" "}
-          All the <span style={{ color: "rgb(3,165,251)" }}>Educators</span> in
+          All the <span style={{ color: "rgb(3,165,251)" }}>Students</span> in
           our system,{" "}
           {
             <span style={{ color: "rgb(3,165,251)" }}>
@@ -132,6 +132,7 @@ const AdminEducators = () => {
                       color: "white",
                     }}
                     onClick={() => navigate(`/profile/${user.username}`)}
+
                   >
                     View Profile
                   </Button>
@@ -145,4 +146,4 @@ const AdminEducators = () => {
   );
 };
 
-export default AdminEducators;
+export default AdminStudents;

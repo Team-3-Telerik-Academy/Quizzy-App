@@ -22,10 +22,21 @@ const AdminHome = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [educators, setEducators] = useState([]);
+  const [students, setStudents] = useState([]);
   const [privateQuizzes, setPrivateQuizzes] = useState([]);
   const [publicQuizzes, setPublicQuizzes] = useState([]);
   const { userData } = useContext(AppContext);
   const [blockedUsers, setBlockedUsers] = useState([]);
+
+  useEffect(() => {
+    getAllUsers()
+      .then((users) => {
+        return users.filter((user) => {
+          return user.role === "student";
+        });
+      })
+      .then((students) => setStudents(students));
+  }, []);
 
   useEffect(() => {
     getAllUsers().then((users) => setUsers(users));
@@ -319,7 +330,7 @@ const AdminHome = () => {
                 marginTop: "5px",
               }}
             >
-              {educators.length}
+              {educators?.length}
             </span>
             <span
               style={{
@@ -349,6 +360,7 @@ const AdminHome = () => {
           onMouseOut={(e) => {
             e.currentTarget.style.transform = "scale(1)";
           }}
+          onClick={() => navigate("/adminStudents")}
         >
           <Box
             sx={{
@@ -367,7 +379,7 @@ const AdminHome = () => {
                 marginTop: "5px",
               }}
             >
-              {users.length}
+              {students?.length}
             </span>
             <span
               style={{

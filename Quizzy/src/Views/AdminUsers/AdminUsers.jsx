@@ -111,7 +111,7 @@ const AdminUsers = () => {
                     {user.firstName}
                   </span>
                   <span>{user.lastName}</span>
-                  <span>Role: {user.role}</span>
+                  <span>Role: {user.role.charAt(0).toUpperCase() + user.role.slice(1)}</span>
                 </Box>
                 <Box
                   sx={{

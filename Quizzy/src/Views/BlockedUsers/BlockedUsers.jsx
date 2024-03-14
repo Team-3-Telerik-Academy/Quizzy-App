@@ -4,18 +4,17 @@ import { Box, Button, Typography } from "@mui/material";
 import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import { unblockUser } from "../../services/users.service";
+import { useNavigate } from "react-router-dom";
 
 const BlockedUsers = () => {
   const [users, setUsers] = useState([]);
-
   const { userData } = useContext(AppContext);
+  const navigate = useNavigate();
 
   const handleUnblock = async (username, fn, user) => {
     const result = await unblockUser(username, fn, user);
     return result;
   };
-
-  
 
   useEffect(() => {
     getAllUsers()
@@ -110,6 +109,7 @@ const BlockedUsers = () => {
               >
                 <img
                   src={user.image}
+                  onClick={() => navigate(`/profile/${user.username}`)}
                   style={{
                     width: "40px",
                     borderRadius: "20px",

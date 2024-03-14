@@ -22,6 +22,7 @@ import { useContext } from "react";
 import { Drawer, DrawerHeader } from "./drawerStyle";
 import { MilitaryTech, Scoreboard } from "@mui/icons-material";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import Groups2Icon from "@mui/icons-material/Groups2";
 
 const DrawerComponent = ({ open, handleDrawerClose }) => {
   const { userData } = useContext(AppContext);
@@ -54,6 +55,11 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
                   text: "My Quizzes",
                   icon: <QuestionMark />,
                   click: () => navigate("/myQuizzes"),
+                },
+                {
+                  text: "Educator Groups",
+                  icon: <Groups2Icon />,
+                  click: () => navigate("/educatorGroups"),
                 },
               ]
             : []),

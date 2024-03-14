@@ -18,8 +18,6 @@ import {
   Brightness2 as Brightness2Icon,
   Notifications as NotificationsIcon,
   Email as EmailIcon,
-  Check,
-  Close,
 } from "@mui/icons-material";
 import propTypes from "prop-types";
 import { logoutUser } from "../../services/auth.service";
@@ -33,11 +31,7 @@ import {
   SearchIconWrapper,
   StyledInputBase,
 } from "./loggedInHeaderStyle";
-import {
-  acceptInvitation,
-  declineInvitation,
-} from "../../services/users.service";
-import { getQuizByTitle } from "../../services/quizzes.service";
+import SingleNotification from "../SingleNotification/SingleNotification";
 
 const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -78,48 +72,6 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
 
   const handleNotificationsClose = () => {
     setAnchorElNotifications(null);
-  };
-
-  const handleAcceptInvitation = (prop, value) => {
-    //to write for groups
-    if (prop === "quizInvitations") {
-      getQuizByTitle(value)
-        .then((quiz) => {
-          acceptInvitation(
-            userData.username,
-            prop,
-            value,
-            Object.keys(quiz.val())[0],
-            setUserData
-          );
-        })
-        .then(() => {
-          toast.success("You have accepted the invitation successfully!", {
-            position: "bottom-right",
-          });
-        });
-    }
-  };
-
-  const handleDeclineInvitation = (prop, value) => {
-    //to write for groups
-    if (prop === "quizInvitations") {
-      getQuizByTitle(value)
-        .then((quiz) => {
-          declineInvitation(
-            userData.username,
-            prop,
-            value,
-            Object.keys(quiz.val())[0],
-            setUserData
-          );
-        })
-        .then(() => {
-          toast.success("You have declined the invitation!", {
-            position: "bottom-right",
-          });
-        });
-    }
   };
 
   const onLogout = () => {
@@ -215,35 +167,25 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             style={{ border: "1px solid #ddd" }}
           >
             {userData?.quizInvitations &&
-              Object.keys(userData.quizInvitations).map((invitation) => {
-                return (
-                  <MenuItem
+              Object.keys(userData.quizInvitations).map((invitation) => (
+                <SingleNotification
+                  key={invitation}
+                  invitation={invitation}
+                  value="quizInvitations"
+                  handleNotificationsClose={handleNotificationsClose}
+                />
+              ))}
+            {userData?.groupInvitations &&
+              Object.keys(userData.groupInvitations).map(
+                (invitation) => (
+                  <SingleNotification
                     key={invitation}
-                    onClick={handleNotificationsClose}
-                    style={{ color: "#333", fontSize: "14px" }}
-                  >
-                    You have been invited from{" "}
-                    {userData.quizInvitations[invitation]} to take the{" "}
-                    {invitation} quiz
-                    <IconButton
-                      onClick={() =>
-                        handleAcceptInvitation("quizInvitations", invitation)
-                      }
-                      style={{ color: "green", marginLeft: "10px" }}
-                    >
-                      <Check />
-                    </IconButton>
-                    <IconButton
-                      onClick={() =>
-                        handleDeclineInvitation("quizInvitations", invitation)
-                      }
-                      style={{ color: "red", marginLeft: "10px" }}
-                    >
-                      <Close />
-                    </IconButton>
-                  </MenuItem>
-                );
-              })}
+                    invitation={invitation}
+                    value="groupInvitations"
+                    handleNotificationsClose={handleNotificationsClose}
+                  />
+                )
+              )}
           </Menu>
           <IconButton
             size="large"

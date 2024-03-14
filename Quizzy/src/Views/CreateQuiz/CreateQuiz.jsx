@@ -29,7 +29,7 @@ import {
   CircularProgress,
   Pagination,
 } from "@mui/material";
-import QuizImage from "../../Components/QuizImage/QuizImage";
+import QuizImage from "../../Components/CreateImage/CreateImage";
 import { styled } from "@mui/system";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -156,6 +156,7 @@ const CreateQuiz = () => {
 
   const handleAddQuiz = () => {
     if (validateQuiz(quiz)) return;
+    setCreatingQuiz(true);
 
     let promise;
 
@@ -187,7 +188,6 @@ const CreateQuiz = () => {
             `Quiz with title '${quiz.title}' has already exists!`
           );
         }
-        setCreatingQuiz(true);
         return addQuiz(
           quiz.title,
           quiz.questions,
@@ -203,7 +203,7 @@ const CreateQuiz = () => {
         );
       })
       .then()
-      .then(() => navigate('/CreateSuccess/Quiz'));
+      .then(() => navigate("/CreateSuccess/Quiz"));
   };
 
   return (
@@ -238,7 +238,7 @@ const CreateQuiz = () => {
               fullWidth
               style={{ marginBottom: "20px" }}
             />
-            <QuizImage prop={quiz} fn={setQuiz} value='quiz' />
+            <QuizImage prop={quiz} fn={setQuiz} value="quiz" />
             <Typography
               variant="h6"
               style={{ color: "rgb(3,165,251)" }}

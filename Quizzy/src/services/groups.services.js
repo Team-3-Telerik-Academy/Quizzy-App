@@ -34,7 +34,7 @@ export const getAllGroups = async () => {
     const result = await get(ref(db, `groups/`));
 
     if (!result.exists()) {
-      throw new Error(`Group with id ${id} does not exist!`);
+      throw new Error("There are no groups!");
     }
 
     return result.val();
@@ -72,6 +72,9 @@ export const addGroup = async (
       createdBy: username,
       createdOn: new Date().toString(),
       email: email, 
+      members: {
+        [username]: "admin",
+    },
     });
 
     await invitedUsers.map((user) =>

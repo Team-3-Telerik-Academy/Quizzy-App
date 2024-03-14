@@ -39,10 +39,6 @@ import CreateSuccessView from "./Views/CreateSuccessView/CreateSuccessView";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
-  // const [appState, setAppState] = useState({
-  //   user: null,
-  //   userData: null,
-  // });
   const [userCredentials, setUserCredentials] = useState(null);
   const [userData, setUserData] = useState(null);
 

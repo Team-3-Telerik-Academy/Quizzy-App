@@ -1,9 +1,10 @@
 import { Box, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import createQuizSuccessBackground from "../../Images/sign-in-background.jpg";
 
-const CreateQuizSuccess = () => {
+const CreateSuccessView = () => {
   const navigate = useNavigate();
+  const { value } = useParams();
 
   return (
     <Box
@@ -28,7 +29,7 @@ const CreateQuizSuccess = () => {
           fontSize: "40px",
         }}
       >
-        Quiz Created Successfully!
+        {value} Created Successfully!
       </Typography>
       <Typography variant="subtitle1" gutterBottom style={{ fontSize: "20px" }}>
         What would you like to do next?
@@ -36,21 +37,25 @@ const CreateQuizSuccess = () => {
       <Box mt={3}>
         <Button
           variant="contained"
-          onClick={() => navigate("/createQuiz")}
+          onClick={() =>
+            navigate(value === "quiz" ? "/createQuiz" : "/createGroup")
+          }
           style={{ marginRight: "20px", backgroundColor: "rgb(3, 165, 251)" }}
         >
-          Create Another Quiz
+          Create Another {value === "quiz" ? "Quiz" : "Group"}
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          onClick={() => navigate("/myQuizzes")}
+          onClick={() =>
+            navigate(value === "Quiz" ? "/myQuizzes" : "/myGroups")
+          }
         >
-          View All My Quizzes
+          View All {value === "Quiz" ? "My Quizzes" : "My Groups"}
         </Button>
       </Box>
     </Box>
   );
 };
 
-export default CreateQuizSuccess;
+export default CreateSuccessView;

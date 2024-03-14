@@ -29,7 +29,7 @@ import {
   CircularProgress,
   Pagination,
 } from "@mui/material";
-import QuizImage from "../../Components/CreateQuizComponents/QuizImage/QuizImage";
+import QuizImage from "../../Components/QuizImage/QuizImage";
 import { styled } from "@mui/system";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
@@ -203,7 +203,7 @@ const CreateQuiz = () => {
         );
       })
       .then()
-      .then(() => navigate("/createQuizSuccess"));
+      .then(() => navigate('/CreateSuccess/Quiz'));
   };
 
   return (
@@ -238,7 +238,7 @@ const CreateQuiz = () => {
               fullWidth
               style={{ marginBottom: "20px" }}
             />
-            <QuizImage quiz={quiz} setQuiz={setQuiz} />
+            <QuizImage prop={quiz} fn={setQuiz} value='quiz' />
             <Typography
               variant="h6"
               style={{ color: "rgb(3,165,251)" }}

@@ -1,24 +1,32 @@
 import PropTypes from "prop-types";
 import { Box, Button, Typography } from "@mui/material";
 import { useContext, useEffect, useRef } from "react";
-import AppContext from "../../../Context/AppContext";
-import { deleteImage, uploadImage } from "../../../services/image.services";
+import AppContext from "../../Context/AppContext";
+import { deleteImage, uploadImage } from "../../services/image.services";
 import { getStorage, ref } from "firebase/storage";
 
 const storage = getStorage();
 
-const QuizImage = ({ quiz, setQuiz }) => {
+const QuizImage = ({ prop, fn, value }) => {
   const { userData } = useContext(AppContext);
 
   useEffect(() => {
-    if (quiz.file) {
-      const storageRef = ref(storage, "createQuizImage/" + userData.username);
-  
-      uploadImage(storageRef, quiz.file)
-        .then((downloadURL) => setQuiz({ ...quiz, image: downloadURL }))
+    if (prop.file) {
+      let path;
+
+      if (value === "quiz") {
+        path = "createQuizImage/";
+      } else if (value === "group") {
+        path = "createGroupImage/";
+      }
+
+      const storageRef = ref(storage, path + userData.username);
+
+      uploadImage(storageRef, prop.file)
+        .then((downloadURL) => fn({ ...prop, image: downloadURL }))
         .catch((error) => console.error(error));
     }
-  }, [quiz.file]);
+  }, [prop.file]);
 
   const fileInput = useRef();
 
@@ -27,31 +35,48 @@ const QuizImage = ({ quiz, setQuiz }) => {
   };
 
   const handleDelete = () => {
-    setQuiz({ ...quiz, image: "" });
-    const imageRef = ref(storage, "createQuizImage/" + userData.username);
+    fn({ ...prop, image: "" });
+
+    let path;
+
+    if (value === "quiz") {
+      path = "createQuizImage/";
+    } else if (value === "group") {
+      path = "createGroupImage/";
+    }
+
+    const imageRef = ref(storage, path + userData.username);
     deleteImage(imageRef);
   };
 
   const handleFileChange = (event) => {
-    if (quiz.image) {
-      const imageRef = ref(storage, "createQuizImage/" + userData.username);
+    if (prop.image) {
+      let path;
+
+      if (value === "quiz") {
+        path = "createQuizImage/";
+      } else if (value === "group") {
+        path = "createGroupImage/";
+      }
+
+      const imageRef = ref(storage, path + userData.username);
       deleteImage(imageRef);
     }
 
     const file = event.target.files[0];
-    setQuiz({ ...quiz, file: file });
+    fn({ ...prop, file: file });
   };
 
   return (
     <>
-      {quiz?.image ? (
+      {prop?.image ? (
         <>
           <Typography
             variant="h6"
             gutterBottom
             style={{ color: "rgb(3,165,251)" }}
           >
-            Quiz Image:
+            {value === "quiz" ? "Quiz" : "Group"} Image:
           </Typography>
           <Box
             id="upload-image"
@@ -68,8 +93,8 @@ const QuizImage = ({ quiz, setQuiz }) => {
               onChange={handleFileChange}
             />
             <img
-              src={quiz.image}
-              alt={quiz.title}
+              src={prop.image}
+              alt={prop.title}
               style={{ width: "150px", height: "150px" }}
             />
             <Box
@@ -112,7 +137,7 @@ const QuizImage = ({ quiz, setQuiz }) => {
             gutterBottom
             style={{ color: "rgb(3,165,251)" }}
           >
-            Quiz Image:
+            {value === "quiz" ? "Quiz" : "Group"} Image:
           </Typography>
           <input
             type="file"
@@ -135,8 +160,9 @@ const QuizImage = ({ quiz, setQuiz }) => {
 };
 
 QuizImage.propTypes = {
-  quiz: PropTypes.object,
-  setQuiz: PropTypes.func,
+  prop: PropTypes.object,
+  fn: PropTypes.func,
+  value: PropTypes.string,
 };
 
 export default QuizImage;

@@ -25,7 +25,6 @@ import EditQuiz from "./Views/EditQuiz/EditQuiz";
 import QuizzesView from "./Views/QuizzesView/QuizzesView";
 import AdminPanel from "./Views/AdminPanel/AdminPanel";
 import AdminMain from "./Components/AdminMain/AdminMain";
-import CreateQuizSuccess from "./Views/CreateQuizSuccess/CreateQuizSuccess";
 import AdminHome from "./Views/AdminHome/AdminHome";
 import AdminUsers from "./Views/AdminUsers/AdminUsers";
 import TakenQuizzes from "./Views/TakenQuizzes/TakenQuizzes";
@@ -33,6 +32,8 @@ import QuizResult from "./Components/QuizResult/QuizResult";
 import BlockedUsers from "./Views/BlockedUsers/BlockedUsers";
 import AdminEducators from "./Views/AdminEducators/AdminEducators";
 import Scoreboard from "./Views/Scoreboard/Scoreboard";
+import CreateGroup from "./Views/CreateGroup/CreateGroup";
+import CreateSuccessView from "./Views/CreateSuccessView/CreateSuccessView";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -172,10 +173,10 @@ function App() {
           />
 
           <Route
-            path="/createQuizSuccess"
+            path="/CreateSuccess/:value"
             element={
               <LoggedInMain>
-                <CreateQuizSuccess />
+                <CreateSuccessView />
               </LoggedInMain>
             }
           />
@@ -194,6 +195,14 @@ function App() {
               <LoggedInMain>
                 <br />
                 <ResultDetails />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/createGroup"
+            element={
+              <LoggedInMain>
+                <CreateGroup />
               </LoggedInMain>
             }
           />

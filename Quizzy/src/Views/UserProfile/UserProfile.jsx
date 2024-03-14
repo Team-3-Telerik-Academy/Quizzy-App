@@ -1,6 +1,9 @@
 import toast from "react-hot-toast";
-import { updateUserInfo } from "../../services/users.service";
-import { useContext, useState } from "react";
+import {
+  getUserByUsername,
+  updateUserInfo,
+} from "../../services/users.service";
+import { useContext, useEffect, useState } from "react";
 import AppContext from "../../Context/AppContext";
 import UploadImage from "../../Components/UploadImage/UploadImage";
 import { Divider } from "@mui/material";
@@ -15,9 +18,13 @@ import {
 } from "./userProfileStyle";
 import ProfileHeader from "../../Components/ProfileHeader/ProfileHeader";
 import EditField from "../../Components/EditField/EditField";
+import { useParams } from "react-router-dom";
+import Loading from "../../Components/Loading/Loading";
 
 const UserProfile = () => {
+  const { username } = useParams();
   const { userData, setUserData } = useContext(AppContext);
+  const [user, setUser] = useState(null);
   const [profileInfo, setProfileInfo] = useState({
     firstName: userData?.firstName || "",
     lastName: userData?.lastName || "",
@@ -30,6 +37,10 @@ const UserProfile = () => {
     phone: false,
     image: false,
   });
+
+  useEffect(() => {
+    getUserByUsername(username).then((result) => setUser(result.val()));
+  }, []);
 
   const handleFirstNameChange = () => {
     if (profileInfo.firstName.length < 4 || profileInfo.firstName.length > 32) {
@@ -77,7 +88,7 @@ const UserProfile = () => {
 
     updateUserInfo(
       userData.username,
-      "number",
+      "phone",
       profileInfo.phone,
       setUserData
     ).then(() => {
@@ -87,73 +98,107 @@ const UserProfile = () => {
   };
 
   return (
-    <UserProfileBox>
-      <ProfileHeader />
-      <InfoBox style={{backgroundColor: '#F3F4F6'}}>
-        <LeftInfoBox>
-          <ProfileContent>
-            <ChangeInfo>
-              <InfoText variant="body1">
-                <strong>Username:</strong> <br /> {userData?.username}
-              </InfoText>
-              <Divider />
-              <InfoText variant="body1">
-                <strong>Email:</strong> <br /> {userData?.email}
-              </InfoText>
-              <Divider />
-              <EditField
-                label="First Name"
-                value={profileInfo.firstName}
-                isEditing={editProfile.firstName}
-                onEdit={() =>
-                  setEditProfile({ ...editProfile, firstName: true })
-                }
-                onChange={(e) => {
-                  setProfileInfo({
-                    ...profileInfo,
-                    firstName: e.target.value,
-                  });
-                }}
-                onSave={handleFirstNameChange}
-              />
-              <Divider />
-              <EditField
-                label="Last Name"
-                value={profileInfo.lastName}
-                isEditing={editProfile.lastName}
-                onEdit={() =>
-                  setEditProfile({ ...editProfile, lastName: true })
-                }
-                onChange={(e) => {
-                  setProfileInfo({
-                    ...profileInfo,
-                    lastName: e.target.value,
-                  });
-                }}
-                onSave={handleLastNameChange}
-              />
-              <Divider />
-              <EditField
-                label="Phone"
-                value={profileInfo.phone}
-                isEditing={editProfile.phone}
-                onEdit={() => setEditProfile({ ...editProfile, phone: true })}
-                onChange={(e) => {
-                  setProfileInfo({
-                    ...profileInfo,
-                    phone: e.target.value,
-                  });
-                }}
-                onSave={handlePhoneChange}
-              />
-            </ChangeInfo>
-          </ProfileContent>
-        </LeftInfoBox>
-        <RightInfoBox style={{marginTop: '30px'}}>
-          <UploadImage prop={userData} value="userImage" fn={setUserData} />
-        </RightInfoBox>
-      </InfoBox>
-    </UserProfileBox>
+    <>
+      {user ? (
+        <UserProfileBox>
+          <ProfileHeader
+            userData={userData.username === username ? userData : user}
+          />
+          <InfoBox style={{ backgroundColor: "#F3F4F6" }}>
+            <LeftInfoBox>
+              <ProfileContent>
+                <ChangeInfo>
+                  <InfoText variant="body1">
+                    <strong>Username:</strong> <br /> {user.username}
+                  </InfoText>
+                  <Divider />
+                  <InfoText variant="body1">
+                    <strong>Email:</strong> <br /> {user.email}
+                  </InfoText>
+                  <Divider />
+                  {userData.username === username ? (
+                    <EditField
+                      label="First Name"
+                      value={profileInfo.firstName}
+                      isEditing={editProfile.firstName}
+                      onEdit={() =>
+                        setEditProfile({ ...editProfile, firstName: true })
+                      }
+                      onChange={(e) => {
+                        setProfileInfo({
+                          ...profileInfo,
+                          firstName: e.target.value,
+                        });
+                      }}
+                      onSave={handleFirstNameChange}
+                    />
+                  ) : (
+                    <InfoText variant="body1">
+                      <strong>First Name:</strong> <br /> {user.firstName}
+                    </InfoText>
+                  )}
+                  <Divider />
+                  {userData.username === username ? (
+                    <EditField
+                      label="Last Name"
+                      value={profileInfo.lastName}
+                      isEditing={editProfile.lastName}
+                      onEdit={() =>
+                        setEditProfile({ ...editProfile, lastName: true })
+                      }
+                      onChange={(e) => {
+                        setProfileInfo({
+                          ...profileInfo,
+                          lastName: e.target.value,
+                        });
+                      }}
+                      onSave={handleLastNameChange}
+                    />
+                  ) : (
+                    <InfoText variant="body1">
+                      <strong>Last Name:</strong> <br /> {user.lastName}
+                    </InfoText>
+                  )}
+                  <Divider />
+                  {userData.username === username ? (
+                    <EditField
+                      label="Phone"
+                      value={profileInfo.phone}
+                      isEditing={editProfile.phone}
+                      onEdit={() =>
+                        setEditProfile({ ...editProfile, phone: true })
+                      }
+                      onChange={(e) => {
+                        setProfileInfo({
+                          ...profileInfo,
+                          phone: e.target.value,
+                        });
+                      }}
+                      onSave={handlePhoneChange}
+                    />
+                  ) : (
+                    <InfoText variant="body1">
+                      <strong>Phone:</strong> <br /> {user.phone}
+                    </InfoText>
+                  )}
+                </ChangeInfo>
+              </ProfileContent>
+            </LeftInfoBox>
+            {userData.username === username && (
+              <RightInfoBox style={{ marginTop: "30px" }}>
+                <UploadImage
+                  prop={userData}
+                  value="userImage"
+                  fn={setUserData}
+                />
+              </RightInfoBox>
+            )}
+          </InfoBox>
+        </UserProfileBox>
+      ) : (
+        <Loading />
+      )}
+    </>
   );
 };
 

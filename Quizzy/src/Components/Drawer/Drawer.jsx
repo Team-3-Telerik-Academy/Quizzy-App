@@ -43,6 +43,20 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
       <List>
         {[
           { text: "Home", icon: <Home />, click: () => navigate("/") },
+          ...(userData?.role === "educator"
+            ? [
+                {
+                  text: "Create Quiz",
+                  icon: <Create />,
+                  click: () => navigate("/createQuiz"),
+                },
+                {
+                  text: "My Quizzes",
+                  icon: <QuestionMark />,
+                  click: () => navigate("/myQuizzes"),
+                },
+              ]
+            : []),
           {
             text: "Quizzes",
             icon: <Quiz />,
@@ -58,20 +72,6 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
             icon: <Scoreboard />,
             click: () => navigate("/scoreboard"),
           },
-          ...(userData?.role === "educator"
-            ? [
-                {
-                  text: "Create Quiz",
-                  icon: <Create />,
-                  click: () => navigate("/createQuiz"),
-                },
-                {
-                  text: "My Quizzes",
-                  icon: <QuestionMark />,
-                  click: () => navigate("/myQuizzes"),
-                },
-              ]
-            : []),
           {
             text: "Friends",
             icon: <People />,

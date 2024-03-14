@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   deleteQuiz,
   getQuizById,
-  inviteUser,
-  removeUser,
+  inviteUserToAQuiz,
+  removeUserQuizInvitation,
   updateQuizInfo,
 } from "../../services/quizzes.service";
 import {
@@ -196,7 +196,13 @@ const EditQuiz = () => {
                                 value={user.username}
                                 onChange={(e) => {
                                   e.target.checked &&
-                                    inviteUser(id, user.username, setQuiz);
+                                    inviteUserToAQuiz(
+                                      id,
+                                      quiz.title,
+                                      user.username,
+                                      userData.username,
+                                      setQuiz
+                                    );
                                 }}
                               />
                             }
@@ -225,7 +231,12 @@ const EditQuiz = () => {
                             checked={true}
                             onChange={(e) => {
                               if (!e.target.checked) {
-                                removeUser(id, user, setQuiz);
+                                removeUserQuizInvitation(
+                                  id,
+                                  quiz.title,
+                                  user,
+                                  setQuiz
+                                );
                               }
                             }}
                           />

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Menu,
@@ -18,6 +18,8 @@ import {
   Brightness2 as Brightness2Icon,
   Notifications as NotificationsIcon,
   Email as EmailIcon,
+  Check,
+  Close,
 } from "@mui/icons-material";
 import propTypes from "prop-types";
 import { logoutUser } from "../../services/auth.service";
@@ -31,12 +33,94 @@ import {
   SearchIconWrapper,
   StyledInputBase,
 } from "./loggedInHeaderStyle";
+import {
+  acceptInvitation,
+  declineInvitation,
+} from "../../services/users.service";
+import { getQuizByTitle } from "../../services/quizzes.service";
 
 const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const { userData, setUserData, setUserCredentials } = useContext(AppContext);
   const navigate = useNavigate();
+  const [anchorElNotifications, setAnchorElNotifications] = useState(null);
+  const [notifications, setNotifications] = useState(0);
+
+  useEffect(() => {
+    if (userData) {
+      setNotifications(
+        (userData?.quizInvitations
+          ? Object.keys(userData.quizInvitations).length
+          : 0) +
+          (userData?.groupInvitations
+            ? Object.keys(userData.groupInvitations).length
+            : 0)
+      );
+    }
+  }, []);
+
+  const handleNotificationsOpen = (event) => {
+    if (
+      (userData?.quizInvitations
+        ? Object.keys(userData.quizInvitations).length
+        : 0) +
+        (userData?.groupInvitations
+          ? Object.keys(userData.groupInvitations).length
+          : 0) ===
+      0
+    )
+      return;
+
+    setAnchorElNotifications(event.currentTarget);
+    setNotifications(0);
+  };
+
+  const handleNotificationsClose = () => {
+    setAnchorElNotifications(null);
+  };
+
+  const handleAcceptInvitation = (prop, value) => {
+    //to write for groups
+    if (prop === "quizInvitations") {
+      getQuizByTitle(value)
+        .then((quiz) => {
+          acceptInvitation(
+            userData.username,
+            prop,
+            value,
+            Object.keys(quiz.val())[0],
+            setUserData
+          );
+        })
+        .then(() => {
+          toast.success("You have accepted the invitation successfully!", {
+            position: "bottom-right",
+          });
+        });
+    }
+  };
+
+  const handleDeclineInvitation = (prop, value) => {
+    //to write for groups
+    if (prop === "quizInvitations") {
+      getQuizByTitle(value)
+        .then((quiz) => {
+          declineInvitation(
+            userData.username,
+            prop,
+            value,
+            Object.keys(quiz.val())[0],
+            setUserData
+          );
+        })
+        .then(() => {
+          toast.success("You have declined the invitation!", {
+            position: "bottom-right",
+          });
+        });
+    }
+  };
 
   const onLogout = () => {
     logoutUser().then(() => {
@@ -113,11 +197,54 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
               <EmailIcon />
             </Badge>
           </IconButton>
-          <IconButton size="large" color="inherit">
-            <Badge badgeContent={17} color="secondary">
+          <IconButton
+            size="large"
+            color="inherit"
+            onClick={handleNotificationsOpen}
+          >
+            <Badge badgeContent={notifications} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorElNotifications}
+            keepMounted
+            open={Boolean(anchorElNotifications)}
+            onClose={handleNotificationsClose}
+            style={{ border: "1px solid #ddd" }}
+          >
+            {userData?.quizInvitations &&
+              Object.keys(userData.quizInvitations).map((invitation) => {
+                return (
+                  <MenuItem
+                    key={invitation}
+                    onClick={handleNotificationsClose}
+                    style={{ color: "#333", fontSize: "14px" }}
+                  >
+                    You have been invited from{" "}
+                    {userData.quizInvitations[invitation]} to take the{" "}
+                    {invitation} quiz
+                    <IconButton
+                      onClick={() =>
+                        handleAcceptInvitation("quizInvitations", invitation)
+                      }
+                      style={{ color: "green", marginLeft: "10px" }}
+                    >
+                      <Check />
+                    </IconButton>
+                    <IconButton
+                      onClick={() =>
+                        handleDeclineInvitation("quizInvitations", invitation)
+                      }
+                      style={{ color: "red", marginLeft: "10px" }}
+                    >
+                      <Close />
+                    </IconButton>
+                  </MenuItem>
+                );
+              })}
+          </Menu>
           <IconButton
             size="large"
             edge="end"
@@ -159,7 +286,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
         <MenuItem
           onClick={() => {
             handleMenuClose();
-            navigate("/profile");
+            navigate(`/profile/${userData.username}`);
           }}
         >
           Profile

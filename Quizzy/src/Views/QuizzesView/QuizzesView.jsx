@@ -65,7 +65,8 @@ const QuizzesView = () => {
         >
           <h1
             style={{
-              color: "rgb(3,165,251)",
+              color: "#394E6A",
+              fontFamily: "Fantasy",
               fontWeight: "bold",
               fontSize: "2em",
             }}

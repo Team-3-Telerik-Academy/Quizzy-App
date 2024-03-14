@@ -21,13 +21,34 @@ import { useNavigate } from "react-router-dom/dist";
 const AdminHome = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
-  const [blockedUsers, setBlockedUsers] = useState([] || 0);
+  const [educators, setEducators] = useState([]);
   const [privateQuizzes, setPrivateQuizzes] = useState([]);
   const [publicQuizzes, setPublicQuizzes] = useState([]);
   const { userData } = useContext(AppContext);
+  const [blockedUsers, setBlockedUsers] = useState([]);
 
   useEffect(() => {
     getAllUsers().then((users) => setUsers(users));
+  }, []);
+
+  useEffect(() => {
+    getAllUsers()
+      .then((users) => {
+        return users.filter((user) => {
+          return user.isBlocked === true;
+        });
+      })
+      .then((blockedUsers) => setBlockedUsers(blockedUsers));
+  }, []);
+
+  useEffect(() => {
+    getAllUsers()
+      .then((users) => {
+        return users.filter((user) => {
+          return user.role === "educator";
+        });
+      })
+      .then((educators) => setEducators(educators));
   }, []);
 
   return (
@@ -50,7 +71,11 @@ const AdminHome = () => {
           color: "#394E6A",
         }}
       >
-        Hello, <span style={{color:'rgb(3,165,251)'}}>{userData?.firstName + " " + userData?.lastName}</span>
+        Hello,&nbsp;
+        <span style={{ color: "rgb(3,165,251)" }}>
+          {userData?.firstName.charAt(0).toUpperCase() +
+            userData?.firstName.slice(1).toLowerCase()}
+        </span>
       </Typography>
       <Box
         sx={{
@@ -71,14 +96,14 @@ const AdminHome = () => {
             transition: "transform 0.2s",
             cursor: "pointer",
           }}
+          onClick={() => {
+            navigate("/adminUsers");
+          }}
           onMouseOver={(e) => {
             e.currentTarget.style.transform = "scale(1.05)";
           }}
           onMouseOut={(e) => {
             e.currentTarget.style.transform = "scale(1)";
-          }}
-          onClick={() => {
-            navigate("/adminUsers");
           }}
         >
           <Box
@@ -98,7 +123,7 @@ const AdminHome = () => {
                 marginTop: "5px",
               }}
             >
-              {users.length}
+              {users?.length}
             </span>
             <span
               style={{
@@ -120,6 +145,7 @@ const AdminHome = () => {
             transition: "transform 0.2s",
             cursor: "pointer",
           }}
+          onClick={() => navigate("/blockedUsers")}
           onMouseOver={(e) => {
             e.currentTarget.style.transform = "scale(1.05)";
           }}
@@ -264,6 +290,7 @@ const AdminHome = () => {
             transition: "transform 0.2s",
             cursor: "pointer",
           }}
+          onClick={() => navigate("/adminEducators")}
           onMouseOver={(e) => {
             e.currentTarget.style.transform = "scale(1.05)";
           }}
@@ -292,7 +319,7 @@ const AdminHome = () => {
                 marginTop: "5px",
               }}
             >
-              {users.length}
+              {educators.length}
             </span>
             <span
               style={{

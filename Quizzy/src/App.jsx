@@ -30,6 +30,8 @@ import AdminHome from "./Views/AdminHome/AdminHome";
 import AdminUsers from "./Views/AdminUsers/AdminUsers";
 import TakenQuizzes from "./Views/TakenQuizzes/TakenQuizzes";
 import QuizResult from "./Components/QuizResult/QuizResult";
+import BlockedUsers from "./Views/BlockedUsers/BlockedUsers";
+import AdminEducators from "./Views/AdminEducators/AdminEducators";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -137,6 +139,24 @@ function App() {
             element={
               <AdminMain>
                 <AdminUsers />
+              </AdminMain>
+            }
+          />
+
+          <Route
+            path="/blockedUsers"
+            element={
+              <AdminMain>
+                <BlockedUsers />
+              </AdminMain>
+            }
+          />
+
+          <Route
+            path="/adminEducators"
+            element={
+              <AdminMain>
+                <AdminEducators />
               </AdminMain>
             }
           />

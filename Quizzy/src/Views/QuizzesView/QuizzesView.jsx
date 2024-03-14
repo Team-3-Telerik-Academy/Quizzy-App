@@ -48,7 +48,7 @@ const QuizzesView = () => {
 
   return (
     <>
-      <div
+      <div 
         style={{
           backgroundColor: "#F3F4F6",
           height: "90.9vh",

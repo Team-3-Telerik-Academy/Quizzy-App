@@ -1,28 +1,31 @@
 import { useState, useEffect } from "react";
 import { getAllUsers } from "../../services/users.service";
 import { Box, Button, Typography } from "@mui/material";
-import { handleAdmin, handleBlock } from "../../services/users.service";
 import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
+import { unblockUser } from "../../services/users.service";
 
-const AdminUsers = () => {
+const BlockedUsers = () => {
   const [users, setUsers] = useState([]);
 
   const { userData } = useContext(AppContext);
 
+  const handleUnblock = async (username, fn, user) => {
+    const result = await unblockUser(username, fn, user);
+    return result;
+  };
+
+  
+
   useEffect(() => {
-    getAllUsers().then((users) => setUsers(users));
+    getAllUsers()
+      .then((users) => {
+        return users.filter((user) => {
+          return user.isBlocked === true;
+        });
+      })
+      .then((blockedUsers) => setUsers(blockedUsers));
   }, []);
-
-  const handleAdminStatus = async (username, fn, user) => {
-    const changeAdminStatus = await handleAdmin(username, fn, user);
-    return changeAdminStatus;
-  };
-
-  const handleBlockStatus = async (username, fn, user) => {
-    const changeBlockStatus = await handleBlock(username, fn, user);
-    return changeBlockStatus;
-  };
 
   return (
     <Box
@@ -45,11 +48,30 @@ const AdminUsers = () => {
           color: "#394E6A",
         }}
       >
-        All the users we have in our App,&nbsp;
-        <span style={{ color: "rgb(3,165,251)" }}>
-          {userData.firstName.charAt(0).toUpperCase() +
-            userData.firstName.slice(1).toLowerCase()}
-        </span>
+        {users?.length === 0 && (
+          <span style={{ textAlign: "center" }}>
+            The Quizzy app still does not have users <br></br> with bad
+            attitude,{" "}
+            {
+              <span style={{ color: "rgb(3,165,251)" }}>
+                {userData.firstName.charAt(0).toUpperCase() +
+                  userData.firstName.slice(1).toLowerCase()}
+              </span>
+            }
+          </span>
+        )}
+        {users?.length > 0 && (
+          <span>
+            {" "}
+            All the users with bad attitude,{" "}
+            {
+              <span style={{ color: "rgb(3,165,251)" }}>
+                {userData.firstName.charAt(0).toUpperCase() +
+                  userData.firstName.slice(1).toLowerCase()}
+              </span>
+            }
+          </span>
+        )}
       </Typography>
       <Box
         sx={{
@@ -121,34 +143,15 @@ const AdminUsers = () => {
                     variant="contained"
                     sx={{
                       width: "107px",
-                      height: "auto",
-                      fontSize: "10px",
-                      marginBottom: "5px",
-                      marginLeft: "15px",
-                      backgroundColor: "rgb(3,165,251)",
-                      color: "white",
-                    }}
-                    onClick={() =>
-                      handleAdminStatus(user.username, setUsers, user)
-                    }
-                  >
-                    {user.isAdmin ? "Admin" : "Not Admin"}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: "107px",
                       height: "autopx",
                       fontSize: "10px",
                       marginLeft: "15px",
                       backgroundColor: "rgb(3,165,251)",
                       color: "white",
                     }}
-                    onClick={() =>
-                      handleBlockStatus(user.username, setUsers, user)
-                    }
+                    onClick={() => handleUnblock(user.username, setUsers, user)}
                   >
-                    {user.isBlocked ? "Blocked" : "Not Blocked"}
+                    Unblock
                   </Button>
                 </Box>
               </Box>
@@ -160,4 +163,4 @@ const AdminUsers = () => {
   );
 };
 
-export default AdminUsers;
+export default BlockedUsers;

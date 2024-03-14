@@ -74,31 +74,26 @@ export const handleAdmin = async (username, fn, user) => {
   return fn(allUsers);
 };
 
-export const getBlockedUsers = async () => {
-  const snapshot = await get(ref(db, "blockedUsers"));
-  const arrayOfAllUsers = Object.keys(snapshot.val()).map(
-    (el) => snapshot.val()[el]
-  );
+export const handleBlock = async (username, fn, user) => {
+  const { isAdmin } = user;
+  if (isAdmin) {
+    return null;
+  }
 
-  return arrayOfAllUsers;
+  await update(ref(db, `users/${username}`), { isBlocked: !user.isBlocked });
+  const allUsers = Object.values(await getAllUsers());
+  return fn(allUsers);
 };
 
-export const createBlockedUsers = async (
-  username,
-  firstName,
-  lastName,
-  uid,
-  role,
-  image
-) => {
-  return set(ref(db, `blockedUsers/${username}`), {
-    username,
-    firstName,
-    lastName,
-    uid,
-    role,
-    image,
-  });
+export const unblockUser = async (username, fn, user) => {
+  await update(ref(db, `users/${username}`), { isBlocked: !user.isBlocked });
+  getAllUsers()
+    .then((users) => {
+      return users.filter((user) => {
+        return user.isBlocked === true;
+      });
+    })
+    .then((blockedUsers) => fn(blockedUsers));
 };
 
 export const updateUserInfo = async (username, prop, value, fn) => {

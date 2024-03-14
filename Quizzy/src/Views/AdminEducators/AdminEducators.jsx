@@ -1,28 +1,22 @@
 import { useState, useEffect } from "react";
 import { getAllUsers } from "../../services/users.service";
 import { Box, Button, Typography } from "@mui/material";
-import { handleAdmin, handleBlock } from "../../services/users.service";
 import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 
-const AdminUsers = () => {
+const AdminEducators = () => {
   const [users, setUsers] = useState([]);
-
   const { userData } = useContext(AppContext);
 
   useEffect(() => {
-    getAllUsers().then((users) => setUsers(users));
+    getAllUsers()
+      .then((users) => {
+        return users.filter((user) => {
+          return user.role === "educator";
+        });
+      })
+      .then((educators) => setUsers(educators));
   }, []);
-
-  const handleAdminStatus = async (username, fn, user) => {
-    const changeAdminStatus = await handleAdmin(username, fn, user);
-    return changeAdminStatus;
-  };
-
-  const handleBlockStatus = async (username, fn, user) => {
-    const changeBlockStatus = await handleBlock(username, fn, user);
-    return changeBlockStatus;
-  };
 
   return (
     <Box
@@ -45,10 +39,16 @@ const AdminUsers = () => {
           color: "#394E6A",
         }}
       >
-        All the users we have in our App,&nbsp;
-        <span style={{ color: "rgb(3,165,251)" }}>
-          {userData.firstName.charAt(0).toUpperCase() +
-            userData.firstName.slice(1).toLowerCase()}
+        <span>
+          {" "}
+          All the <span style={{ color: "rgb(3,165,251)" }}>Educators</span> in
+          our system,{" "}
+          {
+            <span style={{ color: "rgb(3,165,251)" }}>
+              {userData.firstName.charAt(0).toUpperCase() +
+                userData.firstName.slice(1).toLowerCase()}
+            </span>
+          }
         </span>
       </Typography>
       <Box
@@ -107,7 +107,9 @@ const AdminUsers = () => {
                     {user.firstName}
                   </span>
                   <span>{user.lastName}</span>
-                  <span>Role: {user.role}</span>
+                  <span style={{ color: "rgb(3,165,251)" }}>
+                    {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                  </span>
                 </Box>
                 <Box
                   sx={{
@@ -121,34 +123,15 @@ const AdminUsers = () => {
                     variant="contained"
                     sx={{
                       width: "107px",
-                      height: "auto",
-                      fontSize: "10px",
-                      marginBottom: "5px",
-                      marginLeft: "15px",
-                      backgroundColor: "rgb(3,165,251)",
-                      color: "white",
-                    }}
-                    onClick={() =>
-                      handleAdminStatus(user.username, setUsers, user)
-                    }
-                  >
-                    {user.isAdmin ? "Admin" : "Not Admin"}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: "107px",
                       height: "autopx",
                       fontSize: "10px",
                       marginLeft: "15px",
                       backgroundColor: "rgb(3,165,251)",
                       color: "white",
                     }}
-                    onClick={() =>
-                      handleBlockStatus(user.username, setUsers, user)
-                    }
+                    
                   >
-                    {user.isBlocked ? "Blocked" : "Not Blocked"}
+                    View Profile
                   </Button>
                 </Box>
               </Box>
@@ -160,4 +143,4 @@ const AdminUsers = () => {
   );
 };
 
-export default AdminUsers;
+export default AdminEducators;

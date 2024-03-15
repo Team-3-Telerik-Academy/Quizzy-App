@@ -48,7 +48,7 @@ const CreateSuccessView = () => {
           variant="contained"
           color="secondary"
           onClick={() =>
-            navigate(value === "Quiz" ? "/myQuizzes" : "/myGroups")
+            navigate(value === "Quiz" ? "/myQuizzes" : "/educatorGroups")
           }
         >
           View All {value === "Quiz" ? "My Quizzes" : "My Groups"}

@@ -22,7 +22,7 @@ import {
 import { styled } from "@mui/system";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import { getAllUsers } from "../../services/users.service";
+import { getAllEducators } from "../../services/users.service";
 import QuizImage from "../../Components/CreateImage/CreateImage";
 import { addGroup, getGroupByTitle } from "../../services/groups.services";
 
@@ -58,7 +58,7 @@ const CreateGroup = () => {
   });
 
   useEffect(() => {
-    getAllUsers().then(setUsers);
+    getAllEducators().then(setUsers);
   }, []);
 
   const updateGroup = (prop) => (e) => {
@@ -171,7 +171,7 @@ const CreateGroup = () => {
               >
                 <ThemeProvider theme={theme}>
                   <FormLabel component="legend" style={{ marginRight: "15px" }}>
-                    Invite Users:
+                    Invite Educators:
                   </FormLabel>
                   {users?.map((user) => (
                     <>
@@ -201,27 +201,21 @@ const CreateGroup = () => {
                 </ThemeProvider>
               </Box>
             </FormControl>
+            <Box display="flex" justifyContent="flex-end" marginTop={2}>
+              <Button
+                variant="contained"
+                onClick={handleAddGroup}
+                sx={{
+                  fontSize: "20px",
+                  padding: "10px",
+                  backgroundColor: "rgb(3, 165, 251)",
+                }}
+              >
+                Create Group
+              </Button>
+            </Box>
           </Paper>
         </Container>
-        <Box
-          width="79%"
-          display="flex"
-          justifyContent="flex-end"
-          marginTop={2}
-          gap="5.8vw"
-        >
-          <Button
-            variant="contained"
-            onClick={handleAddGroup}
-            sx={{
-              fontSize: "20px",
-              padding: "10px",
-              backgroundColor: "rgb(3, 165, 251)",
-            }}
-          >
-            Create Group
-          </Button>
-        </Box>
       </div>
     </>
   );

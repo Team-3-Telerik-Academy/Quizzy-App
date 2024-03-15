@@ -52,7 +52,30 @@ const ProfileHeader = ({ userData }) => {
           textAlign: "center",
         }}
       >
+        <Typography
+            variant="body1"
+            style={{
+              fontWeight: "bold",
+              borderRight: "2px solid rgba(0, 0, 0, 0.25)",
+              paddingRight: "20px",
+            }}
+          >
+            Role: <br />
+            {userData?.role.charAt(0).toUpperCase() + userData?.role.slice(1)}
+          </Typography>
         {userData?.role === "educator" && (
+          <>
+          <Typography
+            variant="body1"
+            style={{
+              fontWeight: "bold",
+              borderRight: "2px solid rgba(0, 0, 0, 0.25)",
+              paddingRight: "20px",
+            }}
+          >
+            Groups: <br />
+            {userData?.groups || 0}
+          </Typography>
           <Typography
             variant="body1"
             style={{
@@ -64,6 +87,7 @@ const ProfileHeader = ({ userData }) => {
             Created quizzes: <br />
             {userData?.createdQuizzes}
           </Typography>
+          </>
         )}
         <Typography
           variant="body1"

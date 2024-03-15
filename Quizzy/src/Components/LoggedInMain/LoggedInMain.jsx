@@ -24,11 +24,15 @@ const LoggedInMain = ({ children }) => {
       {!userData?.image ? (
         <Loading />
       ) : (
-        <Box sx={{ display: "flex"}}>
+        <Box sx={{ display: "flex" }}>
           <CssBaseline />
           <LoggedInHeader open={open} handleDrawerOpen={handleDrawerOpen} />
           <DrawerComponent open={open} handleDrawerClose={handleDrawerClose} />
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }} style={{padding: '0', marginTop: '15px'}}>
+          <Box
+            component="main"
+            sx={{ flexGrow: 1, p: 3 }}
+            style={{ padding: "0", marginTop: "14px" }}
+          >
             <br />
             {children}
           </Box>

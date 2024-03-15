@@ -77,7 +77,7 @@ const Scoreboard = () => {
               style={{
                 width: "30%",
                 border: "2px solid rgb(3, 165, 251)",
-                marginTop: "40px",
+                marginTop: "55px",
               }}
             >
               <Table>
@@ -87,7 +87,9 @@ const Scoreboard = () => {
                       key={user.uid}
                       style={{
                         backgroundColor:
-                          index === 0 ? "rgba(144, 238, 144, 1)" : "inherit",
+                          (page - 1) * number + (index + 1) === 1
+                            ? "rgba(144, 238, 144, 1)"
+                            : "inherit",
                       }}
                     >
                       <TableCell

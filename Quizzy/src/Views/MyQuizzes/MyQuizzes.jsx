@@ -20,6 +20,7 @@ const StyledButton = styled(Button)({
 });
 
 const MyQuizzes = () => {
+  const [updateQuizzes, setUpdateQuizzes] = useState(false);
   const [ongoingQuizzes, setOngoingQuizzes] = useState(null);
   const [finishedQuizzes, setFinishedQuizzes] = useState(null);
   const [page, setPage] = useState(1);
@@ -40,7 +41,7 @@ const MyQuizzes = () => {
         })
         .then(() => setLoading(false));
     }
-  }, [userData]);
+  }, [userData, updateQuizzes]);
 
   return (
     <>
@@ -105,7 +106,7 @@ const MyQuizzes = () => {
               ) : (
                 page === 1 &&
                 ongoingQuizzes.length > 0 && (
-                  <QuizCarousel quizzes={ongoingQuizzes} value="author" />
+                  <QuizCarousel quizzes={ongoingQuizzes} value="author" fn={setUpdateQuizzes} />
                 )
               )}
               {page === 2 && finishedQuizzes.length === 0 ? (

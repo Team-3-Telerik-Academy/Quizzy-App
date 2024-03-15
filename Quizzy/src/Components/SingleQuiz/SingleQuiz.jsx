@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { updateQuizInfo } from "../../services/quizzes.service";
 
-const SingleQuiz = ({ quiz, value }) => {
+const SingleQuiz = ({ quiz, value, fn }) => {
   const navigate = useNavigate();
   const [countdownTime, setCountdownTime] = useState(
     quiz.status === "Ongoing" ? new Date(quiz.ongoingTill) - new Date() : 0
@@ -21,7 +21,9 @@ const SingleQuiz = ({ quiz, value }) => {
         setCountdownTime(time - 1000);
       } else {
         quiz.status = "Finished";
-        updateQuizInfo(quiz.id, "status", "Finished");
+        updateQuizInfo(quiz.id, "status", "Finished").then(() => {
+          fn(prev => !prev);
+        });
       }
     }, 1000);
 
@@ -49,7 +51,6 @@ const SingleQuiz = ({ quiz, value }) => {
       style={{
         height: "450px",
         width: "330px",
-        // borderRadius: "20px",
         overflow: "hidden",
         boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.2)",
         display: "flex",
@@ -61,15 +62,42 @@ const SingleQuiz = ({ quiz, value }) => {
         alt={quiz.title}
         style={{ width: "100%", height: "230px" }}
       />
-      <img
-        src={quiz.type === "public" ? unlocked : locked}
+      <div
         style={{
-          width: "20px",
-          height: "20px",
-          marginLeft: "15px",
-          marginTop: "15px",
+          display: "flex",
+          justifyContent: "space-between",
+          marginLeft: "5px",
+          height: '30px'
         }}
-      />
+      >
+        <img
+          src={quiz.type === "public" ? unlocked : locked}
+          style={{
+            width: "20px",
+            height: "20px",
+            marginLeft: "10px",
+            marginTop: "15px",
+          }}
+        />
+        {quiz.status === "Finished" && quiz.type === 'private' && (
+          <Button
+            variant="contained"
+            onClick={() => navigate(`/quizStatistics/${quiz.id}`)}
+            style={{
+              backgroundColor: "rgb(3, 165, 251)",
+              textTransform: "none",
+              borderRadius: "20px",
+              width: "100px",
+              height: "35px",
+              fontWeight: "500",
+              marginRight: "10px",
+              marginTop: "10px",
+            }}
+          >
+            Statistics
+          </Button>
+        )}
+      </div>
       <span
         style={{
           width: "100%",
@@ -107,7 +135,6 @@ const SingleQuiz = ({ quiz, value }) => {
           style={{
             width: "100%",
             marginLeft: "15px",
-            marginTop: "5px",
             marginBottom: "7px",
             flexGrow: "1",
           }}
@@ -186,6 +213,7 @@ const SingleQuiz = ({ quiz, value }) => {
 SingleQuiz.propTypes = {
   quiz: PropTypes.object.isRequired,
   value: PropTypes.string,
+  fn: PropTypes.func,
 };
 
 export default SingleQuiz;

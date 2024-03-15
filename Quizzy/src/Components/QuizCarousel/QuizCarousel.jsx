@@ -6,19 +6,19 @@ import { EffectCoverflow, Pagination } from "swiper/modules";
 import SingleQuiz from "../SingleQuiz/SingleQuiz";
 import PropTypes from "prop-types";
 
-const QuizCarousel = ({ quizzes, value }) => {
+const QuizCarousel = ({ quizzes, value, fn }) => {
   return (
     <>
       <style>
         {`
           .mySwiper .swiper-pagination-bullets {
-            bottom: 10vh !important;
+            bottom: 6vh !important;
           }
         `}
       </style>
       <Swiper
         style={{
-          height: "85vh",
+          height: "80vh",
           width: "94.6vw",
           paddingTop: "30px",
           margin: "0",
@@ -48,7 +48,7 @@ const QuizCarousel = ({ quizzes, value }) => {
               height: "450px",
             }}
           >
-            <SingleQuiz quiz={quiz} value={value} />
+            <SingleQuiz quiz={quiz} value={value} fn={fn} />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -59,6 +59,7 @@ const QuizCarousel = ({ quizzes, value }) => {
 QuizCarousel.propTypes = {
   quizzes: PropTypes.array.isRequired,
   value: PropTypes.string,
+  fn: PropTypes.func,
 };
 
 export default QuizCarousel;

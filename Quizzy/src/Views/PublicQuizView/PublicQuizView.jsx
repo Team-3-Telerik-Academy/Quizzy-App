@@ -70,6 +70,7 @@ const PublicQuizView = () => {
             timeTaken,
             answers,
             takenOn: new Date().toString(),
+            type: quiz.type,
           })
         )
         .then(() =>

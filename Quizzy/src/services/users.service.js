@@ -20,6 +20,21 @@ export const getAllUsers = async () => {
   return arrayOfAllUsers;
 };
 
+export const getAllEducators = async () => {
+  try {
+    const snapshot = await get(
+      query(ref(db, `users`), orderByChild("role"), equalTo("educator"))
+    );
+    const arrayOfAllUsers = Object.keys(snapshot.val()).map(
+      (el) => snapshot.val()[el]
+    );
+  
+    return arrayOfAllUsers;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const getAllUsersSortedByScore = async () => {
   const snapshot = await get(query(ref(db, "users"), orderByChild('totalPoints')));
   const users = [];
@@ -63,6 +78,7 @@ export const createUserUsername = (
     isBlocked: false,
     quizInvitations: {},
     groupInvitations: {},
+    groups: 0,
   });
 };
 
@@ -131,12 +147,18 @@ export const acceptInvitation = async (username, prop, value, id, fn) => {
   } else if (prop === "groupInvitations") {
     const groupRef = ref(db, `groups/${id}`);
     const invitedUsersRef = child(groupRef, "invitedUsers");
-    const membersRef = child(groupRef, "members");
     await update(invitedUsersRef, {
       [username]: 'accepted',
     });
+
+    const membersRef = child(groupRef, "members");
     await update(membersRef, {
       [username]: "member",
+    });
+
+    const numberOfGroups = await get(ref(db, `users/${username}/groups`));
+    await update(ref(db, `users/${username}`), {
+      groups: numberOfGroups.val() + 1,
     });
   }
 

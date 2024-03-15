@@ -67,7 +67,7 @@ export const addGroup = async (
       title,
       image:
         image ||
-        "https://firebasestorage.googleapis.com/v0/b/quizzy-application-f0713.appspot.com/o/quiz-main-pic.png?alt=media&token=c1fa864d-d5c8-4d63-a759-d06f32413f9d",
+        "https://firebasestorage.googleapis.com/v0/b/quizzy-application-f0713.appspot.com/o/group-default-image.png?alt=media&token=c1fa864d-d5c8-4d63-a759-d06f32413f9d",
       description,
       createdBy: username,
       createdOn: new Date().toString(),
@@ -81,9 +81,9 @@ export const addGroup = async (
       inviteUserToAGroup(result.key, title, user, username, () => {})
     );
 
-    const createdGroups = await get(ref(db, `users/${username}/createdGroups`));
+    const numberOfGroups = await get(ref(db, `users/${username}/groups`));
     await update(ref(db, `users/${username}`), {
-      createdGroups: createdGroups.val() + 1,
+      groups: numberOfGroups.val() + 1,
     });
     return getGroupById(result.key);
   } catch (error) {

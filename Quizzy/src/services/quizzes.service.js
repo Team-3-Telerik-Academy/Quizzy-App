@@ -72,6 +72,7 @@ export const getAllPublicQuizzes = async () => {
     const result = await get(
       query(ref(db, `quizzes`), orderByChild("type"), equalTo("public"))
     );
+    if (!result.exists()) return [];
     return fromQuizzesDocument(result);
   } catch (error) {
     console.error(error);
@@ -83,6 +84,7 @@ export const getAllPrivateQuizzes = async () => {
     const result = await get(
       query(ref(db, `quizzes`), orderByChild("type"), equalTo("private"))
     );
+    if (!result.exists()) return [];
     return fromQuizzesDocument(result);
   } catch (error) {
     console.error(error);
@@ -214,7 +216,24 @@ export const updateQuizInfo = async (id, prop, value, callback) => {
 
 export const addQuestionToAQuiz = async (quizId, question, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
+  const totalPoints = await get(child(quizRef, "totalPoints"));
+  await update(quizRef, {
+    totalPoints: Number(totalPoints.val()) + Number(question.points),
+  });
   push(ref(db, `quizzes/${quizId}/questions`), question).then(() => {
+    onValue(quizRef, (snapshot) => {
+      callback({ ...snapshot.val(), id: quizId });
+    });
+  });
+};
+
+export const removeQuestionFromAQuiz = async (quizId, question, callback) => {
+  const quizRef = ref(db, `quizzes/${quizId}`);
+  const totalPoints = await get(child(quizRef, "totalPoints"));
+  await update(quizRef, {
+    totalPoints: Number(totalPoints.val()) - Number(question.points),
+  });
+  remove(ref(db, `quizzes/${quizId}/questions/${question.id}`)).then(() => {
     onValue(quizRef, (snapshot) => {
       callback({ ...snapshot.val(), id: quizId });
     });
@@ -255,5 +274,38 @@ export const removeUserQuizInvitation = async (quizId, quizTitle, username, call
 
   onValue(quizRef, (snapshot) => {
     callback({ ...snapshot.val(), id: quizId });
+  });
+};
+
+export const addCommentToATakenQuiz = async (username, quizId, comment, callback) => {
+  const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
+  const commentsRef = child(takenQuizRef, 'comments');
+
+  await push(commentsRef, comment);
+
+  onValue(takenQuizRef, (snapshot) => {
+    callback({ ...snapshot.val(), id: quizId, participant: username });
+  });
+};
+
+export const removeCommentToATakenQuiz = async (username, quizId, commentId, callback) => {
+  const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
+  const commentsRef = child(takenQuizRef, `comments/${commentId}`);
+
+  await remove(commentsRef);
+
+  onValue(takenQuizRef, (snapshot) => {
+    callback({ ...snapshot.val(), id: quizId, participant: username });
+  });
+};
+
+export const editCommentToATakenQuiz = async (username, quizId, commentId, newComment, callback) => {
+  const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
+  const commentsRef = child(takenQuizRef, `comments/`);
+
+  await update(commentsRef, { [commentId]: newComment }); 
+
+  onValue(takenQuizRef, (snapshot) => {
+    callback({ ...snapshot.val(), id: quizId, participant: username });
   });
 };

@@ -5,6 +5,7 @@ import {
   deleteQuiz,
   getQuizById,
   inviteUserToAQuiz,
+  removeQuestionFromAQuiz,
   removeUserQuizInvitation,
   updateQuizInfo,
 } from "../../services/quizzes.service";
@@ -165,8 +166,10 @@ const EditQuiz = () => {
     setQuestionsPage(value);
   };
 
-  const removeQuestion = (id) => {
-    updateQuizInfo(quiz.id, `questions/${id}`, null, setQuiz);
+  const removeQuestion = (question) => {
+    removeQuestionFromAQuiz(quiz.id, question, setQuiz).then(() => {
+      setQuestionsPage(1);
+    });
   };
 
   const addQuestion = (question) => {
@@ -228,7 +231,7 @@ const EditQuiz = () => {
                 }}
                 onSave={() => {
                   if (validateData("title")) {
-                    updateQuizInfo(id, "title", quizInfo.title, setQuizInfo);
+                    updateQuizInfo(id, "title", quizInfo.title, setQuiz);
                     setEditQuiz({ ...editQuiz, title: false });
                   }
                 }}
@@ -369,7 +372,7 @@ const EditQuiz = () => {
                         : quiz.difficulty === "medium"
                         ? "hard"
                         : "easy",
-                      setQuizInfo
+                        setQuiz
                     );
                   }}
                 >
@@ -421,7 +424,7 @@ const EditQuiz = () => {
                                   0
                                 )
                               ).toString(),
-                              setQuizInfo
+                              setQuiz
                             );
                             setEditQuiz({ ...editQuiz, ongoingTill: false });
                           }
@@ -476,7 +479,7 @@ const EditQuiz = () => {
                       id,
                       "timer",
                       quizInfo.timer || "0",
-                      setQuizInfo
+                      setQuiz
                     );
                     setEditQuiz({ ...editQuiz, timer: false });
                   }
@@ -517,7 +520,7 @@ const EditQuiz = () => {
                     question={[...questions].reverse()[questionsPage - 1]}
                     removeQuestion={() =>
                       removeQuestion(
-                        [...questions].reverse()[questionsPage - 1].id
+                        [...questions].reverse()[questionsPage - 1]
                       )
                     }
                   />

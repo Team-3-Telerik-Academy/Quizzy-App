@@ -1,5 +1,8 @@
 import { useContext, useEffect, useState } from "react";
-import { getAllPublicQuizzes } from "../../services/quizzes.service";
+import {
+  getAllPrivateQuizzes,
+  getAllPublicQuizzes,
+} from "../../services/quizzes.service";
 import AppContext from "../../Context/AppContext";
 import { styled } from "@mui/system";
 import { Button, Typography } from "@mui/material";
@@ -18,26 +21,65 @@ const StyledButton = styled(Button)({
 });
 
 const QuizzesView = () => {
+  const [updateQuizzes, setUpdateQuizzes] = useState(false);
   const [quizzes, setQuizzes] = useState(null);
   const [ongoingQuizzes, setOngoingQuizzes] = useState(null);
   const [finishedQuizzes, setFinishedQuizzes] = useState(null);
+  const [invitationalQuizzes, setInvitationalQuizzes] = useState(null);
   const [page, setPage] = useState(1);
   const { userData } = useContext(AppContext);
 
   useEffect(() => {
     if (userData) {
-      getAllPublicQuizzes().then((result) => {
-        if (userData.takenQuizzes) {
-          const takenQuizzes = Object.keys(userData.takenQuizzes).map(
-            (takenQuizId) => userData.takenQuizzes[takenQuizId].id
-          );
-          setQuizzes(result.filter((quiz) => !takenQuizzes.includes(quiz.id)));
-        } else {
-          setQuizzes(result);
-        }
-      });
+      getAllPublicQuizzes()
+        .then((result) => {
+          if (userData.takenQuizzes) {
+            const takenQuizzes = Object.keys(userData.takenQuizzes).map(
+              (takenQuizId) => userData.takenQuizzes[takenQuizId].id
+            );
+            setQuizzes(
+              result.filter((quiz) => !takenQuizzes.includes(quiz.id))
+            );
+          } else {
+            setQuizzes(result);
+          }
+        })
+        .then(() =>
+          getAllPrivateQuizzes().then((result) => {
+            if (userData.takenQuizzes) {
+              const takenQuizzes = Object.keys(userData.takenQuizzes).map(
+                (takenQuizId) => userData.takenQuizzes[takenQuizId].id
+              );
+              const allInvitationalQuizzes = result.filter((quiz) =>
+                Object.keys(quiz.invitedUsers).includes(userData.username)
+              );
+              const acceptedQuizzes = allInvitationalQuizzes.filter(
+                (quiz) => quiz.invitedUsers[userData.username] === "accepted"
+              );
+              const acceptedOngoingQuizzes = acceptedQuizzes.filter(
+                (quiz) => quiz.status === "Ongoing"
+              );
+              setInvitationalQuizzes(
+                acceptedOngoingQuizzes.filter(
+                  (quiz) => !takenQuizzes.includes(quiz.id)
+                )
+              );
+            } else {
+              const allInvitationalQuizzes = result.filter((quiz) =>
+                Object.keys(quiz.invitedUsers).includes(userData.username)
+              );
+              const acceptedQuizzes = allInvitationalQuizzes.filter(
+                (quiz) => quiz.invitedUsers[userData.username] === "accepted"
+              );
+              const acceptedOngoingQuizzes = acceptedQuizzes.filter(
+                (quiz) => quiz.status === "Ongoing"
+              );
+              setInvitationalQuizzes(acceptedOngoingQuizzes);
+            }
+          })
+        );
     }
-  }, [userData]);
+  }, [userData, updateQuizzes]);
 
   useEffect(() => {
     if (quizzes) {
@@ -48,7 +90,7 @@ const QuizzesView = () => {
 
   return (
     <>
-      <div 
+      <div
         style={{
           backgroundColor: "#F3F4F6",
           height: "90.9vh",
@@ -74,8 +116,9 @@ const QuizzesView = () => {
             Challenge Yourself: Take a Quiz Today
           </Typography>
         </div>
-        {(ongoingQuizzes !== null || finishedQuizzes !== null) &&
-        (ongoingQuizzes?.length > 0 || finishedQuizzes.length > 0) ? (
+        {ongoingQuizzes?.length > 0 ||
+        finishedQuizzes?.length > 0 ||
+        invitationalQuizzes?.length > 0 ? (
           <>
             <div
               style={{
@@ -90,6 +133,9 @@ const QuizzesView = () => {
               </StyledButton>
               <StyledButton onClick={() => setPage(2)}>
                 Finished Quizzes
+              </StyledButton>
+              <StyledButton onClick={() => setPage(3)}>
+                Invitational Quizzes
               </StyledButton>
             </div>
             {page === 1 && ongoingQuizzes.length === 0 ? (
@@ -107,7 +153,7 @@ const QuizzesView = () => {
             ) : (
               page === 1 &&
               ongoingQuizzes.length > 0 && (
-                <QuizCarousel quizzes={ongoingQuizzes} />
+                <QuizCarousel quizzes={ongoingQuizzes} fn={setUpdateQuizzes}/>
               )
             )}
             {page === 2 && finishedQuizzes.length === 0 ? (
@@ -126,6 +172,24 @@ const QuizzesView = () => {
               page === 2 &&
               finishedQuizzes.length > 0 && (
                 <QuizCarousel quizzes={finishedQuizzes} />
+              )
+            )}
+            {page === 3 && invitationalQuizzes.length === 0 ? (
+              <h2
+                style={{
+                  alignItems: "center",
+                  fontSize: "27px",
+                  display: "flex",
+                  justifyContent: "center",
+                  height: "55%",
+                }}
+              >
+                You haven&apos;t been invited to any quizzes yet!
+              </h2>
+            ) : (
+              page === 3 &&
+              invitationalQuizzes.length > 0 && (
+                <QuizCarousel quizzes={invitationalQuizzes} />
               )
             )}
           </>

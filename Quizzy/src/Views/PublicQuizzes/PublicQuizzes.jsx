@@ -7,7 +7,9 @@ const PublicQuizzes = () => {
   const [quizzes, setQuizzes] = useState(null);
 
   useEffect(() => {
-    getAllPublicQuizzes().then(result => setQuizzes(result.filter((quiz) => quiz.status === "Ongoing")));
+    getAllPublicQuizzes().then((result) =>
+      setQuizzes(result.filter((quiz) => quiz.status === "Ongoing"))
+    );
   }, []);
 
   return (
@@ -33,7 +35,7 @@ const PublicQuizzes = () => {
         🎯 <span style={{ color: "rgb(3,165,251)" }}>Public Quizzes</span>: Test
         Your Knowledge! 🎯
       </Typography>
-      <Typography
+      {/* <Typography
         component="h1"
         variant="h5"
         style={{
@@ -43,7 +45,7 @@ const PublicQuizzes = () => {
         }}
       >
         HTML & CSS Challenge 🎨 JavaScript Brain Teasers 🧠 React Riddles ⚛️
-      </Typography>
+      </Typography> */}
       <div
         style={{
           display: "flex",

@@ -111,7 +111,7 @@ export default function SignUp() {
           display: "flex",
           justifyContent: "flex-start",
           alignItems: "center",
-          height: "90.9vh",
+          height: "88vh",
           backgroundImage: `url(${signUpBackground})`,
           backgroundPosition: "center",
           backgroundSize: "cover",

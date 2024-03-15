@@ -69,6 +69,7 @@ const PublicQuizView = () => {
             timeTaken,
             answers,
             takenOn: new Date().toString(),
+            type: quiz.type,
           })
         )
         .then(() =>
@@ -123,7 +124,7 @@ const PublicQuizView = () => {
       setQuestions(Object.values(data.questions));
       setMinutes(Number(data.timer));
       setQuizTotalPoints(Number(data.totalPoints));
-      setQuestionPoints(Number(data.questions[index].points));
+      setQuestionPoints(Number(Object.values(data.questions)[index].points));
     });
   }, []);
 

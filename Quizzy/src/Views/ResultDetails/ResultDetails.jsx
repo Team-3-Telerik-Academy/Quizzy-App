@@ -39,7 +39,7 @@ const answers = location.state.answers;
         variant="h3"
         sx={{ fontFamily: "fantasy", color: "#394E6A", marginTop: "20px" }}
       >
-        Detailed Analysis of your results:
+        Detailed Analysis of the results:
       </Typography>
       <Box
         sx={{

@@ -36,6 +36,8 @@ import AdminStudents from "./Views/AdminStudents/AdminStudents";
 import EducatorGroups from "./Views/EducatorGroups/EducatorGroups";
 import CreateGroup from "./Views/CreateGroup/CreateGroup";
 import CreateSuccessView from "./Views/CreateSuccessView/CreateSuccessView";
+import SingleStatisticsView from "./Views/SingleStatisticsView/SingleStatisticsView";
+import QuizzesComment from "./Views/QuizzesComment/QuizzesComment";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -70,7 +72,7 @@ function App() {
         {loading && <Loading />}
         {!user && <Header />}
         <Routes>
-          {!user ? (
+          {!loading && !user ? (
             <Route path="/" element={<Home />} />
           ) : (
             <Route
@@ -113,6 +115,14 @@ function App() {
             element={
               <LoggedInMain>
                 <EditQuiz />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/quizStatistics/:statisticsId"
+            element={
+              <LoggedInMain>
+                <SingleStatisticsView />
               </LoggedInMain>
             }
           />
@@ -215,6 +225,15 @@ function App() {
             }
           />
           <Route
+            path="/takenQuizzes/comments"
+            element={
+              <LoggedInMain>
+                <br />
+                <QuizzesComment />
+              </LoggedInMain>
+            }
+          />
+          <Route
             path="/createGroup"
             element={
               <LoggedInMain>
@@ -235,13 +254,13 @@ function App() {
           <Route
             path="/quizResult"
             element={
-              userData ? (
+              !loading && !user ? (
+                <QuizResult />
+              ) : (
                 <LoggedInMain>
                   <br />
                   <QuizResult />
                 </LoggedInMain>
-              ) : (
-                <QuizResult />
               )
             }
           />

@@ -36,6 +36,7 @@ const PublicQuizView = () => {
 
   useEffect(() => {
     if (resultView) {
+      console.log(score);
       navigate("/quizResult", {
         state: {
           answers: answers,
@@ -47,7 +48,7 @@ const PublicQuizView = () => {
         },
       });
     }
-  }, [resultView]);
+  }, [score]);
 
   useEffect(() => {
     if (resultView && userData && !sentToDb) {
@@ -123,7 +124,7 @@ const PublicQuizView = () => {
       setQuestions(Object.values(data.questions));
       setMinutes(Number(data.timer));
       setQuizTotalPoints(Number(data.totalPoints));
-      setQuestionPoints(Number(data.questions[index].points));
+      setQuestionPoints(Number(Object.values(data.questions)[index].points));
     });
   }, []);
 

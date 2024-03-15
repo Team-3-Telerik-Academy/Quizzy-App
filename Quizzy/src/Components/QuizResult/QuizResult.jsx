@@ -22,6 +22,8 @@ const QuizResult = () => {
 
   const navigate = useNavigate();
 
+  console.log(score);
+
   return (
     <>
       <Box

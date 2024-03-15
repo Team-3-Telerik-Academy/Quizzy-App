@@ -12,9 +12,10 @@ const EducatorGroups = () => {
 
   useEffect(() => {
     getAllGroups()
-      .then((groups) => {
-        return Object.values(groups).filter((group) => {
-          return group.email === userData.email;
+      .then((groups) => Object.values(groups))
+      .then((groupsArray) => {
+        return groupsArray.filter((group) => {
+          return Object.keys(group.members).includes(userData?.username);
         });
       })
       .then((result) => setGroups(result));
@@ -116,17 +117,16 @@ const EducatorGroups = () => {
                   marginBottom: "15px",
                   marginLeft: "15px",
                   marginTop: "10px",
-                  transition: "transform 0.3s",
-                  cursor:'pointer'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = "scale(0.9)";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
+                  cursor: "pointer",
                 }}
               >
-                <Box style={{ display: "flex", alignItems: "center" }}>
+                <Box
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "50%",
+                  }}
+                >
                   <img
                     src={group.image}
                     style={{
@@ -146,6 +146,17 @@ const EducatorGroups = () => {
                     {group.title}
                   </span>
                 </Box>
+                <span
+                  style={{
+                    marginLeft: "10px",
+                    fontWeight: "700",
+                    color: "rgb(57, 78, 106)",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {Object.keys(group.members).length}
+                </span>
               </Box>
             );
           })}

@@ -59,6 +59,17 @@ export const byUsername = async (username) => {
   return result.val();
 };
 
+export const listenForChatUsers = (username, callback) => {
+  const userRef = ref(db, `users/${username}/messages`);
+  onValue(userRef, (snapshot) => {
+    if (snapshot.val() === null) {
+      return;
+    }
+    console.log(snapshot.val())
+    callback(Object.values(snapshot.val()));
+  });
+};
+
 export const createUserUsername = (
   username,
   uid,

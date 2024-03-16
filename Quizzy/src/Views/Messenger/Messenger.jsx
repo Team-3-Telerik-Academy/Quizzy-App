@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import AppContext from "../../Context/AppContext";
 import { useContext, useEffect, useState } from "react";
-import { byUsername } from "../../services/users.service";
+import { byUsername, listenForChatUsers } from "../../services/users.service";
 import { useRef } from "react";
 import { sendMessage } from "../../services/users.service";
 
@@ -46,10 +46,36 @@ const Messenger = () => {
     }
   };
 
+  // useEffect(() => {
+  //   // byUsername(userData.username).then((result) => {
+  //   //   const people = Object.values(result.messages);
+  //   //   setPeople(people);
+  //   //   if (chatUser) {
+  //   //     const selectedChatUser = people.filter(
+  //   //       (person) => person.username === chatUser
+  //   //     );
+  //   //     setSelectedPerson({ selected: selectedChatUser[0] });
+  //   //   } else {
+  //   //     setSelectedPerson({ selected: people[0] });
+  //   //   }
+  //   // });
+
+  //   if (userData.messages) {
+  //     const people = Object.values(userData.messages);
+  //     setPeople(people);
+  //     if (chatUser) {
+  //       const selectedChatUser = people.filter(
+  //         (person) => person.username === chatUser
+  //       );
+  //       setSelectedPerson({ selected: selectedChatUser[0] });
+  //     } else {
+  //       setSelectedPerson({ selected: people[0] });
+  //     }
+  //   }
+  // }, [userData]);
+
   useEffect(() => {
-    byUsername(userData.username).then((result) => {
-      const people = Object.values(result.messages);
-      setPeople(people);
+    if (people.length > 0) {
       if (chatUser) {
         const selectedChatUser = people.filter(
           (person) => person.username === chatUser
@@ -58,8 +84,12 @@ const Messenger = () => {
       } else {
         setSelectedPerson({ selected: people[0] });
       }
-    });
-  }, []);
+    } 
+  }, [people]);
+
+  useEffect(() => {
+    listenForChatUsers(userData.username, setPeople);
+  }, [userData.messages]);
 
   return (
     <Box
@@ -181,7 +211,7 @@ const Messenger = () => {
           }}
         >
           <img
-            src={selectedPerson?.selected.image}
+            src={selectedPerson?.selected?.image}
             style={{
               width: "70px",
               height: "70px",
@@ -198,8 +228,8 @@ const Messenger = () => {
               fontSize: "25px",
             }}
           >
-            {selectedPerson?.selected.firstName}{" "}
-            {selectedPerson?.selected.lastName}
+            {selectedPerson?.selected?.firstName}{" "}
+            {selectedPerson?.selected?.lastName}
           </span>
         </Box>
         <Box sx={{ height: "100vh" }}>
@@ -207,8 +237,8 @@ const Messenger = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              overflowY: "auto", 
-              flex: "1", 
+              overflowY: "auto",
+              flex: "1",
               height: "69vh",
               padding: "10px",
               borderRight: "3px solid #f3f4f6",

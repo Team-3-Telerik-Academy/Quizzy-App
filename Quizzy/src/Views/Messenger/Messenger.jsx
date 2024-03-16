@@ -207,8 +207,8 @@ const Messenger = () => {
             sx={{
               display: "flex",
               flexDirection: "column",
-              overflowY: "auto", 
-              flex: "1", 
+              overflowY: "auto",
+              flex: "1",
               height: "69vh",
               padding: "10px",
               borderRight: "3px solid #f3f4f6",

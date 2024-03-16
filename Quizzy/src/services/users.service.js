@@ -267,7 +267,7 @@ export const sendMessage = async (
       name: personSendingMessage,
     });
 
-    return { sender, receiver };
+    // return { sender, receiver };
   } catch (error) {
     console.error("Error sending message:", error);
   }

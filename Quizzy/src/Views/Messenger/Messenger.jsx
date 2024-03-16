@@ -59,7 +59,7 @@ const Messenger = () => {
         setSelectedPerson({ selected: people[0] });
       }
     });
-  }, []);
+  }, [userData]);
 
   return (
     <Box

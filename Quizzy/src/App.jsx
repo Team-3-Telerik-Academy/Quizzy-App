@@ -37,7 +37,6 @@ import EducatorGroups from "./Views/EducatorGroups/EducatorGroups";
 import CreateGroup from "./Views/CreateGroup/CreateGroup";
 import CreateSuccessView from "./Views/CreateSuccessView/CreateSuccessView";
 import SingleStatisticsView from "./Views/SingleStatisticsView/SingleStatisticsView";
-import QuizzesComment from "./Views/QuizzesComment/QuizzesComment";
 import Friends from "./Views/Friends/Friends";
 import Messenger from "./Views/Messenger/Messenger";
 import AdminQuizzes from "./Views/AdminQuizzes/AdminQuizzes";

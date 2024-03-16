@@ -223,8 +223,8 @@ export const createUserMessages = async (
   );
   const userRef = ref(db, `users/${sender.username}`);
 
-  console.log(sender.username);
-  console.log(user.username);
+  // console.log(sender.username);
+  // console.log(user.username);
 
   onValue(userRef, (snapshot) => {
     callback(snapshot.val());
@@ -267,7 +267,13 @@ export const sendMessage = async (
       name: personSendingMessage,
     });
 
-    return { sender, receiver };
+    const userRef = ref(db, `users/${personSendingMessage}`);
+
+    onValue(userRef, (snapshot) => {
+      callback(snapshot.val());
+    });
+
+    // return { sender, receiver };
   } catch (error) {
     console.error("Error sending message:", error);
   }

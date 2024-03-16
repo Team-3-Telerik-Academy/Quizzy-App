@@ -36,8 +36,8 @@ const PublicQuizView = () => {
 
   useEffect(() => {
     if (resultView) {
-      console.log(score);
       navigate("/quizResult", {
+        replace: true,
         state: {
           answers: answers,
           length: length,
@@ -61,7 +61,7 @@ const PublicQuizView = () => {
             setUserData
           );
         })
-        .then(() =>
+        .then(() => {
           push(ref(db, `users/${userData.username}/takenQuizzes`), {
             id,
             quizTitle: quiz.title,
@@ -71,8 +71,8 @@ const PublicQuizView = () => {
             answers,
             takenOn: new Date().toString(),
             type: quiz.type,
-          })
-        )
+          });
+        })
         .then(() =>
           update(ref(db, `quizzes/${id}/takenBy`), {
             [userData.username]: true,
@@ -125,17 +125,13 @@ const PublicQuizView = () => {
       setQuestions(Object.values(data.questions));
       setMinutes(Number(data.timer));
       setQuizTotalPoints(Number(data.totalPoints));
-      setQuestionPoints(Number(Object.values(data.questions)[index].points));
+      setQuestionPoints(
+        Object.values(data.questions).map((question) => Number(question.points))
+      );
     });
   }, []);
 
-  const handleClick = (
-    question,
-    answer,
-    page,
-
-    questionPoint
-  ) => {
+  const handleClick = (question, answer, page, questionPoint) => {
     setSelectedItem({ ...selectedItem, [page]: question });
     setButtonColor("rgb(3,165,251)");
 
@@ -202,7 +198,7 @@ const PublicQuizView = () => {
         handleChange={handleChange}
         handleClick={handleClick}
         quizTotalPoints={quizTotalPoints}
-        questionPoint={questionPoints}
+        questionPoint={questionPoints[index]}
       />
     </>
   );

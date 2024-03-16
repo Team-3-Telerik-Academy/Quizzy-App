@@ -18,11 +18,17 @@ import { useNavigate } from "react-router-dom";
 const TakenQuizzes = () => {
   const [takenQuizzes, setTakenQuizzes] = useState(null);
   const [quizzesOnPage, setQuizzesOnPage] = useState(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(
+    parseInt(localStorage.getItem("takenQuizzesPage")) || 1
+  );
   const [numberOfPages, setNumberOfPages] = useState(1);
   const number = 5;
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.setItem("takenQuizzesPage", page);
+  }, [page]);
 
   useEffect(() => {
     getTakenQuizzesByUser(userData.username).then(setTakenQuizzes);
@@ -35,8 +41,8 @@ const TakenQuizzes = () => {
     }
   }, [takenQuizzes]);
 
-  const handleViewDetails = (answers) => {
-    navigate("/takenQuizzes/details", { state: { answers: answers } });
+  const handleViewDetails = (quiz) => {
+    navigate("/takenQuizzes/details", { state: { quiz: quiz } });
   };
 
   const handlePageChange = (event, value) => {
@@ -213,7 +219,7 @@ const TakenQuizzes = () => {
                             border: "1px solid white",
                           }}
                           variant="contained"
-                          onClick={() => handleViewDetails(quiz.answers)}
+                          onClick={() => handleViewDetails(quiz)}
                         >
                           View Details
                         </Button>

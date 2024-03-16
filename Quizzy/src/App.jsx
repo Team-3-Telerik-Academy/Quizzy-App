@@ -40,6 +40,9 @@ import SingleStatisticsView from "./Views/SingleStatisticsView/SingleStatisticsV
 import QuizzesComment from "./Views/QuizzesComment/QuizzesComment";
 import Friends from "./Views/Friends/Friends";
 import Messenger from "./Views/Messenger/Messenger";
+import AdminQuizzes from "./Views/AdminQuizzes/AdminQuizzes";
+import TakenQuizViewDetails from "./Views/TakenQuizViewDetails/TakenQuizViewDetails";
+import ViewDetailsSingleQuizStatistics from "./Views/ViewDetailsSingleQuizStatistics/ViewDetailsSingleQuizStatistics";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -209,6 +212,15 @@ function App() {
           />
 
           <Route
+            path="/adminQuizzes/:type"
+            element={
+              <AdminMain>
+                <AdminQuizzes />
+              </AdminMain>
+            }
+          />
+
+          <Route
             path="/CreateSuccess/:value"
             element={
               <LoggedInMain>
@@ -249,17 +261,17 @@ function App() {
             element={
               <LoggedInMain>
                 <br />
-                <ResultDetails />
+                <TakenQuizViewDetails />
               </LoggedInMain>
             }
           />
 
           <Route
-            path="/takenQuizzes/comments"
+            path="/singleQuizStatistics/viewDetails"
             element={
               <LoggedInMain>
                 <br />
-                <QuizzesComment />
+                <ViewDetailsSingleQuizStatistics />
               </LoggedInMain>
             }
           />

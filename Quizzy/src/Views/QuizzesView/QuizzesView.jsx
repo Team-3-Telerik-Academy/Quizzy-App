@@ -7,6 +7,7 @@ import AppContext from "../../Context/AppContext";
 import { styled } from "@mui/system";
 import { Button, Typography } from "@mui/material";
 import QuizCarousel from "../../Components/QuizCarousel/QuizCarousel";
+import Quizzes from "../../Components/Quizzes/Quizzes";
 
 const StyledButton = styled(Button)({
   color: "#fff",
@@ -21,13 +22,26 @@ const StyledButton = styled(Button)({
 });
 
 const QuizzesView = () => {
+  const [view, setView] = useState(
+    localStorage.getItem("quizzesView") || "carousel"
+  );
   const [updateQuizzes, setUpdateQuizzes] = useState(false);
   const [quizzes, setQuizzes] = useState(null);
   const [ongoingQuizzes, setOngoingQuizzes] = useState(null);
   const [finishedQuizzes, setFinishedQuizzes] = useState(null);
   const [invitationalQuizzes, setInvitationalQuizzes] = useState(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(
+    parseInt(localStorage.getItem("quizzesPage")) || 1
+  );
   const { userData } = useContext(AppContext);
+
+  useEffect(() => {
+    localStorage.setItem("quizzesPage", page);
+  }, [page]);
+
+  useEffect(() => {
+    localStorage.setItem("quizzesView", view);
+  }, [view]);
 
   useEffect(() => {
     if (userData) {
@@ -138,6 +152,30 @@ const QuizzesView = () => {
                 Invitational Quizzes
               </StyledButton>
             </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                width: "100%",
+              }}
+            >
+              <select
+                value={view}
+                onChange={(e) => setView(e.target.value)}
+                style={{
+                  backgroundColor: "white",
+                  color: "rgb(3,165,251)",
+                  marginRight: "3.5vw",
+                  marginTop: "10px",
+                  padding: "10px",
+                  borderRadius: "5px",
+                  border: "1px solid rgb(3,165,251)",
+                }}
+              >
+                <option value="carousel">Slide Show</option>
+                <option value="pages">Full View</option>
+              </select>
+            </div>
             {page === 1 && ongoingQuizzes.length === 0 ? (
               <h2
                 style={{
@@ -153,7 +191,16 @@ const QuizzesView = () => {
             ) : (
               page === 1 &&
               ongoingQuizzes.length > 0 && (
-                <QuizCarousel quizzes={ongoingQuizzes} fn={setUpdateQuizzes}/>
+                <>
+                  {view === "carousel" ? (
+                    <QuizCarousel
+                      quizzes={ongoingQuizzes}
+                      fn={setUpdateQuizzes}
+                    />
+                  ) : (
+                    <Quizzes quizzes={ongoingQuizzes} fn={setUpdateQuizzes} />
+                  )}
+                </>
               )
             )}
             {page === 2 && finishedQuizzes.length === 0 ? (
@@ -171,10 +218,18 @@ const QuizzesView = () => {
             ) : (
               page === 2 &&
               finishedQuizzes.length > 0 && (
-                <QuizCarousel quizzes={finishedQuizzes} />
+                <>
+                  <>
+                    {view === "carousel" ? (
+                      <QuizCarousel quizzes={finishedQuizzes} />
+                    ) : (
+                      <Quizzes quizzes={finishedQuizzes} />
+                    )}
+                  </>
+                </>
               )
             )}
-            {page === 3 && invitationalQuizzes.length === 0 ? (
+            {page === 3 && invitationalQuizzes?.length === 0 ? (
               <h2
                 style={{
                   alignItems: "center",
@@ -188,8 +243,17 @@ const QuizzesView = () => {
               </h2>
             ) : (
               page === 3 &&
-              invitationalQuizzes.length > 0 && (
-                <QuizCarousel quizzes={invitationalQuizzes} />
+              invitationalQuizzes?.length > 0 && (
+                <>
+                {view === "carousel" ? (
+                    <QuizCarousel
+                      quizzes={invitationalQuizzes}
+                      fn={setUpdateQuizzes}
+                    />
+                  ) : (
+                    <Quizzes quizzes={invitationalQuizzes} fn={setUpdateQuizzes} />
+                  )}
+                </>
               )
             )}
           </>

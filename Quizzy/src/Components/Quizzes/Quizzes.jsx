@@ -6,14 +6,16 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { updateQuizInfo } from "../../services/quizzes.service";
 
-const Quizzes = ({ quizzes, value }) => {
+const Quizzes = ({ quizzes, value, fn }) => {
   const navigate = useNavigate();
   const [countdownTimes, setCountdownTimes] = useState(
-    quizzes.map((quiz) => {
-      if (quiz.status === "Ongoing") {
-        return { [quiz.id]: new Date(quiz.ongoingTill) - new Date() };
-      }
-    }).filter(item => item !== undefined)
+    quizzes
+      .map((quiz) => {
+        if (quiz.status === "Ongoing") {
+          return { [quiz.id]: new Date(quiz.ongoingTill) - new Date() };
+        }
+      })
+      .filter((item) => item !== undefined)
   );
 
   useEffect(() => {
@@ -24,16 +26,18 @@ const Quizzes = ({ quizzes, value }) => {
           .map((timeObj) => {
             const quizId = Object.keys(timeObj)[0];
             const time = timeObj[quizId];
-      
+
             if (time - 1000 > 0) {
               return { [quizId]: time - 1000 };
             } else {
-              quizzes.find(quiz => quiz.id === quizId).status = "Finished";
-              updateQuizInfo(quizId, "status", "Finished");
+              quizzes.find((quiz) => quiz.id === quizId).status = "Finished";
+              updateQuizInfo(quizId, "status", "Finished").then(() => {
+                fn((prev) => !prev);
+              });
               return;
             }
           })
-          .filter(item => item !== undefined)
+          .filter((item) => item !== undefined)
       );
     }, 1000);
 
@@ -44,7 +48,7 @@ const Quizzes = ({ quizzes, value }) => {
     <div
       style={{
         margin: "20px",
-        marginBottom: '40px',
+        marginBottom: "40px",
         display: "flex",
         flexWrap: "wrap",
         alignItems: "center",
@@ -74,15 +78,15 @@ const Quizzes = ({ quizzes, value }) => {
           <div
             key={quiz.id}
             style={{
-              height: "450px",
-              width: "330px",
+              height: "400px",
+              width: "320px",
               borderRadius: "20px",
               overflow: "hidden",
               boxShadow: "0px 4px 8px 0px rgba(0, 0, 0, 0.2)",
               transition: "transform 0.2s",
               display: "flex",
               flexDirection: "column",
-              marginTop: "25px",
+              marginBottom: "20px",
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.transform = "scale(1.05)";
@@ -94,17 +98,44 @@ const Quizzes = ({ quizzes, value }) => {
             <img
               src={quiz.image}
               alt={quiz.title}
-              style={{ width: "100%", height: "230px" }}
+              style={{ width: "100%", height: "180px" }}
             />
-            <img
-              src={quiz.type === "public" ? unlocked : locked}
+            <div
               style={{
-                width: "20px",
-                height: "20px",
-                marginLeft: "15px",
-                marginTop: "15px",
+                display: "flex",
+                justifyContent: "space-between",
+                marginLeft: "5px",
+                height: "30px",
               }}
-            />
+            >
+              <img
+                src={quiz.type === "public" ? unlocked : locked}
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  marginLeft: "15px",
+                  marginTop: "15px",
+                }}
+              />
+              {quiz.status === "Finished" && quiz.type === "private" && (
+                <Button
+                  variant="contained"
+                  onClick={() => navigate(`/quizStatistics/${quiz.id}`)}
+                  style={{
+                    backgroundColor: "rgb(3, 165, 251)",
+                    textTransform: "none",
+                    borderRadius: "20px",
+                    width: "100px",
+                    height: "35px",
+                    fontWeight: "500",
+                    marginRight: "10px",
+                    marginTop: "10px",
+                  }}
+                >
+                  Statistics
+                </Button>
+              )}
+            </div>
             <span
               style={{
                 width: "100%",
@@ -194,22 +225,24 @@ const Quizzes = ({ quizzes, value }) => {
                 >
                   Edit Quiz
                 </Button>
-              ) : quiz.status === "Ongoing" && (
-                <Button
-                  variant="contained"
-                  onClick={() => navigate(`/publicQuizzes/${quiz.id}`)}
-                  style={{
-                    backgroundColor: "rgb(3, 165, 251)",
-                    textTransform: "none",
-                    borderRadius: "20px",
-                    width: "100px",
-                    height: "35px",
-                    fontWeight: "500",
-                    marginRight: "10px",
-                  }}
-                >
-                  Start Quiz
-                </Button>
+              ) : (
+                quiz.status === "Ongoing" && (
+                  <Button
+                    variant="contained"
+                    onClick={() => navigate(`/publicQuizzes/${quiz.id}`)}
+                    style={{
+                      backgroundColor: "rgb(3, 165, 251)",
+                      textTransform: "none",
+                      borderRadius: "20px",
+                      width: "100px",
+                      height: "35px",
+                      fontWeight: "500",
+                      marginRight: "10px",
+                    }}
+                  >
+                    Start Quiz
+                  </Button>
+                )
               )}
             </div>
           </div>
@@ -222,6 +255,7 @@ const Quizzes = ({ quizzes, value }) => {
 Quizzes.propTypes = {
   quizzes: PropTypes.arrayOf(PropTypes.object).isRequired,
   value: PropTypes.string,
+  fn: PropTypes.func,
 };
 
 export default Quizzes;

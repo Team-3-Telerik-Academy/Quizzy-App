@@ -6,11 +6,26 @@ import incorrect from "..//../Images/incorrect.svg";
 import analytics from "..//../Images/analytics.svg";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const QuizResult = () => {
+const QuizResult = (props) => {
   const location = useLocation();
-  const { answers, length, score, correctAns, timeTaken, quizTotalPoints } =
-    location.state;
+  const {
+    answers: locationAnswers,
+    length: locationLength,
+    score: locationScore,
+    correctAns: locationCorrectAns,
+    timeTaken: locationTimeTaken,
+    quizTotalPoints: locationQuizTotalPoints,
+  } = location.state || {};
+
+  const answers = props.answers || locationAnswers;
+  const length = props.length || locationLength;
+  const score = props.score || locationScore;
+  const correctAns = props.correctAns || locationCorrectAns;
+  const timeTaken = props.timeTaken || locationTimeTaken;
+  const quizTotalPoints = props.quizTotalPoints || locationQuizTotalPoints;
+
   const [correctAnswers] = useState(Object.values(correctAns).length);
   const [IncorrectAnswers] = useState(
     length - Object.values(correctAns).length
@@ -22,23 +37,21 @@ const QuizResult = () => {
 
   const navigate = useNavigate();
 
-  console.log(score);
-
   return (
     <>
       <Box
         sx={{
           width: "100%",
-          height: "100vh",
+          height: props.height ? props.height : "100vh",
           display: "flex",
-          backgroundColor: "#F3F4f6",
+          backgroundColor: props.color ? props.color : "#F3F4f6",
           alignItems: "center",
           flexDirection: "column",
         }}
       >
         <Container
           sx={{
-            marginTop: "50px",
+            marginTop: props.margin ? props.margin : "100px",
             display: "flex",
             gap: "100px",
             justifyContent: "center",
@@ -67,7 +80,8 @@ const QuizResult = () => {
               }}
             >
               <span style={{ fontSize: "40px" }}>
-                Your score: <br />
+                {/* Your score: <br /> */}
+                Score: <br />
               </span>
               {((score / quizTotalPoints) * 100).toFixed(2)} %
             </span>
@@ -173,6 +187,18 @@ const QuizResult = () => {
       </Box>
     </>
   );
+};
+
+QuizResult.propTypes = {
+  answers: PropTypes.array,
+  length: PropTypes.number,
+  score: PropTypes.number,
+  correctAns: PropTypes.array,
+  timeTaken: PropTypes.string,
+  quizTotalPoints: PropTypes.number,
+  color: PropTypes.string,
+  height: PropTypes.string,
+  margin: PropTypes.string,
 };
 
 export default QuizResult;

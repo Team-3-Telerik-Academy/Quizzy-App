@@ -277,11 +277,11 @@ export const removeUserQuizInvitation = async (quizId, quizTitle, username, call
   });
 };
 
-export const addCommentToATakenQuiz = async (username, quizId, comment, callback) => {
+export const addCommentToATakenQuiz = async (username, quizId, comment, author, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
   const commentsRef = child(takenQuizRef, 'comments');
 
-  await push(commentsRef, comment);
+  await push(commentsRef, { 'content': comment, 'author': author });
 
   onValue(takenQuizRef, (snapshot) => {
     callback({ ...snapshot.val(), id: quizId, participant: username });
@@ -301,9 +301,42 @@ export const removeCommentToATakenQuiz = async (username, quizId, commentId, cal
 
 export const editCommentToATakenQuiz = async (username, quizId, commentId, newComment, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
-  const commentsRef = child(takenQuizRef, `comments/`);
+  const commentRef = child(takenQuizRef, `comments/${commentId}`);
 
-  await update(commentsRef, { [commentId]: newComment }); 
+  await update(commentRef, { 'content': newComment });
+
+  onValue(takenQuizRef, (snapshot) => {
+    callback({ ...snapshot.val(), id: quizId, participant: username });
+  });
+};
+
+export const addReplyToACommentToATakenQuiz = async (username, quizId, commentId, reply, author, callback) => {
+  const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
+  const repliesRef = child(takenQuizRef, `comments/${commentId}/replies`);
+
+  await push(repliesRef, { content: reply, author: author });
+
+  onValue(takenQuizRef, (snapshot) => {
+    callback({ ...snapshot.val(), id: quizId, participant: username });
+  });
+};
+
+export const deleteReplyFromACommentFromATakenQuiz = async (username, quizId, commentId, replyId, callback) => {
+  const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
+  const replyRef = child(takenQuizRef, `comments/${commentId}/replies/${replyId}`);
+
+  await remove(replyRef);
+
+  onValue(takenQuizRef, (snapshot) => {
+    callback({ ...snapshot.val(), id: quizId, participant: username });
+  });
+};
+
+export const editReplyInACommentInATakenQuiz = async (username, quizId, commentId, replyId, newReplyContent, callback) => {
+  const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
+  const replyRef = child(takenQuizRef, `comments/${commentId}/replies/${replyId}`);
+
+  await update(replyRef, { content: newReplyContent });
 
   onValue(takenQuizRef, (snapshot) => {
     callback({ ...snapshot.val(), id: quizId, participant: username });

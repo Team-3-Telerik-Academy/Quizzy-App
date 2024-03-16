@@ -195,6 +195,7 @@ const AdminHome = () => {
           </Box>
         </Box>
         <Box
+        onClick={() => navigate('/adminQuizzes/public')}
           sx={{
             width: "220px",
             height: "220px",
@@ -245,6 +246,7 @@ const AdminHome = () => {
           </Box>
         </Box>
         <Box
+        onClick={() => navigate('/adminQuizzes/private')}
           sx={{
             width: "220px",
             height: "220px",

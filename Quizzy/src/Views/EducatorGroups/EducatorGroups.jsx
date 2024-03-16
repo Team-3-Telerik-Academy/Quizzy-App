@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Pagination, Typography } from "@mui/material";
 import { useNavigate } from "react-router";
 import { getAllGroups } from "../../services/groups.services";
 import { useEffect, useState, useContext } from "react";
@@ -6,9 +6,17 @@ import AppContext from "../../Context/AppContext";
 
 const EducatorGroups = () => {
   const [groups, setGroups] = useState([]);
+  const [groupsOnPage, setGroupsOnPage] = useState(null);
+  const [page, setPage] = useState(parseInt(localStorage.getItem('educatorGroupsPage')) || 1);
+  const [numberOfPages, setNumberOfPages] = useState(1);
+  const number = 6;
   const navigate = useNavigate();
 
   const { userData } = useContext(AppContext);
+
+  useEffect(() => {
+    localStorage.setItem('educatorGroupsPage', page);
+  }, [page]);
 
   useEffect(() => {
     getAllGroups()
@@ -19,7 +27,19 @@ const EducatorGroups = () => {
         });
       })
       .then((result) => setGroups(result));
-  }, []);
+  }, [userData]);
+
+  useEffect(() => {
+    if (groups) {
+      setNumberOfPages(Math.ceil(groups.length / number));
+      setGroupsOnPage(groups.slice((page - 1) * number, page * number));
+    }
+  }, [groups]);
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    setGroupsOnPage(groups.slice((value - 1) * number, value * number));
+  };
 
   return (
     <Box
@@ -65,7 +85,7 @@ const EducatorGroups = () => {
           Create Group
         </Button>
       </Box>
-      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "center", flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
         <Box
           sx={{
             width: "600px",
@@ -108,7 +128,7 @@ const EducatorGroups = () => {
             </span>
           </Box>
 
-          {groups.map((group) => {
+          {groupsOnPage?.map((group) => {
             return (
               <Box
                 key={group.createdOn}
@@ -161,6 +181,20 @@ const EducatorGroups = () => {
             );
           })}
         </Box>
+        <Pagination
+              count={numberOfPages}
+              page={page}
+              onChange={handlePageChange}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "20px",
+                "& .MuiPaginationItem-page.Mui-selected": {
+                  backgroundColor: "rgb(0, 165, 251)",
+                  color: "white",
+                },
+              }}
+            />
       </Box>
     </Box>
   );

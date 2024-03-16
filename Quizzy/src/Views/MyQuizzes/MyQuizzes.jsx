@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
 import { styled } from "@mui/system";
 import QuizCarousel from "../../Components/QuizCarousel/QuizCarousel";
+import Quizzes from "../../Components/Quizzes/Quizzes";
 
 const StyledButton = styled(Button)({
   color: "#fff",
@@ -20,13 +21,24 @@ const StyledButton = styled(Button)({
 });
 
 const MyQuizzes = () => {
+  const [view, setView] = useState(localStorage.getItem('myQuizzesView') || "carousel");
   const [updateQuizzes, setUpdateQuizzes] = useState(false);
   const [ongoingQuizzes, setOngoingQuizzes] = useState(null);
   const [finishedQuizzes, setFinishedQuizzes] = useState(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(
+    parseInt(localStorage.getItem("myQuizzesPage")) || 1
+  );
   const [loading, setLoading] = useState(true);
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.setItem("myQuizzesPage", page);
+  }, [page]);
+
+  useEffect(() => {
+    localStorage.setItem('myQuizzesView', view);
+  }, [view]);
 
   useEffect(() => {
     if (userData) {
@@ -51,7 +63,7 @@ const MyQuizzes = () => {
         <div
           style={{
             backgroundColor: "#F3F4F6",
-            height: "90.8vh",
+            height: "91.7vh",
             marginTop: "20px",
             overflow: "auto",
           }}
@@ -74,7 +86,7 @@ const MyQuizzes = () => {
               My Amazing Quizzes
             </Typography>
           </div>
-          {ongoingQuizzes?.length > 0 || finishedQuizzes.length > 0 ? (
+          {ongoingQuizzes?.length > 0 || finishedQuizzes?.length > 0 ? (
             <>
               <div
                 style={{
@@ -91,6 +103,30 @@ const MyQuizzes = () => {
                   Finished Quizzes
                 </StyledButton>
               </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  width: "100%",
+                }}
+              >
+                <select
+                  value={view}
+                  onChange={(e) => setView(e.target.value)}
+                  style={{
+                    backgroundColor: "white",
+                    color: "rgb(3,165,251)",
+                    marginRight: "3.5vw",
+                    marginTop: "10px",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    border: "1px solid rgb(3,165,251)",
+                  }}
+                >
+                  <option value="carousel">Slide Show</option>
+                  <option value="pages">Full View</option>
+                </select>
+              </div>
               {page === 1 && ongoingQuizzes.length === 0 ? (
                 <h2
                   style={{
@@ -106,7 +142,21 @@ const MyQuizzes = () => {
               ) : (
                 page === 1 &&
                 ongoingQuizzes.length > 0 && (
-                  <QuizCarousel quizzes={ongoingQuizzes} value="author" fn={setUpdateQuizzes} />
+                  <>
+                    {view === "carousel" ? (
+                      <QuizCarousel
+                        quizzes={ongoingQuizzes}
+                        value="author"
+                        fn={setUpdateQuizzes}
+                      />
+                    ) : (
+                      <Quizzes
+                        quizzes={ongoingQuizzes}
+                        value="author"
+                        fn={setUpdateQuizzes}
+                      />
+                    )}
+                  </>
                 )
               )}
               {page === 2 && finishedQuizzes.length === 0 ? (
@@ -124,7 +174,13 @@ const MyQuizzes = () => {
               ) : (
                 page === 2 &&
                 finishedQuizzes.length > 0 && (
-                  <QuizCarousel quizzes={finishedQuizzes} value="author" />
+                  <>
+                    {view === "carousel" ? (
+                      <QuizCarousel quizzes={finishedQuizzes} value="author" />
+                    ) : (
+                      <Quizzes quizzes={finishedQuizzes} value="author" />
+                    )}
+                  </>
                 )
               )}
             </>

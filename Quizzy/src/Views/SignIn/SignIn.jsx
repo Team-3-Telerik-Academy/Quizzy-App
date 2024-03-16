@@ -16,6 +16,7 @@ import { loginUser } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
 import signInBackground from "../../Images/sign-in-background.jpg";
 import toast from "react-hot-toast";
+import { getUserData } from "../../services/users.service";
 
 const theme = createTheme({
   palette: {
@@ -47,24 +48,33 @@ const SignIn = () => {
   };
 
   const onLogin = () => {
-    loginUser(form.email, form.password)
-      .then((credential) => {
-        toast.success("You have signed in successfully!", {
-          position: "bottom-right",
+    getUserData('email', form.email).then((user) => {
+      if (user.exists() && Object.values(user.val())[0].isBlocked) {
+        toast.error("You are blocked! Please contact the administrator.");
+        return;
+      }
+
+      loginUser(form.email, form.password)
+        .then((credential) => {
+          toast.success("You have signed in successfully!", {
+            position: "bottom-right",
+          });
+          setUserCredentials(credential.user);
+        })
+        .then(() => {
+          navigate(location.state?.from.pathname || "/");
+        })
+        .catch((e) => {
+          console.log(e.message);
+          toast.error(
+            "Your login information was incorrect! Please try again."
+          );
+          setForm({
+            ...form,
+            password: "",
+          });
         });
-        setUserCredentials(credential.user);
-      })
-      .then(() => {
-        navigate(location.state?.from.pathname || "/");
-      })
-      .catch((e) => {
-        console.log(e.message);
-        toast.error("Your login information was incorrect! Please try again.");
-        setForm({
-          ...form,
-          password: "",
-        });
-      });
+    });
   };
 
   return (

@@ -1,7 +1,8 @@
 import { Box, Typography, Paper } from "@mui/material";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
 
 const theme = createTheme({
   palette: {
@@ -20,16 +21,16 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const ResultDetails = () => {
-const location = useLocation();
-const answers = location.state.answers;
+const ResultDetails = (props) => {
+  const location = useLocation();
+  const answers = location.state?.answers || props.answers;
 
   return (
     <Box
       sx={{
         width: "100%",
-        height: "100vh",
-        backgroundColor: "#F3F4f6",
+        height: props.height || "100vh",
+        backgroundColor: props.color || "#F3F4f6",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -44,11 +45,11 @@ const answers = location.state.answers;
       <Box
         sx={{
           width: "100%",
-          height: "100vh",
+          height: props.height || '100vh',
           display: "flex",
           flexDirection: "row",
           justifyContent: "center",
-          marginTop: "25px",
+          margin: "25px 0",
           gap: "50px",
         }}
       >
@@ -129,6 +130,12 @@ const answers = location.state.answers;
       </Box>
     </Box>
   );
+};
+
+ResultDetails.propTypes = {
+  answers: PropTypes.array,
+  height: PropTypes.string,
+  color: PropTypes.string,
 };
 
 export default ResultDetails;

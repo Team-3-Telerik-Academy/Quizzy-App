@@ -16,10 +16,14 @@ import Loading from "../../Components/Loading/Loading";
 const Scoreboard = () => {
   const [users, setUsers] = useState(null);
   const [usersOnPage, setUsersOnPage] = useState(null);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(parseInt(localStorage.getItem('scoreboardPage')) || 1);
   const [numberOfPages, setNumberOfPages] = useState(1);
   const number = 5;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.setItem('scoreboardPage', page);
+  }, [page]);
 
   useEffect(() => {
     getAllUsersSortedByScore().then(setUsers);

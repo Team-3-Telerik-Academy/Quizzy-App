@@ -10,6 +10,7 @@ import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import toast from "react-hot-toast";
 import { getGroupByTitle } from "../../services/groups.services";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SingleNotification = ({
   invitation,
@@ -17,44 +18,52 @@ const SingleNotification = ({
   handleNotificationsClose,
 }) => {
   const { userData, setUserData } = useContext(AppContext);
+  const location = useLocation();
+const navigate = useNavigate();
 
-  const handleAcceptInvitation = (prop, value) => {
-    //to write for friends
-    if (prop === "quizInvitations") {
-      getQuizByTitle(value)
-        .then((quiz) => {
-          acceptInvitation(
-            userData.username,
-            prop,
-            value,
-            Object.keys(quiz.val())[0],
-            setUserData
-          );
-        })
-        .then(() => {
-          toast.success("You have accepted the invitation successfully!", {
-            position: "bottom-right",
-          });
+const handleAcceptInvitation = (prop, value) => {
+  //to write for friends
+  if (prop === "quizInvitations") {
+    getQuizByTitle(value)
+      .then((quiz) => {
+        acceptInvitation(
+          userData.username,
+          prop,
+          value,
+          Object.keys(quiz.val())[0],
+          setUserData
+        );
+      })
+      .then(() => {
+        toast.success("You have accepted the invitation successfully!", {
+          position: "bottom-right",
         });
-    }
-    if (prop === "groupInvitations") {
-      getGroupByTitle(value)
-        .then((group) => {
-          acceptInvitation(
-            userData.username,
-            prop,
-            value,
-            Object.keys(group.val())[0],
-            setUserData
-          );
-        })
-        .then(() => {
-          toast.success("You have accepted the invitation successfully!", {
-            position: "bottom-right",
-          });
+        if (location.pathname === '/quizzes') {
+          navigate('/quizzes');
+        }
+      });
+  }
+  if (prop === "groupInvitations") {
+    getGroupByTitle(value)
+      .then((group) => {
+        acceptInvitation(
+          userData.username,
+          prop,
+          value,
+          Object.keys(group.val())[0],
+          setUserData
+        );
+      })
+      .then(() => {
+        toast.success("You have accepted the invitation successfully!", {
+          position: "bottom-right",
         });
-    }
-  };
+        if (location.pathname === '/educatorGroups') {
+          navigate('/educatorGroups');
+        }
+      });
+  }
+};
 
   const handleDeclineInvitation = (prop, value) => {
     //to write for friends

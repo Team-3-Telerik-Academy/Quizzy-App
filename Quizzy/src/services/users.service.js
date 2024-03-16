@@ -8,6 +8,7 @@ import {
   equalTo,
   orderByChild,
   child,
+  push,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
@@ -28,7 +29,7 @@ export const getAllEducators = async () => {
     const arrayOfAllUsers = Object.keys(snapshot.val()).map(
       (el) => snapshot.val()[el]
     );
-  
+
     return arrayOfAllUsers;
   } catch (error) {
     console.error(error);
@@ -36,7 +37,9 @@ export const getAllEducators = async () => {
 };
 
 export const getAllUsersSortedByScore = async () => {
-  const snapshot = await get(query(ref(db, "users"), orderByChild('totalPoints')));
+  const snapshot = await get(
+    query(ref(db, "users"), orderByChild("totalPoints"))
+  );
   const users = [];
   snapshot.forEach((childSnapshot) => {
     users.push({
@@ -49,6 +52,11 @@ export const getAllUsersSortedByScore = async () => {
 
 export const getUserByUsername = (username) => {
   return get(ref(db, `users/${username}`));
+};
+
+export const byUsername = async (username) => {
+  const result = await get(ref(db, `users/${username}`));
+  return result.val();
 };
 
 export const createUserUsername = (
@@ -142,13 +150,13 @@ export const acceptInvitation = async (username, prop, value, id, fn) => {
     const quizRef = ref(db, `quizzes/${id}`);
     const invitedUsersRef = child(quizRef, "invitedUsers");
     await update(invitedUsersRef, {
-      [username]: 'accepted',
+      [username]: "accepted",
     });
   } else if (prop === "groupInvitations") {
     const groupRef = ref(db, `groups/${id}`);
     const invitedUsersRef = child(groupRef, "invitedUsers");
     await update(invitedUsersRef, {
-      [username]: 'accepted',
+      [username]: "accepted",
     });
 
     const membersRef = child(groupRef, "members");
@@ -174,15 +182,106 @@ export const declineInvitation = async (username, prop, value, id, fn) => {
     const quizRef = ref(db, `quizzes/${id}`);
     const invitedUsersRef = child(quizRef, "invitedUsers");
     await update(invitedUsersRef, {
-      [username]: 'declined',
+      [username]: "declined",
     });
   } else if (prop === "groupInvitations") {
     const groupRef = ref(db, `groups/${id}`);
     const invitedUsersRef = child(groupRef, "invitedUsers");
     await update(invitedUsersRef, {
-      [username]: 'declined',
+      [username]: "declined",
     });
   }
 
   listenForUserChanges(username, fn);
+};
+
+export const createUserMessages = async (
+  user,
+  sender,
+  navigate,
+  path,
+  callback
+) => {
+  const receivingUser = await set(
+    ref(db, `users/${user.username}/messages/${sender.username}`),
+    {
+      username: sender.username,
+      image: sender.image,
+      firstName: sender.firstName,
+      lastName: sender.lastName,
+    }
+  );
+
+  const sendingUser = await set(
+    ref(db, `users/${sender.username}/messages/${user.username}`),
+    {
+      username: user.username,
+      image: user.image,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    }
+  );
+  const userRef = ref(db, `users/${sender.username}`);
+
+  console.log(sender.username);
+  console.log(user.username);
+
+  onValue(userRef, (snapshot) => {
+    callback(snapshot.val());
+  });
+
+  navigate(path);
+};
+
+//// send message function
+
+export const sendMessage = async (
+  personSendingMessage,
+  content,
+  personReceivingMessage,
+  callback
+) => {
+  try {
+    const senderRef = ref(
+      db,
+      `users/${personSendingMessage}/messages/${personReceivingMessage}/chat/`
+    );
+    const receiverRef = ref(
+      db,
+      `users/${personReceivingMessage}/messages/${personSendingMessage}/chat/`
+    );
+
+    const sender = await push(senderRef, {
+      message: content,
+      day: new Date().toDateString(),
+      hour: new Date().getHours(),
+      minutes: new Date().getMinutes(),
+      name: personSendingMessage,
+    });
+
+    const receiver = await push(receiverRef, {
+      message: content,
+      day: new Date().toDateString(),
+      hour: new Date().getHours(),
+      minutes: new Date().getMinutes(),
+      name: personSendingMessage,
+    });
+
+    return { sender, receiver };
+  } catch (error) {
+    console.error("Error sending message:", error);
+  }
+};
+
+export const displayMessages = async (username, personChatWith, callback) => {
+  const messageRef = ref(
+    db,
+    `users/${username}/messages/${personChatWith}/chat`
+  );
+
+  const chats = onValue(messageRef, (snapshot) => {
+    const result = snapshot.val();
+    callback(result);
+  });
+  return chats;
 };

@@ -81,12 +81,12 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
           {
             text: "Friends",
             icon: <People />,
-            click: () => navigate("/friends"),
+            click: () => navigate("/Friends"),
           },
           {
             text: "Messenger",
             icon: <Sms />,
-            click: () => navigate("/messenger"),
+            click: () => navigate("/Messenger"),
           },
           {
             text: "Live Battle",

@@ -38,11 +38,14 @@ import CreateGroup from "./Views/CreateGroup/CreateGroup";
 import CreateSuccessView from "./Views/CreateSuccessView/CreateSuccessView";
 import SingleStatisticsView from "./Views/SingleStatisticsView/SingleStatisticsView";
 import QuizzesComment from "./Views/QuizzesComment/QuizzesComment";
+import Friends from "./Views/Friends/Friends";
+import Messenger from "./Views/Messenger/Messenger";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
   const [userCredentials, setUserCredentials] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [chatUser, setChatUser] = useState(null);
 
   if (userCredentials !== user) {
     setUserCredentials(user);
@@ -65,7 +68,14 @@ function App() {
 
   return (
     <AppContext.Provider
-      value={{ userCredentials, setUserCredentials, userData, setUserData }}
+      value={{
+        userCredentials,
+        setUserCredentials,
+        userData,
+        setUserData,
+        chatUser,
+        setChatUser,
+      }}
     >
       <Toaster />
       <BrowserRouter>
@@ -215,6 +225,25 @@ function App() {
               </LoggedInMain>
             }
           />
+
+          <Route
+            path="/Friends"
+            element={
+              <LoggedInMain>
+                <Friends />
+              </LoggedInMain>
+            }
+          />
+
+          <Route
+            path="/Messenger"
+            element={
+              <LoggedInMain>
+                <Messenger />
+              </LoggedInMain>
+            }
+          />
+
           <Route
             path="/takenQuizzes/details"
             element={
@@ -224,6 +253,7 @@ function App() {
               </LoggedInMain>
             }
           />
+
           <Route
             path="/takenQuizzes/comments"
             element={

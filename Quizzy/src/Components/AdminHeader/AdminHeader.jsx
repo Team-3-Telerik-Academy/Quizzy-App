@@ -74,9 +74,9 @@ const AdminHeader = () => {
   return (
     <AppBar position="fixed" open={open}>
       <Toolbar>
-        <Typography sx={{ fontFamily: "fantasy", fontSize: "30px" }}>
+        {/* <Typography sx={{ fontFamily: "fantasy", fontSize: "30px" }}>
           Hi, {userData?.firstName + " " + userData?.lastName}
-        </Typography>
+        </Typography> */}
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           <IconButton

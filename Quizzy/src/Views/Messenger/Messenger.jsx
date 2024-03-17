@@ -15,7 +15,7 @@ const Messenger = () => {
   const [chat, setChat] = useState(null);
 
   useEffect(() => {
-    if (selectedPerson && userData.messages[selectedPerson.selected.username]) {
+    if (selectedPerson && userData.messages[selectedPerson?.selected.username]) {
       setChat(userData.messages[selectedPerson.selected.username].chat);
     }
   }, [selectedPerson, userData]);

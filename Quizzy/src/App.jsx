@@ -1,14 +1,14 @@
 import "./App.css";
 import Header from "./Components/Header/Header";
 import SignUp from "./Views/SignUp/SignUp";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AppContext from "./Context/AppContext";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignIn from "./Views/SignIn/SignIn";
 import Home from "./Views/Home/Home";
 import { auth } from "./config/firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { getUserData } from "./services/users.service";
+import { getUserData, listenForUserChanges } from "./services/users.service";
 import { Toaster } from "react-hot-toast";
 import LoggedInMain from "./Components/LoggedInMain/LoggedInMain";
 import Loading from "./Components/Loading/Loading";
@@ -67,6 +67,15 @@ function App() {
       })
       .catch((e) => alert(e.message));
   }, [user]);
+
+  const userDataRef = useRef();
+
+useEffect(() => {
+  if (userData && JSON.stringify(userData) !== JSON.stringify(userDataRef.current)) {
+    userDataRef.current = userData;
+    listenForUserChanges(userData.username, setUserData);
+  }
+}, [userData]);
 
   return (
     <AppContext.Provider

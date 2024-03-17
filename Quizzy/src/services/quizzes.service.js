@@ -10,7 +10,7 @@ import {
   remove,
   child,
 } from "firebase/database";
-import { db } from "../config/firebase-config";
+import { auth, db } from "../config/firebase-config";
 
 export const fromQuizzesDocument = (snapshot) => {
   try {
@@ -277,11 +277,18 @@ export const removeUserQuizInvitation = async (quizId, quizTitle, username, call
   });
 };
 
-export const addCommentToATakenQuiz = async (username, quizId, comment, author, callback) => {
+export const addCommentToATakenQuiz = async (username, quizId, comment, author, authorUsername, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
   const commentsRef = child(takenQuizRef, 'comments');
+  const participantRef = child(ref(db, `users/${username}`), 'quizCommentsNotifications');
 
-  await push(commentsRef, { 'content': comment, 'author': author });
+  const newCommentRef = await push(child(participantRef, 'comments'));
+  const newCommentKey = newCommentRef.key;
+
+  await push(commentsRef, { 'content': comment, 'author': author, 'authorUsername': authorUsername });
+  await update(participantRef, {
+    [newCommentKey]: quizId,
+  });
 
   onValue(takenQuizRef, (snapshot) => {
     callback({ ...snapshot.val(), id: quizId, participant: username });
@@ -310,9 +317,31 @@ export const editCommentToATakenQuiz = async (username, quizId, commentId, newCo
   });
 };
 
-export const addReplyToACommentToATakenQuiz = async (username, quizId, commentId, reply, author, callback) => {
+export const addReplyToACommentToATakenQuiz = async (username, quizId, commentId, reply, author, replyAuthor, commentAuthorUsername, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
   const repliesRef = child(takenQuizRef, `comments/${commentId}/replies`);
+
+  //not finished - only one notification will appear like this
+  if (replyAuthor === username) {
+    const authorRef = child(ref(db, `users/${commentAuthorUsername}`), 'quizRepliesNotifications');
+    // const newReplyRef = await push(child(authorRef, 'replies'));
+    // const newReplyKey = newReplyRef.key;
+
+    await push(authorRef, {
+      quizId: quizId,
+      username: username,
+    });
+  }
+
+  if (replyAuthor === commentAuthorUsername) {
+    const participantRef = child(ref(db, `users/${username}`), 'quizRepliesNotifications');
+    const newReplyRef = await push(child(participantRef, 'replies'));
+    const newReplyKey = newReplyRef.key;
+
+    await update(participantRef, {
+      [newReplyKey]: quizId,
+    });
+  }
 
   await push(repliesRef, { content: reply, author: author });
 

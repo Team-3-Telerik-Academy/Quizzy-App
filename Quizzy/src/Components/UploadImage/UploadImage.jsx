@@ -34,7 +34,7 @@ const UploadImage = ({ prop, fn, value }) => {
     } else if (value === "userImage") {
       path = "avatars/";
       fileName = userData.username;
-      updateUserInfo(userData.username, "image", defaultUserImage, fn);
+      updateUserInfo(userData.username, "image", defaultUserImage);
     }
 
     const imageRef = ref(storage, path + fileName);
@@ -73,7 +73,7 @@ const UploadImage = ({ prop, fn, value }) => {
       if (value === "quizImage") {
         updateQuizInfo(prop.id, "image", downloadUrl, fn);
       } else if (value === "userImage") {
-        updateUserInfo(userData.username, "image", downloadUrl, fn);
+        updateUserInfo(userData.username, "image", downloadUrl);
       }
     });
   };

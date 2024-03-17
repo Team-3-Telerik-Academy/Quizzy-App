@@ -10,7 +10,7 @@ import LoggedInMain from "../../Components/LoggedInMain/LoggedInMain";
 import { updateUserInfo } from "../../services/users.service";
 
 const PublicQuizView = () => {
-  const { userData, setUserData } = useContext(AppContext);
+  const { userData } = useContext(AppContext);
   const { id } = useParams();
   const [index, setIndex] = useState(0);
   const [page, setPage] = useState(1);
@@ -58,7 +58,6 @@ const PublicQuizView = () => {
             userData.username,
             "totalPoints",
             totalPoints.val() + score,
-            setUserData
           );
         })
         .then(() => {
@@ -71,6 +70,7 @@ const PublicQuizView = () => {
             answers,
             takenOn: new Date().toString(),
             type: quiz.type,
+            totalPoints: quizTotalPoints,
           });
         })
         .then(() =>

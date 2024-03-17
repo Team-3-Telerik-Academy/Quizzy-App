@@ -9,6 +9,7 @@ import {
   orderByChild,
   child,
   push,
+  remove,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
@@ -57,17 +58,6 @@ export const getUserByUsername = (username) => {
 export const byUsername = async (username) => {
   const result = await get(ref(db, `users/${username}`));
   return result.val();
-};
-
-export const listenForChatUsers = (username, callback) => {
-  const userRef = ref(db, `users/${username}/messages`);
-  onValue(userRef, (snapshot) => {
-    if (snapshot.val() === null) {
-      return;
-    }
-    console.log(snapshot.val())
-    callback(Object.values(snapshot.val()));
-  });
 };
 
 export const createUserUsername = (
@@ -146,13 +136,12 @@ export const unblockUser = async (username, fn, user) => {
     .then((blockedUsers) => fn(blockedUsers));
 };
 
-export const updateUserInfo = async (username, prop, value, fn) => {
+export const updateUserInfo = async (username, prop, value) => {
   const userRef = ref(db, `users/${username}`);
   await update(userRef, { [prop]: value });
-  listenForUserChanges(username, fn);
 };
 
-export const acceptInvitation = async (username, prop, value, id, fn) => {
+export const acceptInvitation = async (username, prop, value, id) => {
   const userRef = ref(db, `users/${username}`);
   await update(child(userRef, prop), { [value]: null });
 
@@ -180,11 +169,9 @@ export const acceptInvitation = async (username, prop, value, id, fn) => {
       groups: numberOfGroups.val() + 1,
     });
   }
-
-  listenForUserChanges(username, fn);
 };
 
-export const declineInvitation = async (username, prop, value, id, fn) => {
+export const declineInvitation = async (username, prop, value, id) => {
   const userRef = ref(db, `users/${username}`);
   await update(child(userRef, prop), { [value]: null });
 
@@ -202,8 +189,11 @@ export const declineInvitation = async (username, prop, value, id, fn) => {
       [username]: "declined",
     });
   }
+};
 
-  listenForUserChanges(username, fn);
+export const deleteNotification = async (username, prop, value) => {
+  const userRef = ref(db, `users/${username}`);
+  await update(child(userRef, prop), { [value]: null });
 };
 
 export const createUserMessages = async (
@@ -232,14 +222,14 @@ export const createUserMessages = async (
       lastName: user.lastName,
     }
   );
-  const userRef = ref(db, `users/${sender.username}`);
 
+  // const userRef = ref(db, `users/${sender.username}`);
   // console.log(sender.username);
   // console.log(user.username);
 
-  onValue(userRef, (snapshot) => {
-    callback(snapshot.val());
-  });
+  // onValue(userRef, (snapshot) => {
+  //   callback(snapshot.val());
+  // });
 
   navigate(path);
 };
@@ -278,11 +268,11 @@ export const sendMessage = async (
       name: personSendingMessage,
     });
 
-    const userRef = ref(db, `users/${personSendingMessage}`);
+    // const userRef = ref(db, `users/${personSendingMessage}`);
 
-    onValue(userRef, (snapshot) => {
-      callback(snapshot.val());
-    });
+    // onValue(userRef, (snapshot) => {
+    //   callback(snapshot.val());
+    // });
 
     // return { sender, receiver };
   } catch (error) {
@@ -290,6 +280,8 @@ export const sendMessage = async (
   }
 };
 
+
+// on value - not used
 export const displayMessages = async (username, personChatWith, callback) => {
   const messageRef = ref(
     db,
@@ -301,4 +293,15 @@ export const displayMessages = async (username, personChatWith, callback) => {
     callback(result);
   });
   return chats;
+};
+
+// on value - not used
+export const listenForChatUsers = (username, callback) => {
+  const userRef = ref(db, `users/${username}/messages`);
+  onValue(userRef, (snapshot) => {
+    if (snapshot.val() === null) {
+      return;
+    }
+    callback(Object.values(snapshot.val()));
+  });
 };

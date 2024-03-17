@@ -20,7 +20,7 @@ const AdminMain = ({ children }) => {
           <Box
             component="main"
             sx={{ flexGrow: 1, p: 3 }}
-            style={{ padding: "0" }}
+            style={{ padding: "0", height: '100%' }}
           >
             <br />
             {children}

@@ -142,13 +142,13 @@ const QuizzesView = () => {
                 gap: "50px",
               }}
             >
-              <StyledButton onClick={() => setPage(1)}>
+              <StyledButton style={{backgroundColor: page === 1 && 'rgba(255, 255, 255, 0.3)'}} onClick={() => setPage(1)}>
                 Ongoing Quizzes
               </StyledButton>
-              <StyledButton onClick={() => setPage(2)}>
+              <StyledButton style={{backgroundColor: page === 2 && 'rgba(255, 255, 255, 0.3)'}} onClick={() => setPage(2)}>
                 Finished Quizzes
               </StyledButton>
-              <StyledButton onClick={() => setPage(3)}>
+              <StyledButton style={{backgroundColor: page === 3 && 'rgba(255, 255, 255, 0.3)'}} onClick={() => setPage(3)}>
                 Invitational Quizzes
               </StyledButton>
             </div>

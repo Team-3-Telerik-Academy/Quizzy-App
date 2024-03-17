@@ -30,7 +30,7 @@ const Friends = () => {
       sender,
       navigate,
       path,
-      setUserData
+      // setUserData
     );
   };
 

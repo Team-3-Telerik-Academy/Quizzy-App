@@ -23,7 +23,7 @@ import Loading from "../../Components/Loading/Loading";
 
 const UserProfile = () => {
   const { username } = useParams();
-  const { userData, setUserData } = useContext(AppContext);
+  const { userData } = useContext(AppContext);
   const [user, setUser] = useState(null);
   const [profileInfo, setProfileInfo] = useState({
     firstName: userData?.firstName || "",
@@ -52,7 +52,6 @@ const UserProfile = () => {
       userData.username,
       "firstName",
       profileInfo.firstName,
-      setUserData
     ).then(() => setEditProfile({ ...editProfile, firstName: false }));
   };
 
@@ -66,7 +65,6 @@ const UserProfile = () => {
       userData.username,
       "lastName",
       profileInfo.lastName,
-      setUserData
     ).then(() => setEditProfile({ ...editProfile, lastName: false }));
   };
 
@@ -90,7 +88,6 @@ const UserProfile = () => {
       userData.username,
       "phone",
       profileInfo.phone,
-      setUserData
     ).then(() => {
       userData.phone = profileInfo.phone;
       setEditProfile({ ...editProfile, phone: false });
@@ -189,7 +186,6 @@ const UserProfile = () => {
                 <UploadImage
                   prop={userData}
                   value="userImage"
-                  fn={setUserData}
                 />
               </RightInfoBox>
             )}

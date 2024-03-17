@@ -40,8 +40,18 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const navigate = useNavigate();
   const [anchorElNotifications, setAnchorElNotifications] = useState(null);
   const [notifications, setNotifications] = useState(0);
+  const [openedNotifications, setOpenedNotifications] = useState(
+    localStorage.getItem("openedNotifications")
+      ? Number(localStorage.getItem("openedNotifications"))
+      : 0
+  );
 
   useEffect(() => {
+    localStorage.setItem("openedNotifications", openedNotifications);
+  }, [openedNotifications]);
+
+  useEffect(() => {
+    // + friendRequest
     if (userData) {
       setNotifications(
         (userData?.quizInvitations
@@ -49,22 +59,36 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
           : 0) +
           (userData?.groupInvitations
             ? Object.keys(userData.groupInvitations).length
-            : 0)
+            : 0) +
+          (userData?.quizCommentsNotifications
+            ? Object.keys(userData.quizCommentsNotifications).length
+            : 0) + (userData?.quizRepliesNotifications
+              ? Object.keys(userData.quizRepliesNotifications).length
+              : 0) -
+          openedNotifications
       );
     }
-  }, []);
+  }, [userData]);
 
   const handleNotificationsOpen = (event) => {
+    // for friend request
     if (
       (userData?.quizInvitations
         ? Object.keys(userData.quizInvitations).length
         : 0) +
         (userData?.groupInvitations
           ? Object.keys(userData.groupInvitations).length
-          : 0) ===
+          : 0) +
+        (userData?.quizCommentsNotifications
+          ? Object.keys(userData.quizCommentsNotifications).length
+          : 0) + (userData?.quizRepliesNotifications
+            ? Object.keys(userData.quizRepliesNotifications).length
+            : 0) ===
       0
     )
       return;
+
+    if (notifications !== 0) setOpenedNotifications(notifications);
 
     setAnchorElNotifications(event.currentTarget);
     setNotifications(0);
@@ -173,19 +197,52 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
                   invitation={invitation}
                   value="quizInvitations"
                   handleNotificationsClose={handleNotificationsClose}
+                  setOpenedNotifications={setOpenedNotifications}
                 />
               ))}
             {userData?.groupInvitations &&
-              Object.keys(userData.groupInvitations).map(
-                (invitation) => (
-                  <SingleNotification
-                    key={invitation}
-                    invitation={invitation}
-                    value="groupInvitations"
-                    handleNotificationsClose={handleNotificationsClose}
-                  />
-                )
-              )}
+              Object.keys(userData.groupInvitations).map((invitation) => (
+                <SingleNotification
+                  key={invitation}
+                  invitation={invitation}
+                  value="groupInvitations"
+                  handleNotificationsClose={handleNotificationsClose}
+                  setOpenedNotifications={setOpenedNotifications}
+                />
+              ))}
+            {userData?.quizCommentsNotifications &&
+              Object.keys(userData.quizCommentsNotifications).map((id) => (
+                <SingleNotification
+                  key={id}
+                  invitation={userData.quizCommentsNotifications[id]}
+                  id={id}
+                  value="quizCommentsNotifications"
+                  handleNotificationsClose={handleNotificationsClose}
+                  setOpenedNotifications={setOpenedNotifications}
+                />
+              ))}
+              {userData?.quizRepliesNotifications && userData.role === 'student' &&
+              Object.keys(userData.quizRepliesNotifications).map((id) => (
+                <SingleNotification
+                  key={id}
+                  invitation={userData.quizRepliesNotifications[id]}
+                  id={id}
+                  value="quizRepliesNotifications"
+                  handleNotificationsClose={handleNotificationsClose}
+                  setOpenedNotifications={setOpenedNotifications}
+                />
+              ))}
+            {userData?.quizRepliesNotifications && userData.role === 'educator' &&
+              Object.values(userData.quizRepliesNotifications).map((notification, index) => (
+                <SingleNotification
+                  key={Object.keys(userData.quizRepliesNotifications)[index]}
+                  invitation={notification}
+                  id={Object.keys(userData.quizRepliesNotifications)[index]}
+                  value="quizRepliesNotifications"
+                  handleNotificationsClose={handleNotificationsClose}
+                  setOpenedNotifications={setOpenedNotifications}
+                />
+              ))}
           </Menu>
           <IconButton
             size="large"

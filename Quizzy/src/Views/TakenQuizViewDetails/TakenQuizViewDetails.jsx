@@ -9,7 +9,7 @@ const TakenQuizViewDetails = () => {
 
   return (
     <>
-      {quiz?.comments ? (
+      {quiz ? (
         <QuizzesComment result={quiz} value={'student'}>
           <ResultDetails answers={quiz.answers} height={'100%'} color={'white'} />
         </QuizzesComment>

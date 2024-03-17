@@ -15,7 +15,10 @@ const Messenger = () => {
   const [chat, setChat] = useState(null);
 
   useEffect(() => {
-    if (selectedPerson && userData.messages[selectedPerson?.selected.username]) {
+    if (
+      selectedPerson &&
+      userData.messages[selectedPerson.selected.username]
+    ) {
       setChat(userData.messages[selectedPerson.selected.username].chat);
     }
   }, [selectedPerson, userData]);
@@ -39,8 +42,8 @@ const Messenger = () => {
       const result = await sendMessage(
         personSendingMessage,
         content,
-        personReceivingMessage,
-        setUserData
+        personReceivingMessage
+        // setUserData
       );
       setMessage("");
     }
@@ -75,7 +78,9 @@ const Messenger = () => {
   // }, [userData]);
 
   useEffect(() => {
-    if (people.length > 0) {
+    if (userData.messages) {
+      const people = Object.values(userData.messages);
+      setPeople(people);
       if (chatUser) {
         const selectedChatUser = people.filter(
           (person) => person.username === chatUser
@@ -84,12 +89,12 @@ const Messenger = () => {
       } else {
         setSelectedPerson({ selected: people[0] });
       }
-    } 
-  }, [people]);
-
-  useEffect(() => {
-    listenForChatUsers(userData.username, setPeople);
+    }
   }, [userData.messages]);
+
+  // useEffect(() => {
+  //   listenForChatUsers(userData.username, setPeople);
+  // }, [userData.messages]);
 
   return (
     <Box

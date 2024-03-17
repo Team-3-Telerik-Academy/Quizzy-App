@@ -93,6 +93,7 @@ const AdminHome = () => {
           display: "grid",
           gridTemplateColumns: "repeat(3,1fr)",
           marginTop: "60px",
+          marginBottom: "25px",
           gap: "15px",
         }}
       >
@@ -195,7 +196,7 @@ const AdminHome = () => {
           </Box>
         </Box>
         <Box
-        onClick={() => navigate('/adminQuizzes/public')}
+          onClick={() => navigate("/adminQuizzes/public")}
           sx={{
             width: "220px",
             height: "220px",
@@ -246,7 +247,7 @@ const AdminHome = () => {
           </Box>
         </Box>
         <Box
-        onClick={() => navigate('/adminQuizzes/private')}
+          onClick={() => navigate("/adminQuizzes/private")}
           sx={{
             width: "220px",
             height: "220px",

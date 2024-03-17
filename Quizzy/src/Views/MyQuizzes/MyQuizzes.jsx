@@ -96,10 +96,10 @@ const MyQuizzes = () => {
                   gap: "50px",
                 }}
               >
-                <StyledButton onClick={() => setPage(1)}>
+                <StyledButton style={{backgroundColor: page === 1 && 'rgba(255, 255, 255, 0.3)'}} onClick={() => setPage(1)}>
                   Ongoing Quizzes
                 </StyledButton>
-                <StyledButton onClick={() => setPage(2)}>
+                <StyledButton style={{backgroundColor: page === 2 && 'rgba(255, 255, 255, 0.3)'}} onClick={() => setPage(2)}>
                   Finished Quizzes
                 </StyledButton>
               </div>

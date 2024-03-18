@@ -263,12 +263,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             onClick={handleProfileMenuOpen}
             color="inherit"
           >
-            <Avatar alt={userData.name} src={userData?.image} />
-            {/* <img
-              src={userData?.image}
-              alt={userData?.username}
-              style={{ width: "35px", height: "35px", borderRadius: "50%" }}
-            /> */}
+            <Avatar alt={userData?.username} src={userData?.image} />
           </IconButton>
         </Box>
         <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -296,7 +291,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
         <MenuItem
           onClick={() => {
             handleMenuClose();
-            navigate(`/profile/${userData.username}`);
+            navigate(`/profile/${userData?.username}`);
           }}
         >
           Profile

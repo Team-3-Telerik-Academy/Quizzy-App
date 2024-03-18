@@ -57,7 +57,6 @@ function App() {
     setUserCredentials(user);
   }
 
-
   // finally retrieve user data if the user is logged (this is also broken and will be fixed in a bit)
   useEffect(() => {
     if (user === null) return;
@@ -99,7 +98,7 @@ function App() {
       <Toaster />
       <BrowserRouter>
         {loading && <Loading />}
-        {!user && <Header />}
+        {!loading && !user && <Header />}
         <Routes>
           {!loading && !user ? (
             <Route path="/" element={<Home />} />
@@ -243,58 +242,72 @@ function App() {
           <Route
             path="/quizzes"
             element={
-              <LoggedInMain>
-                <QuizzesView />
-              </LoggedInMain>
+              <Authenticated>
+                <LoggedInMain>
+                  <QuizzesView />
+                </LoggedInMain>
+              </Authenticated>
             }
           />
           <Route
             path="/takenQuizzes"
             element={
-              <LoggedInMain>
-                <TakenQuizzes />
-              </LoggedInMain>
+              <Authenticated>
+                <LoggedInMain>
+                  <TakenQuizzes />
+                </LoggedInMain>
+              </Authenticated>
             }
           />
           <Route
             path="/takenQuizzes/details"
             element={
-              <LoggedInMain>
-                <br />
-                <TakenQuizViewDetails />
-              </LoggedInMain>
+              <Authenticated>
+                <LoggedInMain>
+                  <br />
+                  <TakenQuizViewDetails />
+                </LoggedInMain>
+              </Authenticated>
             }
           />
           <Route
             path="/scoreboard"
             element={
-              <LoggedInMain>
-                <Scoreboard />
-              </LoggedInMain>
+              <Authenticated>
+                <LoggedInMain>
+                  <Scoreboard />
+                </LoggedInMain>
+              </Authenticated>
             }
           />
           <Route
             path="/Friends"
             element={
-              <LoggedInMain>
-                <Friends />
-              </LoggedInMain>
+              <Authenticated>
+                <LoggedInMain>
+                  <Friends />
+                </LoggedInMain>
+              </Authenticated>
             }
           />
           <Route
             path="/Messenger"
             element={
-              <LoggedInMain>
-                <Messenger />
-              </LoggedInMain>
+              <Authenticated>
+                <LoggedInMain>
+                  <Messenger />
+                </LoggedInMain>
+              </Authenticated>
             }
           />
           <Route
             path="/profile/:username"
             element={
-              <LoggedInMain>
-                <UserProfile />
-              </LoggedInMain>
+              <Authenticated>
+                <LoggedInMain>
+                  <UserProfile />
+                </LoggedInMain>
+              </Authenticated>
             }
           />
 

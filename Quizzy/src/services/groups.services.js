@@ -14,8 +14,10 @@ import { db } from "../config/firebase-config";
 export const getGroupById = async (id) => {
   try {
     const result = await get(ref(db, `groups/${id}`));
+    console.log('in')
 
     if (!result.exists()) {
+      console.log('nofound')
       throw new Error(`Group with id ${id} does not exist!`);
     }
 

@@ -104,167 +104,187 @@ const QuizzesView = () => {
 
   return (
     <>
-      <div
-        style={{
-          backgroundColor: "#F3F4F6",
-          height: "90.9vh",
-          marginTop: "20px",
-          overflow: "auto",
-        }}
-      >
+      {invitationalQuizzes && ongoingQuizzes && finishedQuizzes && (
         <div
           style={{
-            backgroundColor: "white",
-            padding: "10px",
-            textAlign: "center",
+            backgroundColor: "#F3F4F6",
+            height: "90.9vh",
+            marginTop: "20px",
+            overflow: "auto",
           }}
         >
-          <Typography
-            variant="h4"
-            sx={{
-              color: "#394E6A",
-              fontFamily: "Fantasy",
-              margin: "20px 0",
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "10px",
+              textAlign: "center",
             }}
           >
-            Challenge Yourself: Take a Quiz Today
-          </Typography>
-        </div>
-        {ongoingQuizzes?.length > 0 ||
-        finishedQuizzes?.length > 0 ||
-        invitationalQuizzes?.length > 0 ? (
-          <>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                backgroundColor: "rgb(3,165,251)",
-                gap: "50px",
+            <Typography
+              variant="h4"
+              sx={{
+                color: "#394E6A",
+                fontFamily: "Fantasy",
+                margin: "20px 0",
               }}
             >
-              <StyledButton style={{backgroundColor: page === 1 && 'rgba(255, 255, 255, 0.3)'}} onClick={() => setPage(1)}>
-                Ongoing Quizzes
-              </StyledButton>
-              <StyledButton style={{backgroundColor: page === 2 && 'rgba(255, 255, 255, 0.3)'}} onClick={() => setPage(2)}>
-                Finished Quizzes
-              </StyledButton>
-              <StyledButton style={{backgroundColor: page === 3 && 'rgba(255, 255, 255, 0.3)'}} onClick={() => setPage(3)}>
-                Invitational Quizzes
-              </StyledButton>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                width: "100%",
-              }}
-            >
-              <select
-                value={view}
-                onChange={(e) => setView(e.target.value)}
+              Challenge Yourself: Take a Quiz Today
+            </Typography>
+          </div>
+          {ongoingQuizzes?.length > 0 ||
+          finishedQuizzes?.length > 0 ||
+          invitationalQuizzes?.length > 0 ? (
+            <>
+              <div
                 style={{
-                  backgroundColor: "white",
-                  color: "rgb(3,165,251)",
-                  marginRight: "3.5vw",
-                  marginTop: "10px",
-                  padding: "10px",
-                  borderRadius: "5px",
-                  border: "1px solid rgb(3,165,251)",
-                }}
-              >
-                <option value="carousel">Slide Show</option>
-                <option value="pages">Full View</option>
-              </select>
-            </div>
-            {page === 1 && ongoingQuizzes.length === 0 ? (
-              <h2
-                style={{
-                  alignItems: "center",
-                  fontSize: "27px",
                   display: "flex",
                   justifyContent: "center",
-                  height: "55%",
+                  backgroundColor: "rgb(3,165,251)",
+                  gap: "50px",
                 }}
               >
-                No ongoing quizzes available at the moment!
-              </h2>
-            ) : (
-              page === 1 &&
-              ongoingQuizzes.length > 0 && (
-                <>
-                  {view === "carousel" ? (
-                    <QuizCarousel
-                      quizzes={ongoingQuizzes}
-                      fn={setUpdateQuizzes}
-                    />
-                  ) : (
-                    <Quizzes quizzes={ongoingQuizzes} fn={setUpdateQuizzes} />
-                  )}
-                </>
-              )
-            )}
-            {page === 2 && finishedQuizzes.length === 0 ? (
-              <h2
+                <StyledButton
+                  style={{
+                    backgroundColor: page === 1 && "rgba(255, 255, 255, 0.3)",
+                  }}
+                  onClick={() => setPage(1)}
+                >
+                  Ongoing Quizzes
+                </StyledButton>
+                <StyledButton
+                  style={{
+                    backgroundColor: page === 2 && "rgba(255, 255, 255, 0.3)",
+                  }}
+                  onClick={() => setPage(2)}
+                >
+                  Finished Quizzes
+                </StyledButton>
+                <StyledButton
+                  style={{
+                    backgroundColor: page === 3 && "rgba(255, 255, 255, 0.3)",
+                  }}
+                  onClick={() => setPage(3)}
+                >
+                  Invitational Quizzes
+                </StyledButton>
+              </div>
+              <div
                 style={{
-                  alignItems: "center",
-                  fontSize: "27px",
                   display: "flex",
-                  justifyContent: "center",
-                  height: "55%",
+                  justifyContent: "flex-end",
+                  width: "100%",
                 }}
               >
-                No finished quizzes available at the moment!
-              </h2>
-            ) : (
-              page === 2 &&
-              finishedQuizzes.length > 0 && (
-                <>
+                <select
+                  value={view}
+                  onChange={(e) => setView(e.target.value)}
+                  style={{
+                    backgroundColor: "white",
+                    color: "rgb(3,165,251)",
+                    marginRight: "3.5vw",
+                    marginTop: "10px",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    border: "1px solid rgb(3,165,251)",
+                  }}
+                >
+                  <option value="carousel">Slide Show</option>
+                  <option value="pages">Full View</option>
+                </select>
+              </div>
+              {page === 1 && ongoingQuizzes.length === 0 ? (
+                <h2
+                  style={{
+                    alignItems: "center",
+                    fontSize: "27px",
+                    display: "flex",
+                    justifyContent: "center",
+                    height: "55%",
+                  }}
+                >
+                  No ongoing quizzes available at the moment!
+                </h2>
+              ) : (
+                page === 1 &&
+                ongoingQuizzes.length > 0 && (
                   <>
                     {view === "carousel" ? (
-                      <QuizCarousel quizzes={finishedQuizzes} />
+                      <QuizCarousel
+                        quizzes={ongoingQuizzes}
+                        fn={setUpdateQuizzes}
+                      />
                     ) : (
-                      <Quizzes quizzes={finishedQuizzes} />
+                      <Quizzes quizzes={ongoingQuizzes} fn={setUpdateQuizzes} />
                     )}
                   </>
-                </>
-              )
-            )}
-            {page === 3 && invitationalQuizzes?.length === 0 ? (
-              <h2
-                style={{
-                  alignItems: "center",
-                  fontSize: "27px",
-                  display: "flex",
-                  justifyContent: "center",
-                  height: "55%",
-                }}
-              >
-                You haven&apos;t been invited to any quizzes yet!
-              </h2>
-            ) : (
-              page === 3 &&
-              invitationalQuizzes?.length > 0 && (
-                <>
-                {view === "carousel" ? (
-                    <QuizCarousel
-                      quizzes={invitationalQuizzes}
-                      fn={setUpdateQuizzes}
-                    />
-                  ) : (
-                    <Quizzes quizzes={invitationalQuizzes} fn={setUpdateQuizzes} />
-                  )}
-                </>
-              )
-            )}
-          </>
-        ) : (
-          <h1
-            style={{ textAlign: "center", marginTop: "35vh", height: "28vh" }}
-          >
-            No quizzes available at the moment
-          </h1>
-        )}
-      </div>
+                )
+              )}
+              {page === 2 && finishedQuizzes.length === 0 ? (
+                <h2
+                  style={{
+                    alignItems: "center",
+                    fontSize: "27px",
+                    display: "flex",
+                    justifyContent: "center",
+                    height: "55%",
+                  }}
+                >
+                  No finished quizzes available at the moment!
+                </h2>
+              ) : (
+                page === 2 &&
+                finishedQuizzes.length > 0 && (
+                  <>
+                    <>
+                      {view === "carousel" ? (
+                        <QuizCarousel quizzes={finishedQuizzes} />
+                      ) : (
+                        <Quizzes quizzes={finishedQuizzes} />
+                      )}
+                    </>
+                  </>
+                )
+              )}
+              {page === 3 && invitationalQuizzes?.length === 0 ? (
+                <h2
+                  style={{
+                    alignItems: "center",
+                    fontSize: "27px",
+                    display: "flex",
+                    justifyContent: "center",
+                    height: "55%",
+                  }}
+                >
+                  You haven&apos;t been invited to any quizzes yet!
+                </h2>
+              ) : (
+                page === 3 &&
+                invitationalQuizzes?.length > 0 && (
+                  <>
+                    {view === "carousel" ? (
+                      <QuizCarousel
+                        quizzes={invitationalQuizzes}
+                        fn={setUpdateQuizzes}
+                      />
+                    ) : (
+                      <Quizzes
+                        quizzes={invitationalQuizzes}
+                        fn={setUpdateQuizzes}
+                      />
+                    )}
+                  </>
+                )
+              )}
+            </>
+          ) : (
+            <h1
+              style={{ textAlign: "center", marginTop: "35vh", height: "28vh" }}
+            >
+              No quizzes available at the moment
+            </h1>
+          )}
+        </div>
+      )}
     </>
   );
 };

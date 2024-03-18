@@ -56,7 +56,7 @@ const SingleStatisticsView = () => {
       const flattenedQuizzes = filteredQuizzes.flat();
       flattenedQuizzes.sort((a, b) => b.score - a.score);
       setResults(flattenedQuizzes);
-    });
+    }).catch(() => navigate("*"));
   }, []);
 
   useEffect(() => {

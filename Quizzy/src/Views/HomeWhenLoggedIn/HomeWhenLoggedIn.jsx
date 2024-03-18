@@ -1,10 +1,8 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-// import home from "../../Images/test.jpg";
 import quizHomePic from "../../Images/quiz-home-pic.jpeg";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 
 const HomeWhenLoggedIn = () => {
   const navigate = useNavigate();
@@ -24,7 +22,6 @@ const HomeWhenLoggedIn = () => {
       <Typography
         variant="h4"
         sx={{
-          // color: "rgb(3, 165, 251)",
           color: "#394e6a",
           fontFamily: "Fantasy",
           marginBottom: "20px",

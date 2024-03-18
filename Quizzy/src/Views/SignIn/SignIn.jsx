@@ -17,7 +17,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import signInBackground from "../../Images/sign-in-background.jpg";
 import toast from "react-hot-toast";
 import { getUserData } from "../../services/users.service";
-// import { useLocation } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -65,7 +64,7 @@ const SignIn = () => {
           setUserCredentials(credential.user);
         })
         .then(() => {
-          navigate(location.state?.from.pathname || "/");
+          navigate(location?.state.from || "/");
         })
         .catch((e) => {
           console.log(e.message);

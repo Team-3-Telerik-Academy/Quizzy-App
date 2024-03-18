@@ -29,13 +29,13 @@ const AuthenticatedEducator = ({ children }) => {
   return (
     <>
       {!loading && !user ? (
-        <Navigate replace to="/signIn" state={{ from: location }} />
+        <Navigate replace to="/signIn" state={{ from: location.pathname }} />
       ) : !loading && user && ready && userData.role === 'educator' ? (
         children
       ) : (
         ready &&
-        !userData.admin && (
-          <Navigate replace to="/" state={{ from: location }} />
+        userData.role !== 'educator' && (
+          <Navigate replace to="/" state={{ from: location.pathname }} />
         )
       )}
     </>

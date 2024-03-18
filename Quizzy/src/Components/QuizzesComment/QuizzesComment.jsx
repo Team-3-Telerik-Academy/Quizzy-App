@@ -40,7 +40,7 @@ const QuizzesComment = (props) => {
   if (props.value === "educator") {
     quizParticipant = result.participant;
     quizKey = result.key;
-  } else if (props.value === "student" ) {
+  } else if (props.value === "student") {
     quizParticipant = userData.username;
     quizKey = result.id;
   }
@@ -67,7 +67,6 @@ const QuizzesComment = (props) => {
               }
             );
           }
-
           return {
             author: quiz.comments[commentKey].author,
             authorUsername: quiz.comments[commentKey].authorUsername,
@@ -77,6 +76,8 @@ const QuizzesComment = (props) => {
           };
         });
         setComments(quizComments);
+      } else {
+        setComments([]);
       }
     }
   }, [quiz]);
@@ -171,185 +172,196 @@ const QuizzesComment = (props) => {
   };
 
   return (
-    <Container>
-      <Box my={4}>
-        {props.children}
-        <Typography
-          variant="h4"
-          gutterBottom
-          style={{
-            color: "#394E6A",
-            fontFamily: "Fantasy",
-            textAlign: "center",
-          }}
-        >
-          Comments:
-        </Typography>
-        {props.value === "educator" && (
-          <>
-            <Box my={2}>
-              <ThemeProvider theme={theme}>
-                <TextField
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  id="comment"
-                  label="Comment"
-                  multiline
-                  rows={3}
-                  variant="outlined"
-                  fullWidth
-                />
-              </ThemeProvider>
-            </Box>
-            <Button
-              variant="contained"
-              type="submit"
-              style={{ backgroundColor: "rgb(3, 165, 251)" }}
-              onClick={handleAddComment}
+    <>
+      {comments && (
+        <Container>
+          <Box my={4}>
+            {props.children}
+            <Typography
+              variant="h4"
+              gutterBottom
+              style={{
+                color: "#394E6A",
+                fontFamily: "Fantasy",
+                textAlign: "center",
+              }}
             >
-              Add Comment
-            </Button>
-          </>
-        )}
-      </Box>
-      {props.value === "educator" && (
-        <Typography
-          variant="h5"
-          gutterBottom
-          style={{ color: "#394E6A", fontFamily: "Fantasy" }}
-        >
-          Past Comments:
-        </Typography>
-      )}
-      <Box style={{ marginBottom: "40px" }}>
-        {comments
-          ? comments.map((comment) => (
+              Comments:
+            </Typography>
+            {props.value === "educator" && (
               <>
-                <Typography
-                  style={{ color: "rgb(3,165,251)", fontWeight: "bold" }}
-                >
-                  {comment.author}:
-                </Typography>
-                <Box
-                  key={comment.commentId}
-                  my={2}
-                  style={{
-                    marginTop: "0",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    border: "1px solid #394E6A",
-                    padding: "10px",
-                    borderRadius: "5px",
-                  }}
-                  onMouseOver={(e) => {
-                    e.currentTarget.style.boxShadow = "0 0 5px rgb(3,165,251)";
-                  }}
-                  onMouseOut={(e) => {
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  {editingCommentId === comment.commentId ? (
-                    <ThemeProvider theme={theme}>
-                      <TextField
-                        value={editedComment}
-                        onChange={(e) => setEditedComment(e.target.value)}
-                        id="comment"
-                        label="Comment"
-                        multiline
-                        rows={1}
-                        variant="outlined"
-                        color="primary"
-                        style={{ width: "400px" }}
-                      />
-                      <div style={{ display: "flex", alignItems: "center" }}>
-                        <Button
-                          style={{
-                            backgroundColor: "rgb(3, 165, 251)",
-                            border: "1px solid white",
-                            color: "white",
-                            height: "37px",
-                          }}
-                          variant="contained"
-                          onClick={() => handleEditComment(comment.commentId)}
-                        >
-                          Done
-                        </Button>
-                        <Button
-                          style={{
-                            backgroundColor: "rgb(3, 165, 251)",
-                            border: "1px solid white",
-                            color: "white",
-                            height: "37px",
-                          }}
-                          variant="contained"
-                          onClick={() => {
-                            setEditingCommentId(null);
-                            setEditedComment("");
-                          }}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </ThemeProvider>
-                  ) : (
-                    <Typography
-                      variant="body1"
-                      style={{ fontWeight: "bold"}}
-                    >
-                      {comment.comment}
-                    </Typography>
-                  )}
-                  {editingCommentId !== comment.commentId &&
-                    props.value === "educator" && (
-                      <div>
-                        <Button
-                          style={{
-                            backgroundColor: "rgb(3, 165, 251)",
-                            border: "1px solid white",
-                          }}
-                          variant="contained"
-                          onClick={() => {
-                            setEditingCommentId(comment.commentId);
-                            setEditedComment(comment.comment);
-                          }}
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          style={{
-                            backgroundColor: "rgb(3, 165, 251)",
-                            border: "1px solid white",
-                          }}
-                          variant="contained"
-                          onClick={() => handleRemoveComment(comment.commentId)}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    )}
+                <Box my={2}>
+                  <ThemeProvider theme={theme}>
+                    <TextField
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      id="comment"
+                      label="Comment"
+                      multiline
+                      rows={3}
+                      variant="outlined"
+                      fullWidth
+                    />
+                  </ThemeProvider>
                 </Box>
-                <ReplyToAComment
-                  comment={comment}
-                  theme={theme}
-                  handleAddReply={handleAddReply}
-                  handleDeleteReply={handleDeleteReply}
-                  handleEditReply={handleEditReply}
-                />
+                <Button
+                  variant="contained"
+                  type="submit"
+                  style={{ backgroundColor: "rgb(3, 165, 251)" }}
+                  onClick={handleAddComment}
+                >
+                  Add Comment
+                </Button>
               </>
-            ))
-          : props.value !== "educator" && (
-              <Typography
-                variant="h6"
-                align="center"
-                color="textSecondary"
-                style={{ marginTop: "2em" }}
-              >
-                There are no comments for this quiz yet!
-              </Typography>
             )}
-      </Box>
-    </Container>
+          </Box>
+          {props.value === "educator" && (
+            <Typography
+              variant="h5"
+              gutterBottom
+              style={{ color: "#394E6A", fontFamily: "Fantasy" }}
+            >
+              Past Comments:
+            </Typography>
+          )}
+          <Box style={{ marginBottom: "40px" }}>
+            {comments.length > 0
+              ? comments.map((comment) => (
+                  <>
+                    <Typography
+                      style={{ color: "rgb(3,165,251)", fontWeight: "bold" }}
+                    >
+                      {comment.author}:
+                    </Typography>
+                    <Box
+                      key={comment.commentId}
+                      my={2}
+                      style={{
+                        marginTop: "0",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        border: "1px solid #394E6A",
+                        padding: "10px",
+                        borderRadius: "5px",
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.boxShadow =
+                          "0 0 5px rgb(3,165,251)";
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.boxShadow = "none";
+                      }}
+                    >
+                      {editingCommentId === comment.commentId ? (
+                        <ThemeProvider theme={theme}>
+                          <TextField
+                            value={editedComment}
+                            onChange={(e) => setEditedComment(e.target.value)}
+                            id="comment"
+                            label="Comment"
+                            multiline
+                            rows={1}
+                            variant="outlined"
+                            color="primary"
+                            style={{ width: "400px" }}
+                          />
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
+                            <Button
+                              style={{
+                                backgroundColor: "rgb(3, 165, 251)",
+                                border: "1px solid white",
+                                color: "white",
+                                height: "37px",
+                              }}
+                              variant="contained"
+                              onClick={() =>
+                                handleEditComment(comment.commentId)
+                              }
+                            >
+                              Done
+                            </Button>
+                            <Button
+                              style={{
+                                backgroundColor: "rgb(3, 165, 251)",
+                                border: "1px solid white",
+                                color: "white",
+                                height: "37px",
+                              }}
+                              variant="contained"
+                              onClick={() => {
+                                setEditingCommentId(null);
+                                setEditedComment("");
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </ThemeProvider>
+                      ) : (
+                        <Typography
+                          variant="body1"
+                          style={{ fontWeight: "bold" }}
+                        >
+                          {comment.comment}
+                        </Typography>
+                      )}
+                      {editingCommentId !== comment.commentId &&
+                        props.value === "educator" && (
+                          <div>
+                            <Button
+                              style={{
+                                backgroundColor: "rgb(3, 165, 251)",
+                                border: "1px solid white",
+                              }}
+                              variant="contained"
+                              onClick={() => {
+                                setEditingCommentId(comment.commentId);
+                                setEditedComment(comment.comment);
+                              }}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              style={{
+                                backgroundColor: "rgb(3, 165, 251)",
+                                border: "1px solid white",
+                              }}
+                              variant="contained"
+                              onClick={() =>
+                                handleRemoveComment(comment.commentId)
+                              }
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        )}
+                    </Box>
+                    <ReplyToAComment
+                      comment={comment}
+                      theme={theme}
+                      handleAddReply={handleAddReply}
+                      handleDeleteReply={handleDeleteReply}
+                      handleEditReply={handleEditReply}
+                    />
+                  </>
+                ))
+              : props.value !== "educator" && (
+                  <Typography
+                    variant="h6"
+                    align="center"
+                    color="textSecondary"
+                    style={{ marginTop: "2em" }}
+                  >
+                    There are no comments for this quiz yet!
+                  </Typography>
+                )}
+          </Box>
+        </Container>
+      )}
+    </>
   );
 };
 

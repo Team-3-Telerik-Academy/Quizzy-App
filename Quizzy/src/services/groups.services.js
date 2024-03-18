@@ -17,7 +17,6 @@ export const getGroupById = async (id) => {
     console.log('in')
 
     if (!result.exists()) {
-      console.log('nofound')
       throw new Error(`Group with id ${id} does not exist!`);
     }
 

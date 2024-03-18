@@ -4,19 +4,17 @@ import {
   Menu,
   MenuItem,
   IconButton,
-  Switch,
   Badge,
   Toolbar,
   Typography,
   Avatar,
+  Paper,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
   Search as SearchIcon,
   MoreVert as MoreIcon,
   Logout as LogoutIcon,
-  Brightness7 as Brightness7Icon,
-  Brightness2 as Brightness2Icon,
   Notifications as NotificationsIcon,
   Email as EmailIcon,
 } from "@mui/icons-material";
@@ -33,6 +31,8 @@ import {
   StyledInputBase,
 } from "./loggedInHeaderStyle";
 import SingleNotification from "../SingleNotification/SingleNotification";
+import { getAllPublicQuizzes } from "../../services/quizzes.service";
+import { getAllUsers } from "../../services/users.service";
 
 const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -46,6 +46,59 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
       ? Number(localStorage.getItem("openedNotifications"))
       : 0
   );
+
+  const [allPublicQuizzes, setAllPublicQuizzes] = useState(null);
+  const [allUsers, setAllUsers] = useState(null);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    if (searchInput) {
+      const quizzes = allPublicQuizzes
+        .filter((quiz) =>
+          quiz.title.toLowerCase().includes(searchInput.toLowerCase())
+        )
+        .slice(0, 5);
+      const users = allUsers
+        .filter((user) =>
+          user.username.toLowerCase().includes(searchInput.toLowerCase())
+        )
+        .slice(0, 5);
+      setSearchResults([...quizzes, ...users]);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchInput, allPublicQuizzes, allUsers]);
+
+  const handleSearchChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    navigate("/search", { state: { searchInput: searchInput } });
+  };
+
+  const handleResultSelect = (result) => {
+    const quizKey = Object.entries(userData.takenQuizzes).find(
+      // eslint-disable-next-line no-unused-vars
+      ([_, quiz]) => quiz.id === result.id
+    )?.[0];
+
+    if (quizKey) {
+      navigate(`/takenQuizzes`, { state: { searchedQuizId: quizKey } });
+    } else if (result.title) {
+      navigate(`/quizzes`, { state: { searchedQuizzes: result } });
+    } else {
+      navigate(`/profile/${result.username}`);
+    }
+  };
+
+  useEffect(() => {
+    getAllPublicQuizzes()
+      .then(setAllPublicQuizzes)
+      .then(() => getAllUsers().then(setAllUsers));
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("openedNotifications", openedNotifications);
@@ -159,7 +212,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             }}
           />
         </Typography>
-        <Search>
+        <Search onSubmit={handleSearchSubmit}>
           <SearchIconWrapper>
             <SearchIcon />
           </SearchIconWrapper>
@@ -167,15 +220,26 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             placeholder="Search…"
             inputProps={{ "aria-label": "search" }}
             sx={{ width: "30ch" }}
+            value={searchInput}
+            onChange={handleSearchChange}
           />
+          {searchInput && (
+            <Paper
+              style={{ position: "absolute", marginTop: 8, width: "27.2ch" }}
+            >
+              {searchResults.map((result, index) => (
+                <MenuItem
+                  key={index}
+                  onClick={() => handleResultSelect(result)}
+                >
+                  {result.title || result.username}
+                </MenuItem>
+              ))}
+            </Paper>
+          )}
         </Search>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          <IconButton size="large" color="inherit">
-            <Brightness7Icon sx={{ fontSize: 20 }} />
-            <Switch />
-            <Brightness2Icon sx={{ fontSize: 20 }} />
-          </IconButton>
           <IconButton size="large" color="inherit">
             <Badge badgeContent={4} color="secondary">
               <EmailIcon />

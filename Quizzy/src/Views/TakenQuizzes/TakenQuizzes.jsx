@@ -13,7 +13,7 @@ import {
   Pagination,
   Typography,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TakenQuizzes = () => {
   const [takenQuizzes, setTakenQuizzes] = useState(null);
@@ -26,12 +26,20 @@ const TakenQuizzes = () => {
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
 
+  const location = useLocation();
+  const searchedQuizId = location.state?.searchedQuizzes;
+
   useEffect(() => {
     localStorage.setItem("takenQuizzesPage", page);
   }, [page]);
 
   useEffect(() => {
-    getTakenQuizzesByUser(userData?.username).then(setTakenQuizzes);
+    if (!searchedQuizId) {
+      getTakenQuizzesByUser(userData?.username).then(setTakenQuizzes);
+    } else {
+      setPage(1);
+      setTakenQuizzes([searchedQuizId]);
+    }
   }, []);
 
   useEffect(() => {

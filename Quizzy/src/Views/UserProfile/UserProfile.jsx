@@ -90,7 +90,7 @@ const UserProfile = () => {
       {user && (
         <UserProfileBox>
           <ProfileHeader
-            userData={userData.username === username ? userData : user}
+            user={userData.username === username ? userData : user}
           />
           <InfoBox style={{ backgroundColor: "#F3F4F6" }}>
             <LeftInfoBox>

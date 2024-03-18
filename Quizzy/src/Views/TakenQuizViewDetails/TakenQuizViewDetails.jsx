@@ -8,11 +8,22 @@ const TakenQuizViewDetails = () => {
 
   return (
     <>
-      {quiz && (
-        <QuizzesComment result={quiz} value={'student'}>
-          <ResultDetails answers={quiz.answers} height={'100%'} color={'white'} />
-        </QuizzesComment>
-      )}
+      {quiz &&
+        (quiz.type === "private" ? (
+          <QuizzesComment result={quiz} value={"student"}>
+            <ResultDetails
+              answers={quiz.answers}
+              height={"100%"}
+              color={"white"}
+            />
+          </QuizzesComment>
+        ) : (
+          <ResultDetails
+            answers={quiz.answers}
+            height={"100%"}
+            color={"white"}
+          />
+        ))}
     </>
   );
 };

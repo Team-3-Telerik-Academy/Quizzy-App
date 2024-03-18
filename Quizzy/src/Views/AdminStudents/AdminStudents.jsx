@@ -4,6 +4,7 @@ import { Box, Button, Typography } from "@mui/material";
 import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
 const AdminStudents = () => {
   const [users, setUsers] = useState(null);
@@ -92,14 +93,10 @@ const AdminStudents = () => {
                       e.currentTarget.style.transform = "scale(1)";
                     }}
                   >
-                    <img
-                      src={user.image}
-                      style={{
-                        width: "40px",
-                        borderRadius: "20px",
-                        height: "40px",
-                      }}
-                      alt=""
+                    <UserProfilePic
+                      image={user.image}
+                      status={user.status}
+                      onClick={() => navigate(`/profile/${user.username}`)}
                     />
                     <Box
                       sx={{

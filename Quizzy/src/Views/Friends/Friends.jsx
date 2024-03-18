@@ -5,6 +5,7 @@ import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { friendRequest } from "../../services/users.service";
+import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
 const Friends = () => {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ const Friends = () => {
   const { userData, chatUser, setChatUser, setUserData } =
     useContext(AppContext);
   const [text, setText] = useState({});
+  const [friendRequestSent, setFriendRequestSent] = useState(false);
 
   useEffect(() => {
     users.map((user, index) => {
@@ -31,9 +33,9 @@ const Friends = () => {
       .then((result) => setUsers(result));
   }, []);
 
-  const handleFriendRequest = async (sender, receiver, index) => {
-    const result = await friendRequest(sender, receiver);
-    setText((prevText) => ({ ...prevText, [index]: "Request sent" }));
+  const handleFriendRequest = async (sender, receiver, action) => {
+    const result = await friendRequest(sender, receiver, action);
+    // setText((prevText) => ({ ...prevText, [index]: "Request sent" }));
     return result;
   };
 
@@ -87,7 +89,6 @@ const Friends = () => {
             marginTop: "20px",
             fontFamily: "fantasy",
             color: "#394E6A",
-
             alignItems: "center",
           }}
         >
@@ -133,7 +134,6 @@ const Friends = () => {
                         display: "flex",
                         alignItems: "center",
                         transition: "transform 0.2s",
-                        // cursor: "pointer",
                       }}
                       onMouseOver={(e) => {
                         e.currentTarget.style.transform = "scale(1.05)";
@@ -142,16 +142,10 @@ const Friends = () => {
                         e.currentTarget.style.transform = "scale(1)";
                       }}
                     >
-                      <img
+                      <UserProfilePic
+                        image={user.image}
+                        status={user.status}
                         onClick={() => navigate(`/profile/${user.username}`)}
-                        src={user.image}
-                        style={{
-                          width: "40px",
-                          borderRadius: "20px",
-                          height: "40px",
-                          cursor: "pointer",
-                        }}
-                        alt=""
                       />
                       <Box
                         sx={{
@@ -179,25 +173,46 @@ const Friends = () => {
                           marginLeft: "10px",
                         }}
                       >
-                        <Button
-                          variant="contained"
-                          sx={{
-                            width: "115px",
-                            height: "auto",
-                            fontSize: "9.8px",
-                            marginBottom: "5px",
-                            marginLeft: "10px",
-                            backgroundColor: "rgb(3,165,251)",
-                            color: "white",
-                          }}
-                          onClick={() =>
-                            handleFriendRequest(userData, user, index)
-                          }
-                        >
-                          {text[index] === "Request sent"
-                            ? "Request sent"
-                            : "Add Friend"}
-                        </Button>
+                        {userData.sentFriendRequests &&
+                        Object.keys(userData.sentFriendRequests).includes(
+                          user.username
+                        ) ? (
+                          <Button
+                            variant="contained"
+                            sx={{
+                              width: "115px",
+                              height: "auto",
+                              fontSize: "9.8px",
+                              marginBottom: "5px",
+                              marginLeft: "10px",
+                              backgroundColor: "rgb(3,165,251)",
+                              color: "white",
+                            }}
+                            onClick={() =>
+                              handleFriendRequest(userData, user, "unsent")
+                            }
+                          >
+                            Request sent
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="contained"
+                            sx={{
+                              width: "115px",
+                              height: "auto",
+                              fontSize: "9.8px",
+                              marginBottom: "5px",
+                              marginLeft: "10px",
+                              backgroundColor: "rgb(3,165,251)",
+                              color: "white",
+                            }}
+                            onClick={() =>
+                              handleFriendRequest(userData, user, "send")
+                            }
+                          >
+                            Add Friend
+                          </Button>
+                        )}
                       </Box>
                     </Box>
                   </Box>

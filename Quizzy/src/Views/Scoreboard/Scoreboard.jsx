@@ -12,17 +12,20 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
+import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
 const Scoreboard = () => {
   const [users, setUsers] = useState(null);
   const [usersOnPage, setUsersOnPage] = useState(null);
-  const [page, setPage] = useState(parseInt(localStorage.getItem('scoreboardPage')) || 1);
+  const [page, setPage] = useState(
+    parseInt(localStorage.getItem("scoreboardPage")) || 1
+  );
   const [numberOfPages, setNumberOfPages] = useState(1);
   const number = 5;
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.setItem('scoreboardPage', page);
+    localStorage.setItem("scoreboardPage", page);
   }, [page]);
 
   useEffect(() => {
@@ -111,16 +114,10 @@ const Scoreboard = () => {
                           gap: "10px",
                         }}
                       >
-                        <img
+                        <UserProfilePic
+                          image={user.image}
+                          status={user.status}
                           onClick={() => navigate(`/profile/${user.username}`)}
-                          src={user.image}
-                          alt={user.username}
-                          style={{
-                            cursor: "pointer",
-                            height: "40px",
-                            width: "40px",
-                            borderRadius: "50%",
-                          }}
                         />
                         <strong>
                           {user.firstName} {user.lastName}

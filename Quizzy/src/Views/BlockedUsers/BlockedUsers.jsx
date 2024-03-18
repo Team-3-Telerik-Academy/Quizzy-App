@@ -5,6 +5,7 @@ import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import { unblockUser } from "../../services/users.service";
 import { useNavigate } from "react-router-dom";
+import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
 const BlockedUsers = () => {
   const [users, setUsers] = useState(null);
@@ -109,15 +110,10 @@ const BlockedUsers = () => {
                       e.currentTarget.style.transform = "scale(1)";
                     }}
                   >
-                    <img
-                      src={user.image}
+                    <UserProfilePic
+                      image={user.image}
+                      status={user.status}
                       onClick={() => navigate(`/profile/${user.username}`)}
-                      style={{
-                        width: "40px",
-                        borderRadius: "20px",
-                        height: "40px",
-                      }}
-                      alt=""
                     />
                     <Box
                       sx={{

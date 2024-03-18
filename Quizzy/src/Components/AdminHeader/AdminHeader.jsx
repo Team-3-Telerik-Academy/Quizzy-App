@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useContext } from "react";
 
 import { styled, AppBar as MuiAppBar } from "@mui/material";
+import UserProfilePic from "../UserProfilePic/UserProfilePic";
 const drawerWidth = 0;
 
 const AppBar = styled(MuiAppBar, {
@@ -88,11 +89,7 @@ const AdminHeader = () => {
             onClick={handleProfileMenuOpen}
             color="inherit"
           >
-            <img
-              src={userData?.image}
-              alt={userData?.username}
-              style={{ width: "35px", height: "35px", borderRadius: "50%" }}
-            />
+            <UserProfilePic image={userData?.image} status={userData?.status} />
           </IconButton>
         </Box>
         <Box sx={{ display: { xs: "flex", md: "none" } }}>

@@ -4,13 +4,15 @@ import PropTypes from "prop-types";
 import { useContext, useEffect, useState } from "react";
 import {
   createUserMessages,
+  friendRequest,
   getAllUsersSortedByScore,
 } from "../../services/users.service";
 import AppContext from "../../Context/AppContext";
 import { useNavigate } from "react-router-dom";
 import addUser from "..//..//Images/add-user.png";
 import sendMessage from "..//..//Images/send-message.png";
-import friends from "..//..//Images/friends.png";
+import sentRequest from "..//..//Images/sentRequest.png";
+import UserProfilePic from "../UserProfilePic/UserProfilePic";
 
 const HeaderBox = styled(Box)({
   borderBottom: "2px solid rgba(0, 0, 0, 0.25)",
@@ -34,14 +36,19 @@ const ProfileHeader = ({ user }) => {
     });
   }, []);
 
-  const handleSendMessage = async () => {
+  const handleFriendRequest = (action) => {
+    friendRequest(userData, user, action);
+  };
+
+  const handleSendMessage = () => {
     if (user.messages && Object.keys(user.messages).includes(user.username)) {
       setChatUser(user.username);
       navigate("/Messenger");
       return;
     }
     setChatUser(user.username);
-    await createUserMessages(user, userData, navigate, "/Messenger");
+
+    createUserMessages(user, userData, navigate, "/Messenger");
   };
 
   return (
@@ -56,11 +63,7 @@ const ProfileHeader = ({ user }) => {
         }}
       >
         {user?.image && (
-          <img
-            style={{ width: "100px", height: "100px", borderRadius: "50%" }}
-            src={user?.image}
-            alt={user?.username}
-          />
+          <UserProfilePic height='100px' width='100px' image={user.image} status={user.status}/>
         )}
         <Typography variant="h4">
           {user?.username} <br />
@@ -79,12 +82,25 @@ const ProfileHeader = ({ user }) => {
               alt="friends"
               style={{ height: "20px", width: "20px" }}
             /> */}
-                <img
-                  // onClick={handleSendRequest}
-                  src={addUser}
-                  alt="send friend request"
-                  style={{ height: "20px", width: "20px", cursor: "pointer" }}
-                />
+                {userData.sentFriendRequests &&
+                Object.keys(userData.sentFriendRequests).includes(
+                  user.username
+                ) ? (
+                  <img
+                    onClick={() => handleFriendRequest("unsent")}
+                    src={sentRequest}
+                    alt="send friend request"
+                    style={{ height: "20px", width: "20px", cursor: "pointer" }}
+                  />
+                ) : (
+                  <img
+                    onClick={() => handleFriendRequest("send")}
+                    src={addUser}
+                    alt="unsent friend request"
+                    style={{ height: "20px", width: "20px", cursor: "pointer" }}
+                  />
+                )}
+
                 <img
                   onClick={handleSendMessage}
                   src={sendMessage}

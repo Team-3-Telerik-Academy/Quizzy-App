@@ -34,7 +34,8 @@ const HomeWhenLoggedIn = () => {
         src={quizHomePic}
         alt="Cool Quiz"
         style={{
-          width: "500px",
+          width: '100%',
+          maxWidth: "500px",
           height: "auto",
           marginBottom: "20px",
           borderRadius: "10px",

@@ -7,7 +7,6 @@ import {
   Badge,
   Toolbar,
   Typography,
-  Avatar,
   Paper,
 } from "@mui/material";
 import {
@@ -33,6 +32,7 @@ import {
 import SingleNotification from "../SingleNotification/SingleNotification";
 import { getAllPublicQuizzes } from "../../services/quizzes.service";
 import { getAllUsers } from "../../services/users.service";
+import UserProfilePic from "../UserProfilePic/UserProfilePic";
 
 const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -86,10 +86,13 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
     )?.[0];
 
     if (quizKey) {
+      setSearchInput("");
       navigate(`/takenQuizzes`, { state: { searchedQuizId: quizKey } });
     } else if (result.title) {
+      setSearchInput("");
       navigate(`/quizzes`, { state: { searchedQuizzes: result } });
     } else {
+      setSearchInput("");
       navigate(`/profile/${result.username}`);
     }
   };
@@ -329,7 +332,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             onClick={handleProfileMenuOpen}
             color="inherit"
           >
-            <Avatar alt={userData?.username} src={userData?.image} />
+            <UserProfilePic image={userData?.image} status={userData?.status}/>
           </IconButton>
         </Box>
         <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -384,7 +387,9 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             aria-haspopup="true"
             color="inherit"
           >
+            <UserProfilePic image={userData?.image}/>
             <img
+              className="img"
               src={userData?.image}
               alt={userData?.username}
               style={{ width: "35px", height: "35px", borderRadius: "50%" }}

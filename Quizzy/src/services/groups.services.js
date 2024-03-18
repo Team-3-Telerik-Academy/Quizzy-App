@@ -77,6 +77,9 @@ export const addGroup = async (
       members: {
         [username]: memberImage,
     },
+    membersStatus: {
+      [username]: 'online',
+    },
     });
 
     await invitedUsers.map((user) =>

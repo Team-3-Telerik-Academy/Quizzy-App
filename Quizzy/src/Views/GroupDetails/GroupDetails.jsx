@@ -24,6 +24,7 @@ import { getQuizzesByGroupId } from "../../services/quizzes.service";
 import QuizCarousel from "../../Components/QuizCarousel/QuizCarousel";
 import Quizzes from "../../Components/Quizzes/Quizzes";
 import { styled } from "@mui/system";
+import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
 const StyledButton = styled(Button)({
   color: "#fff",
@@ -137,7 +138,7 @@ const GroupDetails = () => {
                       to={`/profile/${name}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <Avatar alt={name} src={group.members[name]} />
+                      <UserProfilePic image={group.members[name]} status={group.membersStatus[name]}/>
                     </Link>
                   </Tooltip>
                 ))}

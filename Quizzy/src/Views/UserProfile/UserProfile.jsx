@@ -19,7 +19,6 @@ import {
 import ProfileHeader from "../../Components/ProfileHeader/ProfileHeader";
 import EditField from "../../Components/EditField/EditField";
 import { useParams } from "react-router-dom";
-import Loading from "../../Components/Loading/Loading";
 
 const UserProfile = () => {
   const { username } = useParams();
@@ -48,11 +47,9 @@ const UserProfile = () => {
       return;
     }
 
-    updateUserInfo(
-      userData.username,
-      "firstName",
-      profileInfo.firstName,
-    ).then(() => setEditProfile({ ...editProfile, firstName: false }));
+    updateUserInfo(userData.username, "firstName", profileInfo.firstName).then(
+      () => setEditProfile({ ...editProfile, firstName: false })
+    );
   };
 
   const handleLastNameChange = () => {
@@ -61,11 +58,9 @@ const UserProfile = () => {
       return;
     }
 
-    updateUserInfo(
-      userData.username,
-      "lastName",
-      profileInfo.lastName,
-    ).then(() => setEditProfile({ ...editProfile, lastName: false }));
+    updateUserInfo(userData.username, "lastName", profileInfo.lastName).then(
+      () => setEditProfile({ ...editProfile, lastName: false })
+    );
   };
 
   const handlePhoneChange = () => {
@@ -84,11 +79,7 @@ const UserProfile = () => {
       return;
     }
 
-    updateUserInfo(
-      userData.username,
-      "phone",
-      profileInfo.phone,
-    ).then(() => {
+    updateUserInfo(userData.username, "phone", profileInfo.phone).then(() => {
       userData.phone = profileInfo.phone;
       setEditProfile({ ...editProfile, phone: false });
     });
@@ -96,7 +87,7 @@ const UserProfile = () => {
 
   return (
     <>
-      {user ? (
+      {user && (
         <UserProfileBox>
           <ProfileHeader
             userData={userData.username === username ? userData : user}
@@ -183,16 +174,11 @@ const UserProfile = () => {
             </LeftInfoBox>
             {userData.username === username && (
               <RightInfoBox style={{ marginTop: "30px" }}>
-                <UploadImage
-                  prop={userData}
-                  value="userImage"
-                />
+                <UploadImage prop={userData} value="userImage" />
               </RightInfoBox>
             )}
           </InfoBox>
         </UserProfileBox>
-      ) : (
-        <Loading />
       )}
     </>
   );

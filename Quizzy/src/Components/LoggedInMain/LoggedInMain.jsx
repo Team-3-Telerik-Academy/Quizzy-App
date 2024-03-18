@@ -1,15 +1,14 @@
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import DrawerComponent from "../Drawer/Drawer";
-import Loading from "../Loading/Loading";
-import { useContext, useState } from "react";
-import AppContext from "../../Context/AppContext";
 import LoggedInHeader from "../LoggedInHeader/LoggedInHeader";
 import propTypes from "prop-types";
+import { useContext, useState } from "react";
+import AppContext from "../../Context/AppContext";
 
 const LoggedInMain = ({ children }) => {
-  const { userData } = useContext(AppContext);
   const [open, setOpen] = useState(false);
+  const {userData} = useContext(AppContext);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -21,9 +20,7 @@ const LoggedInMain = ({ children }) => {
 
   return (
     <>
-      {!userData ? (
-        <Loading />
-      ) : (
+      {userData && (
         <Box sx={{ display: "flex" }}>
           <CssBaseline />
           <LoggedInHeader open={open} handleDrawerOpen={handleDrawerOpen} />

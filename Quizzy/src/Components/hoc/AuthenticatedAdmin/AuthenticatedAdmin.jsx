@@ -5,7 +5,6 @@ import { useContext, useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
-
 /**
  * Higher-order component that provides authentication and authorization for admin users.
  *
@@ -26,18 +25,16 @@ const AuthenticatedAdmin = ({ children }) => {
     }
   }, [userData]);
 
-  console.log(location);
-
   return (
     <>
       {!loading && !user ? (
         <Navigate replace to="/signIn" state={{ from: location.pathname }} />
-      ) : !loading && user && ready && userData.admin ? (
+      ) : !loading && user && ready && userData.isAdmin ? (
         children
       ) : (
         ready &&
-        !userData.admin && (
-          <Navigate replace to="/" state={{ from: location }} />
+        !userData.isAdmin && (
+          <Navigate replace to="/" state={{ from: location.pathname }} />
         )
       )}
     </>

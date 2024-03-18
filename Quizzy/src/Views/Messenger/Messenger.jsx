@@ -16,7 +16,7 @@ const Messenger = () => {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    if (userData.messages) {
+    if (userData?.messages) {
       const people = Object.values(userData.messages);
       if (inputValue) {
         const peopleFilteredByInput = people.filter((person) => {
@@ -32,9 +32,9 @@ const Messenger = () => {
   useEffect(() => {
     if (
       selectedPerson &&
-      userData.messages[selectedPerson?.selected?.username]
+      userData?.messages[selectedPerson?.selected?.username]
     ) {
-      setChat(userData.messages[selectedPerson.selected.username].chat);
+      setChat(userData?.messages[selectedPerson.selected.username].chat);
     }
   }, [selectedPerson, userData]);
 
@@ -64,7 +64,7 @@ const Messenger = () => {
   };
 
   useEffect(() => {
-    if (userData.messages) {
+    if (userData?.messages) {
       const people = Object.values(userData.messages);
       setPeople(people);
       if (chatUser) {
@@ -76,7 +76,7 @@ const Messenger = () => {
         setSelectedPerson({ selected: people[0] });
       }
     }
-  }, [userData.messages]);
+  }, [userData?.messages]);
 
   return (
     <Box

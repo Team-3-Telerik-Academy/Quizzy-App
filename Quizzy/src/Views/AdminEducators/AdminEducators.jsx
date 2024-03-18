@@ -6,7 +6,7 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AdminEducators = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(null);
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -21,7 +21,8 @@ const AdminEducators = () => {
   }, []);
 
   return (
-    <Box
+    <>
+    {users && <Box
       sx={{
         width: "100%",
         display: "flex",
@@ -141,7 +142,9 @@ const AdminEducators = () => {
           );
         })}
       </Box>
-    </Box>
+    </Box>}
+    </>
+    
   );
 };
 

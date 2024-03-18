@@ -7,7 +7,7 @@ import { unblockUser } from "../../services/users.service";
 import { useNavigate } from "react-router-dom";
 
 const BlockedUsers = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState(null);
   const { userData } = useContext(AppContext);
   const navigate = useNavigate();
 
@@ -27,139 +27,145 @@ const BlockedUsers = () => {
   }, []);
 
   return (
-    <Box
-      sx={{
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        padding: "10px",
-      }}
-    >
-      <Typography
-        variant="h3"
-        sx={{
-          marginTop: "60px",
-          display: "flex",
-          justifyContent: "center",
-          marginBottom: "20px",
-          fontFamily: "fantasy",
-          color: "#394E6A",
-        }}
-      >
-        {users?.length === 0 && (
-          <span style={{ textAlign: "center" }}>
-            The Quizzy app still does not have users <br></br> with bad
-            attitude,{" "}
-            {
-              <span style={{ color: "rgb(3,165,251)" }}>
-                {userData.firstName.charAt(0).toUpperCase() +
-                  userData.firstName.slice(1).toLowerCase()}
-              </span>
-            }
-          </span>
-        )}
-        {users?.length > 0 && (
-          <span>
-            {" "}
-            All the users with bad attitude,{" "}
-            {
-              <span style={{ color: "rgb(3,165,251)" }}>
-                {userData.firstName.charAt(0).toUpperCase() +
-                  userData.firstName.slice(1).toLowerCase()}
-              </span>
-            }
-          </span>
-        )}
-      </Typography>
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4,1fr)",
-          justifyContent: "center",
-          alignItems: "center",
-          marginLeft: "10px",
-          gap: "20px",
-        }}
-      >
-        {users?.map((user) => {
-          return (
-            <Box
-              key={user.email}
-              sx={{ display: "flex", fontFamily: "inter,sans-serif" }}
-            >
-              <Box
-                sx={{
-                  width: "300px",
-                  height: "85px",
-                  boxShadow: "4",
-                  borderRadius: "15px",
-                  padding: "8px",
-                  display: "flex",
-                  alignItems: "center",
-                  transition: "transform 0.2s",
-                  cursor: "pointer",
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = "scale(1.05)";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = "scale(1)";
-                }}
-              >
-                <img
-                  src={user.image}
-                  onClick={() => navigate(`/profile/${user.username}`)}
-                  style={{
-                    width: "40px",
-                    borderRadius: "20px",
-                    height: "40px",
-                  }}
-                  alt=""
-                />
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    fontSize: "14px",
-                    marginLeft: "10px",
-                  }}
-                >
-                  <span style={{ color: "black", fontWeight: "bold" }}>
-                    {user.firstName}
+    <>
+      {users && (
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            padding: "10px",
+          }}
+        >
+          <Typography
+            variant="h3"
+            sx={{
+              marginTop: "60px",
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "20px",
+              fontFamily: "fantasy",
+              color: "#394E6A",
+            }}
+          >
+            {users?.length === 0 && (
+              <span style={{ textAlign: "center" }}>
+                The Quizzy app still does not have users <br></br> with bad
+                attitude,{" "}
+                {
+                  <span style={{ color: "rgb(3,165,251)" }}>
+                    {userData.firstName.charAt(0).toUpperCase() +
+                      userData.firstName.slice(1).toLowerCase()}
                   </span>
-                  <span>{user.lastName}</span>
-                  <span>Role: {user.role}</span>
-                </Box>
+                }
+              </span>
+            )}
+            {users?.length > 0 && (
+              <span>
+                {" "}
+                All the users with bad attitude,{" "}
+                {
+                  <span style={{ color: "rgb(3,165,251)" }}>
+                    {userData.firstName.charAt(0).toUpperCase() +
+                      userData.firstName.slice(1).toLowerCase()}
+                  </span>
+                }
+              </span>
+            )}
+          </Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4,1fr)",
+              justifyContent: "center",
+              alignItems: "center",
+              marginLeft: "10px",
+              gap: "20px",
+            }}
+          >
+            {users?.map((user) => {
+              return (
                 <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    fontSize: "14px",
-                    marginLeft: "10px",
-                  }}
+                  key={user.email}
+                  sx={{ display: "flex", fontFamily: "inter,sans-serif" }}
                 >
-                  <Button
-                    variant="contained"
+                  <Box
                     sx={{
-                      width: "107px",
-                      height: "autopx",
-                      fontSize: "10px",
-                      marginLeft: "15px",
-                      backgroundColor: "rgb(3,165,251)",
-                      color: "white",
+                      width: "300px",
+                      height: "85px",
+                      boxShadow: "4",
+                      borderRadius: "15px",
+                      padding: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      transition: "transform 0.2s",
+                      cursor: "pointer",
                     }}
-                    onClick={() => handleUnblock(user.username, setUsers, user)}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform = "scale(1.05)";
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform = "scale(1)";
+                    }}
                   >
-                    Unblock
-                  </Button>
+                    <img
+                      src={user.image}
+                      onClick={() => navigate(`/profile/${user.username}`)}
+                      style={{
+                        width: "40px",
+                        borderRadius: "20px",
+                        height: "40px",
+                      }}
+                      alt=""
+                    />
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        fontSize: "14px",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      <span style={{ color: "black", fontWeight: "bold" }}>
+                        {user.firstName}
+                      </span>
+                      <span>{user.lastName}</span>
+                      <span>Role: {user.role}</span>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        fontSize: "14px",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        sx={{
+                          width: "107px",
+                          height: "autopx",
+                          fontSize: "10px",
+                          marginLeft: "15px",
+                          backgroundColor: "rgb(3,165,251)",
+                          color: "white",
+                        }}
+                        onClick={() =>
+                          handleUnblock(user.username, setUsers, user)
+                        }
+                      >
+                        Unblock
+                      </Button>
+                    </Box>
+                  </Box>
                 </Box>
-              </Box>
-            </Box>
-          );
-        })}
-      </Box>
-    </Box>
+              );
+            })}
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

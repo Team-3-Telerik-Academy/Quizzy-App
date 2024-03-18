@@ -19,7 +19,6 @@ import {
   Tooltip,
   Avatar,
 } from "@mui/material";
-import Loading from "../../Components/Loading/Loading";
 import AppContext from "../../Context/AppContext";
 import { getQuizzesByGroupId } from "../../services/quizzes.service";
 import QuizCarousel from "../../Components/QuizCarousel/QuizCarousel";
@@ -84,7 +83,8 @@ const GroupDetails = () => {
             result.filter((quiz) => quiz.status === "Finished")
           );
         })
-      );
+      )
+      .catch(() => navigate("*"));
   }, [updateQuizzes]);
 
   const handleClickOpen = () => {
@@ -97,7 +97,7 @@ const GroupDetails = () => {
 
   return (
     <>
-      {group ? (
+      {group && (
         <Box
           sx={{
             color: "black",
@@ -264,7 +264,6 @@ const GroupDetails = () => {
             >
               <Typography
                 variant="h5"
-                // color="rgb(3,165,251)"
                 color="#394E6A"
                 style={{ fontFamily: "Fantasy" }}
               >
@@ -408,8 +407,6 @@ const GroupDetails = () => {
             )}
           </Box>
         </Box>
-      ) : (
-        <Loading />
       )}
     </>
   );

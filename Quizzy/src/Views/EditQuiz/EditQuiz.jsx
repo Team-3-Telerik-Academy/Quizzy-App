@@ -99,7 +99,7 @@ const EditQuiz = () => {
         activeTimeInMinutes: quiz.activeTimeInMinutes,
         timer: quiz.timer,
       });
-    });
+    }).catch(() => navigate("*"));
   }, []);
 
   useEffect(() => {

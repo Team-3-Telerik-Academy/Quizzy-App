@@ -141,7 +141,13 @@ export const updateUserInfo = async (username, prop, value) => {
   await update(userRef, { [prop]: value });
 };
 
-export const acceptInvitation = async (username, prop, value, id, userImage) => {
+export const acceptInvitation = async (
+  username,
+  prop,
+  value,
+  id,
+  userImage
+) => {
   const userRef = ref(db, `users/${username}`);
   await update(child(userRef, prop), { [value]: null });
 
@@ -267,19 +273,10 @@ export const sendMessage = async (
       minutes: new Date().getMinutes(),
       name: personSendingMessage,
     });
-
-    // const userRef = ref(db, `users/${personSendingMessage}`);
-
-    // onValue(userRef, (snapshot) => {
-    //   callback(snapshot.val());
-    // });
-
-    // return { sender, receiver };
   } catch (error) {
     console.error("Error sending message:", error);
   }
 };
-
 
 // on value - not used
 export const displayMessages = async (username, personChatWith, callback) => {
@@ -305,3 +302,32 @@ export const listenForChatUsers = (username, callback) => {
     callback(Object.values(snapshot.val()));
   });
 };
+
+export const friendRequest = async (
+  userSendingRequest,
+  userReceivingRequest
+) => {
+  return set(
+    ref(
+      db,
+      `users/${userReceivingRequest.username}/friendRequest/${userSendingRequest.username}`
+    ),
+    {
+      firstName: userSendingRequest.firstName,
+      lastName: userSendingRequest.lastName,
+    }
+  );
+};
+
+// const userRef = ref(
+//   db,
+//   `users/${userReceivingRequest.username}/friendRequests`
+// );
+
+// const request = await push(userRef, {
+// firstName: userReceivingRequest.firstName,
+// lastName: userReceivingRequest.lastName,
+// username: userReceivingRequest.username,
+// image: userReceivingRequest.image,
+// role: userReceivingRequest.role,
+// });

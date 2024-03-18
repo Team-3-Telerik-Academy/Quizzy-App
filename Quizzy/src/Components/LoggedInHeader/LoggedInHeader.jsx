@@ -91,7 +91,8 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
     )
       return;
 
-    if (notifications !== 0) setOpenedNotifications(notifications + openedNotifications);
+    if (notifications !== 0)
+      setOpenedNotifications(notifications + openedNotifications);
 
     setAnchorElNotifications(event.currentTarget);
     setNotifications(0);
@@ -112,6 +113,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
 
       navigate("/");
       window.location.reload();
+      localStorage.clear();
     });
   };
 

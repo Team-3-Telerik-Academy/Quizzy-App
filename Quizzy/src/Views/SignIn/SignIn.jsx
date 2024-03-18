@@ -64,7 +64,7 @@ const SignIn = () => {
           setUserCredentials(credential.user);
         })
         .then(() => {
-          navigate(location?.state.from || "/");
+          navigate(location?.state?.from || "/");
         })
         .catch((e) => {
           console.log(e.message);

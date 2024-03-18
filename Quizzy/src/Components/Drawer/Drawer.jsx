@@ -91,7 +91,7 @@ const DrawerComponent = ({ open, handleDrawerClose }) => {
           {
             text: "Live Battle",
             icon: <Games />,
-            click: () => navigate("/liveBattle"),
+            click: () => navigate("/live-battle"),
           },
           ...(userData?.isAdmin
             ? [

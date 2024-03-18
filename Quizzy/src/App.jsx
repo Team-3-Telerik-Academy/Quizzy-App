@@ -46,6 +46,7 @@ import GroupDetails from "./Views/GroupDetails/GroupDetails";
 import Authenticated from "./Components/hoc/Authenticated/Authenticated";
 import AuthenticatedAdmin from "./Components/hoc/AuthenticatedAdmin/AuthenticatedAdmin";
 import AuthenticatedEducator from "./Components/hoc/AuthenticatedEducator/AuthenticatedEducator";
+import LiveBattleMain from "./Views/LiveBattleMain/LiveBattleMain";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -249,6 +250,18 @@ function App() {
               </Authenticated>
             }
           />
+
+          <Route
+            path="/live-battle"
+            element={
+              <Authenticated>
+                <LoggedInMain>
+                  <LiveBattleMain />
+                </LoggedInMain>
+              </Authenticated>
+            }
+          />
+
           <Route
             path="/takenQuizzes"
             element={

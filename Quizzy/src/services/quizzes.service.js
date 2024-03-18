@@ -91,6 +91,18 @@ export const getAllPrivateQuizzes = async () => {
   }
 };
 
+export const getQuizzesByGroupId = async (groupId) => {
+  try {
+    const result = await get(
+      query(ref(db, "quizzes"), orderByChild("group"), equalTo(groupId))
+    );
+    if (!result.exists()) return [];
+    return fromQuizzesDocument(result);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const getQuizzesByAuthor = async (username) => {
   try {
     const snapshot = await get(
@@ -130,6 +142,7 @@ export const addQuiz = async (
   invitedUsers,
   username,
   ongoingTill,
+  group
 ) => {
   let realCategory;
 
@@ -153,6 +166,7 @@ export const addQuiz = async (
       category: realCategory,
       author: username,
       ongoingTill: new Date(new Date(ongoingTill).setHours(0, 0, 0, 0)).toString(),
+      group,
       createdOn: new Date().toString(),
       takenBy: {},
       status: "Ongoing",

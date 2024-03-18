@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { useContext, useState } from "react";
 import AppContext from "../../Context/AppContext";
 import deleteReply from "..//..//Images/delete-message.png";
+import editReply from "..//..//Images/edit-message.png";
 import done from "..//..//Images/done.png";
 import cancel from "..//..//Images/cancel.png";
-import editReply from "..//..//Images/edit-message.png";
 
 const buttonStyle = {
   backgroundColor: "rgb(3, 165, 251)",
@@ -79,7 +79,7 @@ const ReplyToAComment = ({
                   {editReplyId !== reply.replyId && (
                     <Typography
                       variant="body2"
-                      style={{ color: "#394E6A", fontFamily: "Fantasy" }}
+                      style={{ fontWeight: "bold"}}
                     >
                       {reply.reply}
                     </Typography>

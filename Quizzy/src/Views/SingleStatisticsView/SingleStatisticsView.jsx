@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { getUserByUsername } from "../../services/users.service";
 import { useEffect, useState } from "react";
 import Loading from "../../Components/Loading/Loading";
+import correct from "..//..//Images/done.png";
+import incorrect from "..//..//Images/cancel.png";
 
 const SingleStatisticsView = () => {
   const [quiz, setQuiz] = useState(null);
@@ -237,12 +239,17 @@ const SingleStatisticsView = () => {
                                     key={index}
                                     style={{
                                       borderRight: "1px solid #E0E0E0",
-                                      backgroundColor: isCorrect
-                                        ? "green"
-                                        : "red",
                                       whiteSpace: "nowrap",
+                                      textAlign: "center",
+                                      width: "100px",
                                     }}
-                                  />
+                                  >
+                                    <img
+                                      src={isCorrect ? correct : incorrect}
+                                      alt=""
+                                      style={{ height: "30px", width: "30px" }}
+                                    />
+                                  </TableCell>
                                 );
                               })}
                             </TableRow>

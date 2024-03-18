@@ -63,7 +63,8 @@ const SingleNotification = ({
             userData.username,
             value,
             invitation,
-            Object.keys(group.val())[0]
+            Object.keys(group.val())[0],
+            userData.image,
           );
         })
         .then(() => {
@@ -152,7 +153,8 @@ const SingleNotification = ({
         <>
           <span
             onClick={() =>
-              value === "quizCommentsNotifications" || userData.role === 'student'
+              value === "quizCommentsNotifications" ||
+              userData.role === "student"
                 ? navigate("/takenQuizzes/details", {
                     state: {
                       quiz: {
@@ -163,10 +165,14 @@ const SingleNotification = ({
                   })
                 : navigate("/singleQuizStatistics/viewDetails", {
                     state: {
-                      result: { ...takenQuiz, key: invitation.quizId, participant: invitation.username},
+                      result: {
+                        ...takenQuiz,
+                        key: invitation.quizId,
+                        participant: invitation.username,
+                      },
                       totalPoints: takenQuiz.totalPoints,
                     },
-                  } )
+                  })
             }
           >
             You have a new{" "}
@@ -186,7 +192,7 @@ const SingleNotification = ({
 };
 
 SingleNotification.propTypes = {
-  invitation: PropTypes.string,
+  invitation: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   value: PropTypes.string,
   handleNotificationsClose: PropTypes.func,
   setOpenedNotifications: PropTypes.func,

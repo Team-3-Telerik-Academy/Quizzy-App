@@ -7,7 +7,9 @@ import AppContext from "../../Context/AppContext";
 const EducatorGroups = () => {
   const [groups, setGroups] = useState([]);
   const [groupsOnPage, setGroupsOnPage] = useState(null);
-  const [page, setPage] = useState(parseInt(localStorage.getItem('educatorGroupsPage')) || 1);
+  const [page, setPage] = useState(
+    parseInt(localStorage.getItem("educatorGroupsPage")) || 1
+  );
   const [numberOfPages, setNumberOfPages] = useState(1);
   const number = 6;
   const navigate = useNavigate();
@@ -15,12 +17,14 @@ const EducatorGroups = () => {
   const { userData } = useContext(AppContext);
 
   useEffect(() => {
-    localStorage.setItem('educatorGroupsPage', page);
+    localStorage.setItem("educatorGroupsPage", page);
   }, [page]);
 
   useEffect(() => {
     getAllGroups()
-      .then((groups) => Object.values(groups))
+      .then((groups) => {
+        return Object.entries(groups).map(([id, value]) => ({ id, ...value }));
+      })
       .then((groupsArray) => {
         return groupsArray.filter((group) => {
           return Object.keys(group.members).includes(userData?.username);
@@ -30,7 +34,7 @@ const EducatorGroups = () => {
   }, [userData]);
 
   useEffect(() => {
-    if (groups) {
+    if (groups.length) {
       setNumberOfPages(Math.ceil(groups.length / number));
       setGroupsOnPage(groups.slice((page - 1) * number, page * number));
     }
@@ -85,117 +89,143 @@ const EducatorGroups = () => {
           Create Group
         </Button>
       </Box>
-      <Box sx={{ width: "100%", display: "flex", justifyContent: "center", flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
+      {groups.length > 0 ? (
         <Box
           sx={{
-            width: "600px",
-            height: "auto",
-            boxShadow: "4",
-            borderRadius: "5px",
-            fontFamily: "Poppins",
-            fontSize: "16px",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: "10px",
           }}
         >
           <Box
             sx={{
-              display: "flex",
-              borderBottom: "3px solid #f3f4f6",
-              padding: "5px 0px 5px 0px",
+              width: "600px",
+              height: "auto",
+              boxShadow: "4",
+              borderRadius: "5px",
+              fontFamily: "Poppins",
+              fontSize: "16px",
             }}
           >
-            <span
-              style={{
-                width: "50%",
-                padding: "0px 0px 0px 5px",
-                marginLeft: "17px",
-                fontWeight: "700",
-                color: "rgb(57, 78, 106)",
-                fontSize: "18px",
+            <Box
+              sx={{
+                display: "flex",
+                borderBottom: "3px solid #f3f4f6",
+                padding: "5px 0px 5px 0px",
               }}
             >
-              Name
-            </span>
-            <span
-              style={{
-                width: "50%",
-                padding: "0px 0px 0px 5px",
-                fontWeight: "700",
-                color: "rgb(57, 78, 106)",
-                fontSize: "18px",
-              }}
-            >
-              Educators
-            </span>
-          </Box>
-
-          {groupsOnPage?.map((group) => {
-            return (
-              <Box
-                key={group.createdOn}
-                sx={{
-                  display: "flex",
-                  marginBottom: "15px",
-                  marginLeft: "15px",
-                  marginTop: "10px",
-                  cursor: "pointer",
+              <span
+                style={{
+                  width: "50%",
+                  padding: "0px 0px 0px 5px",
+                  marginLeft: "17px",
+                  fontWeight: "700",
+                  color: "rgb(57, 78, 106)",
+                  fontSize: "18px",
                 }}
               >
+                Name
+              </span>
+              <span
+                style={{
+                  width: "50%",
+                  padding: "0px 0px 0px 5px",
+                  fontWeight: "700",
+                  color: "rgb(57, 78, 106)",
+                  fontSize: "18px",
+                }}
+              >
+                Educators
+              </span>
+            </Box>
+
+            {groupsOnPage?.map((group) => {
+              return (
                 <Box
-                  style={{
+                  key={group.id}
+                  sx={{
                     display: "flex",
-                    alignItems: "center",
-                    width: "50%",
+                    padding: "10px",
+                    cursor: "pointer",
+                    "&:hover": {
+                      backgroundColor: "lightgray",
+                    },
                   }}
+                  onClick={() => navigate(`/groupDetails/${group.id}`)}
                 >
-                  <img
-                    src={group.image}
+                  <Box
                     style={{
-                      width: "50px",
-                      height: "50px",
-                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      width: "50%",
                     }}
-                    alt=""
-                  />
+                  >
+                    <img
+                      src={group.image}
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                      }}
+                      alt=""
+                    />
+                    <span
+                      style={{
+                        marginLeft: "10px",
+                        fontWeight: "700",
+                        color: "rgb(3,165,251)",
+                      }}
+                    >
+                      {group.title}
+                    </span>
+                  </Box>
                   <span
                     style={{
                       marginLeft: "10px",
                       fontWeight: "700",
-                      color: "rgb(3,165,251)",
+                      color: "rgb(57, 78, 106)",
+                      display: "flex",
+                      alignItems: "center",
                     }}
                   >
-                    {group.title}
+                    {Object.keys(group.members).length}
                   </span>
                 </Box>
-                <span
-                  style={{
-                    marginLeft: "10px",
-                    fontWeight: "700",
-                    color: "rgb(57, 78, 106)",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  {Object.keys(group.members).length}
-                </span>
-              </Box>
-            );
-          })}
+              );
+            })}
+          </Box>
+          <Pagination
+            count={numberOfPages}
+            page={page}
+            onChange={handlePageChange}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20px",
+              "& .MuiPaginationItem-page.Mui-selected": {
+                backgroundColor: "rgb(0, 165, 251)",
+                color: "white",
+              },
+            }}
+          />
         </Box>
-        <Pagination
-              count={numberOfPages}
-              page={page}
-              onChange={handlePageChange}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "20px",
-                "& .MuiPaginationItem-page.Mui-selected": {
-                  backgroundColor: "rgb(0, 165, 251)",
-                  color: "white",
-                },
-              }}
-            />
-      </Box>
+      ) : (
+        <Typography
+          style={{
+            fontFamily: "fantasy",
+            alignItems: "center",
+            fontSize: "27px",
+            display: "flex",
+            justifyContent: "center",
+            height: "40vh",
+          }}
+        >
+          No groups found
+        </Typography>
+      )}
     </Box>
   );
 };

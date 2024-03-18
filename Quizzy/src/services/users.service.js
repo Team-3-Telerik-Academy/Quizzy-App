@@ -141,7 +141,7 @@ export const updateUserInfo = async (username, prop, value) => {
   await update(userRef, { [prop]: value });
 };
 
-export const acceptInvitation = async (username, prop, value, id) => {
+export const acceptInvitation = async (username, prop, value, id, userImage) => {
   const userRef = ref(db, `users/${username}`);
   await update(child(userRef, prop), { [value]: null });
 
@@ -161,7 +161,7 @@ export const acceptInvitation = async (username, prop, value, id) => {
 
     const membersRef = child(groupRef, "members");
     await update(membersRef, {
-      [username]: "member",
+      [username]: userImage,
     });
 
     const numberOfGroups = await get(ref(db, `users/${username}/groups`));

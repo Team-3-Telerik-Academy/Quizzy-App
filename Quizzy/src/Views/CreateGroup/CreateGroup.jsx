@@ -108,6 +108,7 @@ const CreateGroup = () => {
           group.description,
           group.invitedUsers,
           userData.username,
+          userData.image,
           userData.email
         );
       })

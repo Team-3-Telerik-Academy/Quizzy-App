@@ -8,6 +8,7 @@ import {
   Badge,
   Toolbar,
   Typography,
+  Avatar,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -90,7 +91,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
     )
       return;
 
-    if (notifications !== 0) setOpenedNotifications(notifications);
+    if (notifications !== 0) setOpenedNotifications(notifications + openedNotifications);
 
     setAnchorElNotifications(event.currentTarget);
     setNotifications(0);
@@ -262,11 +263,12 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             onClick={handleProfileMenuOpen}
             color="inherit"
           >
-            <img
+            <Avatar alt={userData.name} src={userData?.image} />
+            {/* <img
               src={userData?.image}
               alt={userData?.username}
               style={{ width: "35px", height: "35px", borderRadius: "50%" }}
-            />
+            /> */}
           </IconButton>
         </Box>
         <Box sx={{ display: { xs: "flex", md: "none" } }}>

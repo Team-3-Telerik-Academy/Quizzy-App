@@ -60,6 +60,7 @@ export const addGroup = async (
   description,
   invitedUsers,
   username,
+  memberImage,
   email
 ) => {
   try {
@@ -73,7 +74,7 @@ export const addGroup = async (
       createdOn: new Date().toString(),
       email: email, 
       members: {
-        [username]: "admin",
+        [username]: memberImage,
     },
     });
 
@@ -98,8 +99,8 @@ export const inviteUserToAGroup = async (
   sender,
   callback
 ) => {
-  const quizRef = ref(db, `groups/${groupId}`);
-  const invitedUsersRef = child(quizRef, "invitedUsers");
+  const groupRef = ref(db, `groups/${groupId}`);
+  const invitedUsersRef = child(groupRef, "invitedUsers");
   const userRef = child(ref(db, `users/${username}`), "groupInvitations");
 
   await update(invitedUsersRef, {
@@ -110,31 +111,31 @@ export const inviteUserToAGroup = async (
     [groupTitle]: sender,
   });
 
-  onValue(quizRef, (snapshot) => {
+  onValue(groupRef, (snapshot) => {
     callback({ ...snapshot.val(), id: groupId });
   });
 };
 
-export const removeUserQuizInvitation = async (
+export const removeUserGroupInvitation = async (
   groupId,
   groupTitle,
   username,
   callback
 ) => {
-  const quizRef = ref(db, `groups/${groupId}`);
-  const invitedUsersRef = child(quizRef, "invitedUsers");
+  const groupRef = ref(db, `groups/${groupId}`);
+  const invitedUsersRef = child(groupRef, "invitedUsers");
   const userRef = ref(db, `users/${username}`);
-  const userQuizInvitationsRef = child(userRef, "groupInvitations");
+  const userGroupInvitationsRef = child(userRef, "groupInvitations");
 
   await update(invitedUsersRef, {
     [username]: null,
   });
 
-  await update(userQuizInvitationsRef, {
+  await update(userGroupInvitationsRef, {
     [groupTitle]: null,
   });
 
-  onValue(quizRef, (snapshot) => {
+  onValue(groupRef, (snapshot) => {
     callback({ ...snapshot.val(), id: groupId });
   });
 };

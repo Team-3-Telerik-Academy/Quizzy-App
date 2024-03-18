@@ -6,7 +6,7 @@ import { EffectCoverflow, Pagination } from "swiper/modules";
 import SingleQuiz from "../SingleQuiz/SingleQuiz";
 import PropTypes from "prop-types";
 
-const QuizCarousel = ({ quizzes, value, fn }) => {
+const QuizCarousel = ({ quizzes, value, fn, width }) => {
   return (
     <>
       <style>
@@ -19,7 +19,7 @@ const QuizCarousel = ({ quizzes, value, fn }) => {
       <Swiper
         style={{
           height: "80vh",
-          width: "94.6vw",
+          width: width || "94.6vw",
           paddingTop: "30px",
           margin: "0",
         }}
@@ -60,6 +60,7 @@ QuizCarousel.propTypes = {
   quizzes: PropTypes.array.isRequired,
   value: PropTypes.string,
   fn: PropTypes.func,
+  width: PropTypes.string,
 };
 
 export default QuizCarousel;

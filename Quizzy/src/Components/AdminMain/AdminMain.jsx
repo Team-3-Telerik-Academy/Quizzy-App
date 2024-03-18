@@ -10,7 +10,7 @@ const AdminMain = ({ children }) => {
 
   return (
     <>
-      {!userData?.image ? (
+      {!userData ? (
         <Loading />
       ) : (
         <Box sx={{ display: "flex" }}>

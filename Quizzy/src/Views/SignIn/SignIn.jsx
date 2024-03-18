@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useContext, useState } from "react";
 import AppContext from "../../Context/AppContext";
 import { loginUser } from "../../services/auth.service";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import signInBackground from "../../Images/sign-in-background.jpg";
 import toast from "react-hot-toast";
 import { getUserData } from "../../services/users.service";
@@ -27,6 +27,7 @@ const theme = createTheme({
 });
 
 const SignIn = () => {
+  const location = useLocation();
   const navigate = useNavigate();
   const { setUserCredentials } = useContext(AppContext);
   const [error, setError] = useState("");

@@ -33,6 +33,17 @@ const PublicQuizView = () => {
   const [questionPoints, setQuestionPoints] = useState(0);
   const [sentToDb, setSentToDb] = useState(false);
   const navigate = useNavigate();
+  const [quizExists, setQuizExists] = useState(false);
+
+  useEffect(() => {
+    getQuizById(id).then((data) => {
+      if (!data) {
+        setQuizExists(false);
+      } else {
+        setQuizExists(true);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (resultView) {
@@ -182,7 +193,7 @@ const PublicQuizView = () => {
           <br />
         </LoggedInMain>
       )}
-      <TakeQuiz
+      {quizExists ? (<TakeQuiz
         minutes={minutes}
         formattedSeconds={formattedSeconds}
         buttonColor={buttonColor}
@@ -199,7 +210,7 @@ const PublicQuizView = () => {
         handleClick={handleClick}
         quizTotalPoints={quizTotalPoints}
         questionPoint={questionPoints[index]}
-      />
+      />) : (navigate("*"))}
     </>
   );
 };

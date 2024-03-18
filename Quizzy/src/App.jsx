@@ -42,6 +42,10 @@ import Messenger from "./Views/Messenger/Messenger";
 import AdminQuizzes from "./Views/AdminQuizzes/AdminQuizzes";
 import TakenQuizViewDetails from "./Views/TakenQuizViewDetails/TakenQuizViewDetails";
 import ViewDetailsSingleQuizStatistics from "./Views/ViewDetailsSingleQuizStatistics/ViewDetailsSingleQuizStatistics";
+import GroupDetails from "./Views/GroupDetails/GroupDetails";
+import Authenticated from "./Components/hoc/Authenticated/Authenticated";
+import AuthenticatedAdmin from "./Components/hoc/AuthenticatedAdmin/AuthenticatedAdmin";
+import AuthenticatedEducator from "./Components/hoc/AuthenticatedEducator/AuthenticatedEducator";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -71,12 +75,15 @@ function App() {
 
   const userDataRef = useRef();
 
-useEffect(() => {
-  if (userData && JSON.stringify(userData) !== JSON.stringify(userDataRef.current)) {
-    userDataRef.current = userData;
-    listenForUserChanges(userData.username, setUserData);
-  }
-}, [userData]);
+  useEffect(() => {
+    if (
+      userData &&
+      JSON.stringify(userData) !== JSON.stringify(userDataRef.current)
+    ) {
+      userDataRef.current = userData;
+      listenForUserChanges(userData.username, setUserData);
+    }
+  }, [userData]);
 
   return (
     <AppContext.Provider
@@ -106,201 +113,11 @@ useEffect(() => {
               }
             />
           )}
+          <Route path="/aboutUs" element={<AboutUs />} />
           <Route path="/signIn" element={<SignIn />} />
           <Route path="/signUp" element={<SignUp />} />
-          <Route
-            path="/createQuiz"
-            element={
-              <LoggedInMain>
-                <CreateQuiz />
-              </LoggedInMain>
-            }
-          />
-          <Route
-            path="/profile/:username"
-            element={
-              <LoggedInMain>
-                <UserProfile />
-              </LoggedInMain>
-            }
-          />
-          <Route
-            path="/myQuizzes"
-            element={
-              <LoggedInMain>
-                <MyQuizzes />
-              </LoggedInMain>
-            }
-          />
-          <Route
-            path="/editQuiz/:id"
-            element={
-              <LoggedInMain>
-                <EditQuiz />
-              </LoggedInMain>
-            }
-          />
-          <Route
-            path="/quizStatistics/:statisticsId"
-            element={
-              <LoggedInMain>
-                <SingleStatisticsView />
-              </LoggedInMain>
-            }
-          />
-          <Route
-            path="/quizzes"
-            element={
-              <LoggedInMain>
-                <QuizzesView />
-              </LoggedInMain>
-            }
-          />
-
-          <Route
-            path="/scoreboard"
-            element={
-              <LoggedInMain>
-                <Scoreboard />
-              </LoggedInMain>
-            }
-          />
-
-          <Route
-            path="/educatorGroups"
-            element={
-              <LoggedInMain>
-                <EducatorGroups />
-              </LoggedInMain>
-            }
-          />
-
-          <Route
-            path="/adminHome"
-            element={
-              <AdminMain>
-                <AdminHome />
-              </AdminMain>
-            }
-          />
-
-          <Route
-            path="/adminStudents"
-            element={
-              <AdminMain>
-                <AdminStudents />
-              </AdminMain>
-            }
-          />
-
-          <Route
-            path="/adminUsers"
-            element={
-              <AdminMain>
-                <AdminUsers />
-              </AdminMain>
-            }
-          />
-
-          <Route
-            path="/blockedUsers"
-            element={
-              <AdminMain>
-                <BlockedUsers />
-              </AdminMain>
-            }
-          />
-
-          <Route
-            path="/adminEducators"
-            element={
-              <AdminMain>
-                <AdminEducators />
-              </AdminMain>
-            }
-          />
-
-          <Route
-            path="/adminQuizzes/:type"
-            element={
-              <AdminMain>
-                <AdminQuizzes />
-              </AdminMain>
-            }
-          />
-
-          <Route
-            path="/CreateSuccess/:value"
-            element={
-              <LoggedInMain>
-                <CreateSuccessView />
-              </LoggedInMain>
-            }
-          />
-
-          <Route
-            path="/takenQuizzes"
-            element={
-              <LoggedInMain>
-                <TakenQuizzes />
-              </LoggedInMain>
-            }
-          />
-
-          <Route
-            path="/Friends"
-            element={
-              <LoggedInMain>
-                <Friends />
-              </LoggedInMain>
-            }
-          />
-
-          <Route
-            path="/Messenger"
-            element={
-              <LoggedInMain>
-                <Messenger />
-              </LoggedInMain>
-            }
-          />
-
-          <Route
-            path="/takenQuizzes/details"
-            element={
-              <LoggedInMain>
-                <br />
-                <TakenQuizViewDetails />
-              </LoggedInMain>
-            }
-          />
-
-          <Route
-            path="/singleQuizStatistics/viewDetails"
-            element={
-              <LoggedInMain>
-                <br />
-                <ViewDetailsSingleQuizStatistics />
-              </LoggedInMain>
-            }
-          />
-          <Route
-            path="/createGroup"
-            element={
-              <LoggedInMain>
-                <CreateGroup />
-              </LoggedInMain>
-            }
-          />
-          {/* 
-          <Route path="/quiz/:id" element={<Quiz />} />
-          <Route path="/friends" element={<Friends />} />
-          <Route path="/messenger" element={<Messenger />} />
-          <Route path="/liveBattle" element={<LiveBattle />} /> */}
-          <Route path="/aboutUs" element={<AboutUs />} />
-          <Route path="/adminPanel" element={<AdminPanel />} />
+          <Route path="*" element={<NotFound />} />
           <Route path="/publicQuizzes" element={<PublicQuizzes />} />
-          {/* takeQuiz/:id for path to be universal */}
           <Route path="/publicQuizzes/:id" element={<PublicQuizView />} />
           <Route
             path="/quizResult"
@@ -328,7 +145,227 @@ useEffect(() => {
               )
             }
           />
-          <Route path="*" element={<NotFound />} />
+
+          {/* for educators only */}
+          <Route
+            path="/createQuiz"
+            element={
+              <AuthenticatedEducator>
+                <LoggedInMain>
+                  <CreateQuiz />
+                </LoggedInMain>
+              </AuthenticatedEducator>
+            }
+          />
+          <Route
+            path="/myQuizzes"
+            element={
+              <AuthenticatedEducator>
+                <LoggedInMain>
+                  <MyQuizzes />
+                </LoggedInMain>
+              </AuthenticatedEducator>
+            }
+          />
+          <Route
+            path="/editQuiz/:id"
+            element={
+              <AuthenticatedEducator>
+                <LoggedInMain>
+                  <EditQuiz />
+                </LoggedInMain>
+              </AuthenticatedEducator>
+            }
+          />
+          <Route
+            path="/quizStatistics/:statisticsId"
+            element={
+              <AuthenticatedEducator>
+                <LoggedInMain>
+                  <SingleStatisticsView />
+                </LoggedInMain>
+              </AuthenticatedEducator>
+            }
+          />
+          <Route
+            path="/singleQuizStatistics/viewDetails"
+            element={
+              <AuthenticatedEducator>
+                <LoggedInMain>
+                  <br />
+                  <ViewDetailsSingleQuizStatistics />
+                </LoggedInMain>
+              </AuthenticatedEducator>
+            }
+          />
+          <Route
+            path="/createGroup"
+            element={
+              <AuthenticatedEducator>
+                <LoggedInMain>
+                  <CreateGroup />
+                </LoggedInMain>
+              </AuthenticatedEducator>
+            }
+          />
+          <Route
+            path="/educatorGroups"
+            element={
+              <AuthenticatedEducator>
+                <LoggedInMain>
+                  <EducatorGroups />
+                </LoggedInMain>
+              </AuthenticatedEducator>
+            }
+          />
+          <Route
+            path="/groupDetails/:groupId"
+            element={
+              <AuthenticatedEducator>
+                <LoggedInMain>
+                  <GroupDetails />
+                </LoggedInMain>
+              </AuthenticatedEducator>
+            }
+          />
+          <Route
+            path="/CreateSuccess/:value"
+            element={
+              <AuthenticatedEducator>
+                <LoggedInMain>
+                  <CreateSuccessView />
+                </LoggedInMain>
+              </AuthenticatedEducator>
+            }
+          />
+
+          {/* for logged in users */}
+          <Route
+            path="/quizzes"
+            element={
+              <LoggedInMain>
+                <QuizzesView />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/takenQuizzes"
+            element={
+              <LoggedInMain>
+                <TakenQuizzes />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/takenQuizzes/details"
+            element={
+              <LoggedInMain>
+                <br />
+                <TakenQuizViewDetails />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/scoreboard"
+            element={
+              <LoggedInMain>
+                <Scoreboard />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/Friends"
+            element={
+              <LoggedInMain>
+                <Friends />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/Messenger"
+            element={
+              <LoggedInMain>
+                <Messenger />
+              </LoggedInMain>
+            }
+          />
+          <Route
+            path="/profile/:username"
+            element={
+              <LoggedInMain>
+                <UserProfile />
+              </LoggedInMain>
+            }
+          />
+
+          {/* for admins only */}
+          <Route path="/adminPanel" element={<AdminPanel />} />
+          <Route
+            path="/adminHome"
+            element={
+              <AuthenticatedAdmin>
+                <AdminMain>
+                  <AdminHome />
+                </AdminMain>
+              </AuthenticatedAdmin>
+            }
+          />
+          <Route
+            path="/adminUsers"
+            element={
+              <AuthenticatedAdmin>
+                <AdminMain>
+                  <AdminUsers />
+                </AdminMain>
+              </AuthenticatedAdmin>
+            }
+          />
+          <Route
+            path="/blockedUsers"
+            element={
+              <AuthenticatedAdmin>
+                <AdminMain>
+                  <BlockedUsers />
+                </AdminMain>
+              </AuthenticatedAdmin>
+            }
+          />
+          <Route
+            path="/adminQuizzes/:type"
+            element={
+              <AuthenticatedAdmin>
+                <AdminMain>
+                  <AdminQuizzes />
+                </AdminMain>
+              </AuthenticatedAdmin>
+            }
+          />
+          <Route
+            path="/adminEducators"
+            element={
+              <AuthenticatedAdmin>
+                <AdminMain>
+                  <AdminEducators />
+                </AdminMain>
+              </AuthenticatedAdmin>
+            }
+          />
+          <Route
+            path="/adminStudents"
+            element={
+              <AuthenticatedAdmin>
+                <AdminMain>
+                  <AdminStudents />
+                </AdminMain>
+              </AuthenticatedAdmin>
+            }
+          />
+          {/* 
+          <Route path="/quiz/:id" element={<Quiz />} />
+          <Route path="/friends" element={<Friends />} />
+          <Route path="/messenger" element={<Messenger />} />
+          <Route path="/liveBattle" element={<LiveBattle />} /> */}
+          {/* takeQuiz/:id for path to be universal */}
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>

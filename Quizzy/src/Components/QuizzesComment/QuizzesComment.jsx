@@ -295,7 +295,7 @@ const QuizzesComment = (props) => {
                   ) : (
                     <Typography
                       variant="body1"
-                      style={{ color: "#394E6A", fontFamily: "Fantasy" }}
+                      style={{ fontWeight: "bold"}}
                     >
                       {comment.comment}
                     </Typography>

@@ -26,9 +26,9 @@ const QuizResult = (props) => {
   const timeTaken = props.timeTaken || locationTimeTaken;
   const quizTotalPoints = props.quizTotalPoints || locationQuizTotalPoints;
 
-  const [correctAnswers] = useState(Object.values(correctAns).length);
-  const [IncorrectAnswers] = useState(
-    length - Object.values(correctAns).length
+  const [correctAnswers] = useState(correctAns && Object.values(correctAns).length);
+  const [IncorrectAnswers] = useState(correctAns &&
+    (length - Object.values(correctAns).length)
   );
 
   const handleView = () => {
@@ -39,7 +39,7 @@ const QuizResult = (props) => {
 
   return (
     <>
-      <Box
+    {(Object.keys(props).length === 0 && !location.state) ? navigate("*") : (<Box
         sx={{
           width: "100%",
           height: props.height ? props.height : "100vh",
@@ -184,7 +184,8 @@ const QuizResult = (props) => {
             </Box>
           </Box>
         </Container>
-      </Box>
+      </Box>)}
+      
     </>
   );
 };

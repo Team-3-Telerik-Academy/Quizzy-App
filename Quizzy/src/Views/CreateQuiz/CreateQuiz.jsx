@@ -32,7 +32,7 @@ import {
 import QuizImage from "../../Components/CreateImage/CreateImage";
 import { styled } from "@mui/system";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -87,6 +87,14 @@ const CreateQuiz = () => {
       new Date().setDate(new Date().getDate() + 1)
     ).toLocaleDateString("en-CA"),
   });
+  const [group, setGroup] = useState(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.from) {
+      setGroup(location.state.from);
+    }
+  }, [location]);
 
   useEffect(() => {
     if (quiz.type === "private") {
@@ -199,7 +207,8 @@ const CreateQuiz = () => {
           quiz.category,
           quiz.invitedUsers,
           userData.username,
-          quiz.ongoingTill
+          quiz.ongoingTill,
+          group
         );
       })
       .then()

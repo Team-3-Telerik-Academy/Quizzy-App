@@ -337,7 +337,7 @@ export const friendRequest = async (
     );
   }
 
-  if (action === 'unsent') {
+  if (action === 'unsend') {
     await update(
       ref(db, `users/${userReceivingRequest.username}/friendRequests/`),
       {

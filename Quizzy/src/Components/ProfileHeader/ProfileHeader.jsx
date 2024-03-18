@@ -87,7 +87,7 @@ const ProfileHeader = ({ user }) => {
                   user.username
                 ) ? (
                   <img
-                    onClick={() => handleFriendRequest("unsent")}
+                    onClick={() => handleFriendRequest("unsend")}
                     src={sentRequest}
                     alt="send friend request"
                     style={{ height: "20px", width: "20px", cursor: "pointer" }}
@@ -96,7 +96,7 @@ const ProfileHeader = ({ user }) => {
                   <img
                     onClick={() => handleFriendRequest("send")}
                     src={addUser}
-                    alt="unsent friend request"
+                    alt="unsend friend request"
                     style={{ height: "20px", width: "20px", cursor: "pointer" }}
                   />
                 )}

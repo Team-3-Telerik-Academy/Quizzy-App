@@ -189,7 +189,7 @@ const Friends = () => {
                               color: "white",
                             }}
                             onClick={() =>
-                              handleFriendRequest(userData, user, "unsent")
+                              handleFriendRequest(userData, user, "unsend")
                             }
                           >
                             Request sent

@@ -1,8 +1,18 @@
 import { styled } from "@mui/system";
 import { Box, Typography } from "@mui/material";
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import { getAllUsersSortedByScore } from "../../services/users.service";
+import { useContext, useEffect, useState } from "react";
+import {
+  createUserMessages,
+  friendRequest,
+  getAllUsersSortedByScore,
+} from "../../services/users.service";
+import AppContext from "../../Context/AppContext";
+import { useNavigate } from "react-router-dom";
+import addUser from "..//..//Images/add-user.png";
+import sendMessage from "..//..//Images/send-message.png";
+import sentRequest from "..//..//Images/sentRequest.png";
+import UserProfilePic from "../UserProfilePic/UserProfilePic";
 
 const HeaderBox = styled(Box)({
   borderBottom: "2px solid rgba(0, 0, 0, 0.25)",
@@ -12,17 +22,34 @@ const HeaderBox = styled(Box)({
   justifyContent: "space-between",
 });
 
-const ProfileHeader = ({ userData }) => {
+const ProfileHeader = ({ user }) => {
   const [rank, setRank] = useState("unknown");
+  const { userData, setChatUser } = useContext(AppContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getAllUsersSortedByScore().then((users) => {
-      const user = users.find((user) => user.username === userData.username);
+      const user = users.find((user) => user.username === user.username);
       if (user) {
         setRank(users.indexOf(user) + 1);
       }
     });
   }, []);
+
+  const handleFriendRequest = (action) => {
+    friendRequest(userData, user, action);
+  };
+
+  const handleSendMessage = () => {
+    if (user.messages && Object.keys(user.messages).includes(user.username)) {
+      setChatUser(user.username);
+      navigate("/Messenger");
+      return;
+    }
+    setChatUser(user.username);
+
+    createUserMessages(user, userData, navigate, "/Messenger");
+  };
 
   return (
     <HeaderBox>
@@ -35,14 +62,55 @@ const ProfileHeader = ({ userData }) => {
           marginLeft: "15px",
         }}
       >
-        {userData?.image && (
-          <img
-            style={{ width: "100px", height: "100px", borderRadius: "50%" }}
-            src={userData?.image}
-            alt={userData?.username}
-          />
+        {user?.image && (
+          <UserProfilePic height='100px' width='100px' image={user.image} status={user.status}/>
         )}
-        <Typography variant="h4">{userData?.username}</Typography>
+        <Typography variant="h4">
+          {user?.username} <br />
+          <span
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "5px",
+            }}
+          >
+            {user.username !== userData.username && (
+              <>
+                {/* <img
+              src={friends}
+              alt="friends"
+              style={{ height: "20px", width: "20px" }}
+            /> */}
+                {userData.sentFriendRequests &&
+                Object.keys(userData.sentFriendRequests).includes(
+                  user.username
+                ) ? (
+                  <img
+                    onClick={() => handleFriendRequest("unsend")}
+                    src={sentRequest}
+                    alt="send friend request"
+                    style={{ height: "20px", width: "20px", cursor: "pointer" }}
+                  />
+                ) : (
+                  <img
+                    onClick={() => handleFriendRequest("send")}
+                    src={addUser}
+                    alt="unsend friend request"
+                    style={{ height: "20px", width: "20px", cursor: "pointer" }}
+                  />
+                )}
+
+                <img
+                  onClick={handleSendMessage}
+                  src={sendMessage}
+                  alt="send message"
+                  style={{ height: "28px", width: "28px", cursor: "pointer" }}
+                />
+              </>
+            )}
+          </span>
+        </Typography>
       </Box>
       <Box
         style={{
@@ -53,40 +121,40 @@ const ProfileHeader = ({ userData }) => {
         }}
       >
         <Typography
-            variant="body1"
-            style={{
-              fontWeight: "bold",
-              borderRight: "2px solid rgba(0, 0, 0, 0.25)",
-              paddingRight: "20px",
-            }}
-          >
-            Role: <br />
-            {userData?.role.charAt(0).toUpperCase() + userData?.role.slice(1)}
-          </Typography>
-        {userData?.role === "educator" && (
+          variant="body1"
+          style={{
+            fontWeight: "bold",
+            borderRight: "2px solid rgba(0, 0, 0, 0.25)",
+            paddingRight: "20px",
+          }}
+        >
+          Role: <br />
+          {user?.role.charAt(0).toUpperCase() + user?.role.slice(1)}
+        </Typography>
+        {user?.role === "educator" && (
           <>
-          <Typography
-            variant="body1"
-            style={{
-              fontWeight: "bold",
-              borderRight: "2px solid rgba(0, 0, 0, 0.25)",
-              paddingRight: "20px",
-            }}
-          >
-            Groups: <br />
-            {userData?.groups || 0}
-          </Typography>
-          <Typography
-            variant="body1"
-            style={{
-              fontWeight: "bold",
-              borderRight: "2px solid rgba(0, 0, 0, 0.25)",
-              paddingRight: "20px",
-            }}
-          >
-            Created quizzes: <br />
-            {userData?.createdQuizzes}
-          </Typography>
+            <Typography
+              variant="body1"
+              style={{
+                fontWeight: "bold",
+                borderRight: "2px solid rgba(0, 0, 0, 0.25)",
+                paddingRight: "20px",
+              }}
+            >
+              Groups: <br />
+              {user?.groups || 0}
+            </Typography>
+            <Typography
+              variant="body1"
+              style={{
+                fontWeight: "bold",
+                borderRight: "2px solid rgba(0, 0, 0, 0.25)",
+                paddingRight: "20px",
+              }}
+            >
+              Created quizzes: <br />
+              {user?.createdQuizzes}
+            </Typography>
           </>
         )}
         <Typography
@@ -98,9 +166,7 @@ const ProfileHeader = ({ userData }) => {
           }}
         >
           Taken quizzes: <br />{" "}
-          {userData?.takenQuizzes
-            ? Object.keys(userData.takenQuizzes).length
-            : 0}
+          {user?.takenQuizzes ? Object.keys(user.takenQuizzes).length : 0}
         </Typography>
         <Typography
           variant="body1"
@@ -114,13 +180,13 @@ const ProfileHeader = ({ userData }) => {
         </Typography>
         <Typography variant="body1" style={{ fontWeight: "bold" }}>
           Joined on: <br />
-          {new Date(userData?.createdOn).toLocaleString("bg-BG", {
+          {new Date(user?.createdOn).toLocaleString("bg-BG", {
             year: "numeric",
             month: "numeric",
             day: "numeric",
           })}
         </Typography>
-        {userData?.isBlocked && (
+        {user?.isBlocked && (
           <Typography style={{ color: "red", fontWeight: "bold" }}>
             This profile is blocked!
           </Typography>
@@ -131,7 +197,7 @@ const ProfileHeader = ({ userData }) => {
 };
 
 ProfileHeader.propTypes = {
-  userData: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 export default ProfileHeader;

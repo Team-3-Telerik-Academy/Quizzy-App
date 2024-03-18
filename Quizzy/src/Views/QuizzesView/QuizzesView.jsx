@@ -8,6 +8,7 @@ import { styled } from "@mui/system";
 import { Button, Typography } from "@mui/material";
 import QuizCarousel from "../../Components/QuizCarousel/QuizCarousel";
 import Quizzes from "../../Components/Quizzes/Quizzes";
+import { useLocation } from "react-router-dom";
 
 const StyledButton = styled(Button)({
   color: "#fff",
@@ -34,6 +35,8 @@ const QuizzesView = () => {
     parseInt(localStorage.getItem("quizzesPage")) || 1
   );
   const { userData } = useContext(AppContext);
+  const location = useLocation();
+  const searchedQuiz = location.state?.searchedQuizzes;
 
   useEffect(() => {
     localStorage.setItem("quizzesPage", page);
@@ -44,7 +47,7 @@ const QuizzesView = () => {
   }, [view]);
 
   useEffect(() => {
-    if (userData) {
+    if (userData && !searchedQuiz) {
       getAllPublicQuizzes()
         .then((result) => {
           if (userData.takenQuizzes) {
@@ -92,8 +95,16 @@ const QuizzesView = () => {
             }
           })
         );
+    } else if (userData && searchedQuiz) {
+      if (searchedQuiz.status === "Ongoing") {
+        setPage(1);
+      } else if (searchedQuiz.status === "Finished") {
+        setPage(2);
+      }
+
+      setQuizzes([searchedQuiz]);
     }
-  }, [userData, updateQuizzes]);
+  }, [userData, updateQuizzes, searchedQuiz]);
 
   useEffect(() => {
     if (quizzes) {
@@ -104,7 +115,7 @@ const QuizzesView = () => {
 
   return (
     <>
-      {invitationalQuizzes && ongoingQuizzes && finishedQuizzes && (
+      {quizzes && (
         <div
           style={{
             backgroundColor: "#F3F4F6",

@@ -5,6 +5,7 @@ import { handleAdmin, handleBlock } from "../../services/users.service";
 import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
 const AdminUsers = () => {
   const navigate = useNavigate();
@@ -90,16 +91,10 @@ const AdminUsers = () => {
                       e.currentTarget.style.transform = "scale(1)";
                     }}
                   >
-                    <img
+                    <UserProfilePic
+                      image={user.image}
+                      status={user.status}
                       onClick={() => navigate(`/profile/${user.username}`)}
-                      src={user.image}
-                      style={{
-                        width: "40px",
-                        borderRadius: "20px",
-                        height: "40px",
-                        cursor: "pointer",
-                      }}
-                      alt=""
                     />
                     <Box
                       sx={{

@@ -4,6 +4,7 @@ import { useContext, useEffect, useState } from "react";
 import { byUsername, listenForChatUsers } from "../../services/users.service";
 import { useRef } from "react";
 import { sendMessage } from "../../services/users.service";
+import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
 const Messenger = () => {
   const { userData, chatUser, setChatUser, setUserData } =
@@ -170,11 +171,12 @@ const Messenger = () => {
                 }}
                 onClick={() => setSelectedPerson({ selected: person })}
               >
-                <img
+                <UserProfilePic image={person.image} status={person.status} />
+                {/* <img
                   src={person.image}
                   style={{ width: "40px", height: "40px", borderRadius: "50%" }}
                   alt=""
-                />
+                /> */}
                 <span
                   style={{
                     marginLeft: "20px",
@@ -209,16 +211,9 @@ const Messenger = () => {
           }}
         >
           {selectedPerson?.selected?.image && (
-            <img
-              src={selectedPerson?.selected?.image}
-              style={{
-                width: "65px",
-                height: "65px",
-                borderRadius: "50%",
-                marginLeft: "10px",
-                marginRight: "20px",
-              }}
-              alt=""
+            <UserProfilePic
+              image={selectedPerson?.selected?.image}
+              status={selectedPerson?.selected?.status}
             />
           )}
           <span
@@ -227,6 +222,7 @@ const Messenger = () => {
               fontWeight: "bold",
               color: "#394e6a",
               fontSize: "25px",
+              marginLeft: "10px",
             }}
           >
             {selectedPerson?.selected?.firstName}{" "}
@@ -353,7 +349,7 @@ const Messenger = () => {
               border: "3px solid #f3f4f6",
               marginTop: "5px",
               fontFamily: "Segoe UI",
-              width:'95%'
+              width: "95%",
             }}
             onKeyDown={(e) =>
               handleMessage(

@@ -17,7 +17,6 @@ export const getGroupById = async (id) => {
     console.log('in')
 
     if (!result.exists()) {
-      console.log('nofound')
       throw new Error(`Group with id ${id} does not exist!`);
     }
 
@@ -77,6 +76,9 @@ export const addGroup = async (
       email: email, 
       members: {
         [username]: memberImage,
+    },
+    membersStatus: {
+      [username]: 'online',
     },
     });
 

@@ -8,7 +8,11 @@ import SignIn from "./Views/SignIn/SignIn";
 import Home from "./Views/Home/Home";
 import { auth } from "./config/firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { getUserData, listenForUserChanges } from "./services/users.service";
+import {
+  changeUserStatus,
+  getUserData,
+  listenForUserChanges,
+} from "./services/users.service";
 import { Toaster } from "react-hot-toast";
 import LoggedInMain from "./Components/LoggedInMain/LoggedInMain";
 import Loading from "./Components/Loading/Loading";
@@ -82,6 +86,7 @@ function App() {
     ) {
       userDataRef.current = userData;
       listenForUserChanges(userData.username, setUserData);
+      changeUserStatus(userData);
     }
   }, [userData]);
 

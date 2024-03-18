@@ -10,6 +10,7 @@ import {
   child,
   push,
   remove,
+  onDisconnect,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
@@ -174,6 +175,11 @@ export const acceptInvitation = async (
     await update(ref(db, `users/${username}`), {
       groups: numberOfGroups.val() + 1,
     });
+
+    const membersStatusRef = child(groupRef, "membersStatus");
+    await update(membersStatusRef, {
+      [username]: 'online',
+    });
   }
 };
 
@@ -193,6 +199,14 @@ export const declineInvitation = async (username, prop, value, id) => {
     const invitedUsersRef = child(groupRef, "invitedUsers");
     await update(invitedUsersRef, {
       [username]: "declined",
+    });
+    const numberOfGroups = await get(ref(db, `users/${username}/groups`));
+    await update(ref(db, `users/${username}`), {
+      groups: numberOfGroups.val() - 1,
+    });
+    const membersStatusRef = child(groupRef, "membersStatus");
+    await update(membersStatusRef, {
+      [username]: null,
     });
   }
 };
@@ -305,18 +319,47 @@ export const listenForChatUsers = (username, callback) => {
 
 export const friendRequest = async (
   userSendingRequest,
-  userReceivingRequest
+  userReceivingRequest,
+  action
 ) => {
-  return set(
-    ref(
-      db,
-      `users/${userReceivingRequest.username}/friendRequest/${userSendingRequest.username}`
-    ),
-    {
-      firstName: userSendingRequest.firstName,
-      lastName: userSendingRequest.lastName,
-    }
-  );
+  if (action === 'send') {
+    await update(
+      ref(db, `users/${userReceivingRequest.username}/friendRequests/`),
+      {
+        [userSendingRequest.username]: userSendingRequest.firstName + ' ' + userSendingRequest.lastName,
+      }
+    );
+    await update(
+      ref(db, `users/${userSendingRequest.username}/sentFriendRequests/`),
+      {
+        [userReceivingRequest.username]: true,
+      }
+    );
+  }
+
+  if (action === 'unsend') {
+    await update(
+      ref(db, `users/${userReceivingRequest.username}/friendRequests/`),
+      {
+        [userSendingRequest.username]: null,
+      }
+    );
+    await update(
+      ref(db, `users/${userSendingRequest.username}/sentFriendRequests/`),
+      {
+        [userReceivingRequest.username]: null,
+      }
+    );
+  }
+
+  // ref(
+  //   db,
+  //   `users/${userReceivingRequest.username}/friendRequest/${userSendingRequest.username}`
+  // ),
+  // {
+  //   firstName: userSendingRequest.firstName,
+  //   lastName: userSendingRequest.lastName,
+  // }
 };
 
 // const userRef = ref(
@@ -331,3 +374,11 @@ export const friendRequest = async (
 // image: userReceivingRequest.image,
 // role: userReceivingRequest.role,
 // });
+
+export const changeUserStatus = async (userData) => {
+  if (!userData.username) {
+    return;
+  }
+  update(ref(db, `users/${userData.username}`), { status: 'online' });
+  onDisconnect(ref(db, `users/${userData.username}`)).update({ status: 'offline' });
+}

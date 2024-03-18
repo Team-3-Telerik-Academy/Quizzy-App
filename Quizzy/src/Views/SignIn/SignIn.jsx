@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import signInBackground from "../../Images/sign-in-background.jpg";
 import toast from "react-hot-toast";
 import { getUserData } from "../../services/users.service";
+// import { useLocation } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -44,11 +45,12 @@ const SignIn = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     onLogin();
   };
 
   const onLogin = () => {
-    getUserData('email', form.email).then((user) => {
+    getUserData("email", form.email).then((user) => {
       if (user.exists() && Object.values(user.val())[0].isBlocked) {
         toast.error("You are blocked! Please contact the administrator.");
         return;

@@ -1,8 +1,10 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import home from "../../Images/test.jpg";
+// import home from "../../Images/test.jpg";
+import quizHomePic from "../../Images/quiz-home-pic.jpeg";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const HomeWhenLoggedIn = () => {
   const navigate = useNavigate();
@@ -22,21 +24,24 @@ const HomeWhenLoggedIn = () => {
       <Typography
         variant="h4"
         sx={{
-          color: "rgb(3, 165, 251)",
+          // color: "rgb(3, 165, 251)",
+          color: "#394e6a",
           fontFamily: "Fantasy",
           marginBottom: "20px",
         }}
       >
-        Welcome to Quizzy! Ready to test your knowledge?
+        Welcome to <span style={{ color: "rgb(3, 165, 251)" }}>Quizzy</span>{" "}
+        <br /> Are you ready to challenge yourself with our range of quizzes?
       </Typography>
       <img
-        src={home}
+        src={quizHomePic}
         alt="Cool Quiz"
         style={{
-          width: "400px",
+          width: "500px",
           height: "auto",
           marginBottom: "20px",
           borderRadius: "10px",
+
         }}
       />
       <Button
@@ -44,7 +49,7 @@ const HomeWhenLoggedIn = () => {
         variant="contained"
         sx={{
           color: "white",
-          backgroundColor: "black",
+          backgroundColor: "rgb(3,165,251)",
           fontSize: "17px",
           padding: "10px 20px",
           "&:hover": {

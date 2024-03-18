@@ -13,11 +13,26 @@ const Messenger = () => {
   const messagesEndRef = useRef(null);
   const [message, setMessage] = useState("");
   const [chat, setChat] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    if (userData.messages) {
+      const people = Object.values(userData.messages);
+      if (inputValue) {
+        const peopleFilteredByInput = people.filter((person) => {
+          return person.firstName.toLowerCase().includes(inputValue);
+        });
+        setPeople(peopleFilteredByInput);
+      } else {
+        setPeople(people);
+      }
+    }
+  }, [inputValue]);
 
   useEffect(() => {
     if (
       selectedPerson &&
-      userData.messages[selectedPerson.selected.username]
+      userData.messages[selectedPerson?.selected?.username]
     ) {
       setChat(userData.messages[selectedPerson.selected.username].chat);
     }
@@ -43,39 +58,10 @@ const Messenger = () => {
         personSendingMessage,
         content,
         personReceivingMessage
-        // setUserData
       );
       setMessage("");
     }
   };
-
-  // useEffect(() => {
-  //   // byUsername(userData.username).then((result) => {
-  //   //   const people = Object.values(result.messages);
-  //   //   setPeople(people);
-  //   //   if (chatUser) {
-  //   //     const selectedChatUser = people.filter(
-  //   //       (person) => person.username === chatUser
-  //   //     );
-  //   //     setSelectedPerson({ selected: selectedChatUser[0] });
-  //   //   } else {
-  //   //     setSelectedPerson({ selected: people[0] });
-  //   //   }
-  //   // });
-
-  //   if (userData.messages) {
-  //     const people = Object.values(userData.messages);
-  //     setPeople(people);
-  //     if (chatUser) {
-  //       const selectedChatUser = people.filter(
-  //         (person) => person.username === chatUser
-  //       );
-  //       setSelectedPerson({ selected: selectedChatUser[0] });
-  //     } else {
-  //       setSelectedPerson({ selected: people[0] });
-  //     }
-  //   }
-  // }, [userData]);
 
   useEffect(() => {
     if (userData.messages) {
@@ -86,15 +72,11 @@ const Messenger = () => {
           (person) => person.username === chatUser
         );
         setSelectedPerson({ selected: selectedChatUser[0] });
-      } else {
+      } else if (selectedPerson === null) {
         setSelectedPerson({ selected: people[0] });
       }
     }
   }, [userData.messages]);
-
-  // useEffect(() => {
-  //   listenForChatUsers(userData.username, setPeople);
-  // }, [userData.messages]);
 
   return (
     <Box
@@ -109,13 +91,14 @@ const Messenger = () => {
     >
       <Box
         sx={{
-          width: "auto",
+          width: "35%",
           paddingLeft: "15px",
           paddingTop: "15px",
           display: "flex",
           flexDirection: "column",
           height: "100%",
           margin: 0,
+          justifyContent: "center",
         }}
       >
         <span
@@ -128,20 +111,29 @@ const Messenger = () => {
         >
           Messages
         </span>
-        <Box sx={{ borderRight: "3px solid #f3f4f6" }}>
+        <Box
+          sx={{
+            borderRight: "3px solid #f3f4f6",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
           <input
             placeholder="Search in Messenger"
+            value={inputValue}
             style={{
               marginTop: "10px",
-              width: "93%",
+              width: "97%",
               height: "40px",
               borderRadius: "15px",
               padding: "10px",
               outline: "none",
-              border: "1px solid #f3f4f6",
+              border: "4px solid #f3f4f6",
               backgroundColor: "#f3f4f6",
               marginBottom: "10px",
+              fontFamily: "Segoe UI",
             }}
+            onChange={(e) => setInputValue(e.target.value)}
           ></input>
         </Box>
         <Box
@@ -154,10 +146,10 @@ const Messenger = () => {
             borderRight: "3px solid #f3f4f6",
           }}
         >
-          {people?.map((person) => {
+          {people?.map((person, idx) => {
             return (
               <Box
-                key={person.username}
+                key={idx}
                 sx={{
                   display: "flex",
                   cursor: "pointer",
@@ -176,6 +168,7 @@ const Messenger = () => {
                         : "#e7e8eb",
                   },
                 }}
+                onClick={() => setSelectedPerson({ selected: person })}
               >
                 <img
                   src={person.image}
@@ -208,23 +201,26 @@ const Messenger = () => {
         <Box
           sx={{
             width: "100%",
-            height: "13%",
+            height: "15%",
             borderBottom: "3px solid #f3f4f6",
             display: "flex",
             alignItems: "center",
-            padding: "10px",
+            padding: "15px",
           }}
         >
-          <img
-            src={selectedPerson?.selected?.image}
-            style={{
-              width: "70px",
-              height: "70px",
-              borderRadius: "50%",
-              marginLeft: "10px",
-            }}
-            alt=""
-          />
+          {selectedPerson?.selected?.image && (
+            <img
+              src={selectedPerson?.selected?.image}
+              style={{
+                width: "65px",
+                height: "65px",
+                borderRadius: "50%",
+                marginLeft: "10px",
+                marginRight: "20px",
+              }}
+              alt=""
+            />
+          )}
           <span
             style={{
               fontFamily: "Georgia",
@@ -245,13 +241,105 @@ const Messenger = () => {
               overflowY: "auto",
               flex: "1",
               height: "69vh",
-              padding: "10px",
+              paddingTop: "40px",
+              paddingRight: "25px",
               borderRight: "3px solid #f3f4f6",
+              fontFamily: "Segoe UI",
             }}
           >
             {chat &&
-              Object.values(chat).map((message) => {
-                return <h3>{message.message}</h3>;
+              Object.values(chat).map((message, idx) => {
+                if (message.name !== userData.username) {
+                  return (
+                    <>
+                      <div
+                        key={idx}
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "35px",
+                            padding: "10px",
+                            borderRadius: "15px",
+                            color: "black",
+                            fontSize: "15px",
+                            marginLeft: "5px",
+                          }}
+                        >
+                          {message.hour === 0 ? "00" : message.hour}:
+                          {message.minutes < 10
+                            ? `0${message.minutes}`
+                            : message.minutes}
+                        </span>
+                        <span
+                          style={{
+                            backgroundColor: "#dfe0e2",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: "35px",
+                            padding: "10px",
+                            borderRadius: "15px",
+                            color: "black",
+                            fontSize: "17px",
+                            marginBottom: "8px",
+                          }}
+                        >
+                          {message.message}
+                        </span>
+                      </div>
+                    </>
+                  );
+                } else {
+                  return (
+                    <div
+                      key={idx}
+                      style={{ display: "flex", justifyContent: "flex-end" }}
+                    >
+                      <span
+                        style={{
+                          backgroundColor: "rgb(3,165,251)",
+                          height: "30px",
+                          padding: "10px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderRadius: "15px",
+                          color: "white",
+                          fontSize: "17px",
+                          marginBottom: "8px",
+                        }}
+                      >
+                        {message.message}
+                      </span>
+                      <span
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          height: "30px",
+                          padding: "10px",
+                          borderRadius: "15px",
+                          color: "black",
+                          fontSize: "15px",
+                          marginLeft: "5px",
+                        }}
+                      >
+                        {message.hour === 0 ? "00" : message.hour}:
+                        {message.minutes < 10
+                          ? `0${message.minutes}`
+                          : message.minutes}
+                      </span>
+                    </div>
+                  );
+                }
               })}
             <div ref={messagesEndRef} />
           </Box>
@@ -263,6 +351,9 @@ const Messenger = () => {
               padding: "10px",
               resize: "none",
               border: "3px solid #f3f4f6",
+              marginTop: "5px",
+              fontFamily: "Segoe UI",
+              width:'95%'
             }}
             onKeyDown={(e) =>
               handleMessage(

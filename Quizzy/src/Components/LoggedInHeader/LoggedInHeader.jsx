@@ -62,9 +62,10 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             : 0) +
           (userData?.quizCommentsNotifications
             ? Object.keys(userData.quizCommentsNotifications).length
-            : 0) + (userData?.quizRepliesNotifications
-              ? Object.keys(userData.quizRepliesNotifications).length
-              : 0) -
+            : 0) +
+          (userData?.quizRepliesNotifications
+            ? Object.keys(userData.quizRepliesNotifications).length
+            : 0) -
           openedNotifications
       );
     }
@@ -81,9 +82,10 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
           : 0) +
         (userData?.quizCommentsNotifications
           ? Object.keys(userData.quizCommentsNotifications).length
-          : 0) + (userData?.quizRepliesNotifications
-            ? Object.keys(userData.quizRepliesNotifications).length
-            : 0) ===
+          : 0) +
+        (userData?.quizRepliesNotifications
+          ? Object.keys(userData.quizRepliesNotifications).length
+          : 0) ===
       0
     )
       return;
@@ -103,9 +105,12 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
       toast.success("You have logged out successfully!", {
         position: "bottom-right",
       });
+
       setUserData(null);
       setUserCredentials(null);
+
       navigate("/");
+      window.location.reload();
     });
   };
 
@@ -221,7 +226,8 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
                   setOpenedNotifications={setOpenedNotifications}
                 />
               ))}
-              {userData?.quizRepliesNotifications && userData.role === 'student' &&
+            {userData?.quizRepliesNotifications &&
+              userData.role === "student" &&
               Object.keys(userData.quizRepliesNotifications).map((id) => (
                 <SingleNotification
                   key={id}
@@ -232,17 +238,20 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
                   setOpenedNotifications={setOpenedNotifications}
                 />
               ))}
-            {userData?.quizRepliesNotifications && userData.role === 'educator' &&
-              Object.values(userData.quizRepliesNotifications).map((notification, index) => (
-                <SingleNotification
-                  key={Object.keys(userData.quizRepliesNotifications)[index]}
-                  invitation={notification}
-                  id={Object.keys(userData.quizRepliesNotifications)[index]}
-                  value="quizRepliesNotifications"
-                  handleNotificationsClose={handleNotificationsClose}
-                  setOpenedNotifications={setOpenedNotifications}
-                />
-              ))}
+            {userData?.quizRepliesNotifications &&
+              userData.role === "educator" &&
+              Object.values(userData.quizRepliesNotifications).map(
+                (notification, index) => (
+                  <SingleNotification
+                    key={Object.keys(userData.quizRepliesNotifications)[index]}
+                    invitation={notification}
+                    id={Object.keys(userData.quizRepliesNotifications)[index]}
+                    value="quizRepliesNotifications"
+                    handleNotificationsClose={handleNotificationsClose}
+                    setOpenedNotifications={setOpenedNotifications}
+                  />
+                )
+              )}
           </Menu>
           <IconButton
             size="large"

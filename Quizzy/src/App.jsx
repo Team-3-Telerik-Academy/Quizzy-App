@@ -53,6 +53,7 @@ function App() {
     setUserCredentials(user);
   }
 
+
   // finally retrieve user data if the user is logged (this is also broken and will be fixed in a bit)
   useEffect(() => {
     if (user === null) return;

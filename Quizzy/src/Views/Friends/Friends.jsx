@@ -11,8 +11,18 @@ const Friends = () => {
   const { userData, chatUser, setChatUser, setUserData } =
     useContext(AppContext);
 
+  // useEffect(() => {
+  //   getAllUsers().then((users) => setUsers(users));
+  // }, []);
+
   useEffect(() => {
-    getAllUsers().then((users) => setUsers(users));
+    getAllUsers()
+      .then((users) => {
+        return users.filter((user) => {
+          return user.username !== userData.username;
+        });
+      })
+      .then((result) => setUsers(result));
   }, []);
 
   const handleMessage = async (user, sender, navigate, path) => {
@@ -29,7 +39,7 @@ const Friends = () => {
       user,
       sender,
       navigate,
-      path,
+      path
       // setUserData
     );
   };

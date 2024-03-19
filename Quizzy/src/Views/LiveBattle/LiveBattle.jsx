@@ -1,14 +1,45 @@
 import { Box, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { addQuizToLiveBattle, getLiveBattleById, listenToLiveBattle, updateLiveBattle } from "../../services/live-battle.services";
+import AppContext from "../../Context/AppContext";
+import { getLiveBattleQuestions } from "../../services/request-service";
 
 const LiveBattle = () => {
-  const { id } = useParams();
+  const { battleId } = useParams();
+  const { userData } = useContext(AppContext);
+  const [liveBattle, setLiveBattle] = useState(null);
 
   const [chosenCategory, setChosenCategory] = useState({});
 
+  useEffect(() => {
+    getLiveBattleById(battleId).then((data) => {
+      setLiveBattle(data);
+      listenToLiveBattle(battleId, (data) => {
+        setLiveBattle(data);
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (liveBattle && liveBattle.category1 && liveBattle.category2) {
+      getLiveBattleQuestions(liveBattle.category1.value, liveBattle.category2.value).then(
+        (data) => {
+          addQuizToLiveBattle(battleId, "Live Battle Quiz", data);
+        }
+      );
+    }
+  }, [liveBattle]);
+
+  console.log(battleId);
+
   const handleCategory = (category) => {
     setChosenCategory(category);
+    if (userData.username === liveBattle.player1) {
+      updateLiveBattle(battleId, "category1", category);
+    } else {
+      updateLiveBattle(battleId, "category2", category);
+    }
   };
 
   const categories = [
@@ -51,7 +82,7 @@ const LiveBattle = () => {
           marginBottom: "15px",
         }}
       >
-        Below, you'll have the opportunity to choose a{" "}
+        Below, you&apos;ll have the opportunity to choose a{" "}
         <span style={{ color: "rgb(3,165,251)" }}>Category</span> you feel
         confident about.
       </Typography>
@@ -100,6 +131,7 @@ const LiveBattle = () => {
         {categories.map((category) => {
           return (
             <Box
+            key={category.value}
               value={category.value}
               sx={{
                 boxShadow: "4",

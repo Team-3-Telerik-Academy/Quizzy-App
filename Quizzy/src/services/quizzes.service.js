@@ -10,7 +10,7 @@ import {
   remove,
   child,
 } from "firebase/database";
-import { auth, db } from "../config/firebase-config";
+import { db } from "../config/firebase-config";
 
 export const fromQuizzesDocument = (snapshot) => {
   try {

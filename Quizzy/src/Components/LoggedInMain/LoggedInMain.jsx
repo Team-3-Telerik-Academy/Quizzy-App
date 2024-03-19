@@ -8,11 +8,13 @@ import AppContext from "../../Context/AppContext";
 import LiveBattleInvitationPopUp from "../LiveBattleInvitationPopUp/LiveBattleInvitationPopUp";
 import { deleteNotification } from "../../services/users.service";
 import { acceptLiveBattleInvitation } from "../../services/live-battle.services";
+import { useNavigate } from "react-router-dom";
 
 const LoggedInMain = ({ children }) => {
   const [open, setOpen] = useState(false);
   const { userData } = useContext(AppContext);
   const [liveBattlePopUpOpen, setLiveBattlePopUpOpen] = useState(true);
+  const navigate = useNavigate();
 
   const handleDecline = (senderUsername) => {
     setLiveBattlePopUpOpen(false);
@@ -23,7 +25,7 @@ const LoggedInMain = ({ children }) => {
     ).then(() => {
       deleteNotification(
         senderUsername,
-        'liveBattleWaitingInvitations',
+        "liveBattleWaitingInvitations",
         userData.username
       );
     });
@@ -35,12 +37,12 @@ const LoggedInMain = ({ children }) => {
       userData,
       Object.keys(userData.liveBattleInvitations)[0],
       Object.values(userData.liveBattleInvitations)[0]
-    ).then(() => {
+    ).then((liveBattleId) => {
       deleteNotification(
         userData.username,
         "liveBattleInvitations",
         Object.keys(userData.liveBattleInvitations)[0]
-      );
+      ).then(() => navigate(`/battle/${liveBattleId}`));
     });
   };
 

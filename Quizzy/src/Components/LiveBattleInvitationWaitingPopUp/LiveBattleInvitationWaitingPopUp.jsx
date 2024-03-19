@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -8,6 +8,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 import PropTypes from "prop-types";
 import { styled } from "@mui/material/styles";
 import { Button, DialogActions } from "@mui/material";
+import AppContext from "../../Context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
   "& .MuiLinearProgress-barColorPrimary": {
@@ -18,13 +20,22 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
-const LiveBattleInvitationWaitingPopUp = ({
-  open,
-  handleCancel,
-  name,
-}) => {
+const LiveBattleInvitationWaitingPopUp = ({ open, handleCancel, name }) => {
   const theme = useTheme();
   const [progress, setProgress] = useState(0);
+  const navigate = useNavigate();
+  const { userData } = useContext(AppContext);
+
+  useEffect(() => {
+    if (
+      userData.liveBattleWaitingInvitations &&
+      Object.values(userData.liveBattleWaitingInvitations)[0] === "accepted"
+    ) {
+      navigate(
+        `/battle/${Object.keys(userData.liveBattleWaitingInvitations)[0]}`
+      );
+    }
+  }, [userData]);
 
   useEffect(() => {
     if (open) {
@@ -41,6 +52,8 @@ const LiveBattleInvitationWaitingPopUp = ({
       return () => {
         clearInterval(timer);
       };
+    } else {
+      setProgress(0);
     }
   }, [open, handleCancel]);
 
@@ -58,13 +71,21 @@ const LiveBattleInvitationWaitingPopUp = ({
         },
       }}
     >
-      <DialogTitle id="alert-dialog-title" style={{ textAlign: "center", fontSize: '24px', fontFamily: 'Poppins'}}>
+      <DialogTitle
+        id="alert-dialog-title"
+        style={{ textAlign: "center", fontSize: "24px", fontFamily: "Poppins" }}
+      >
         {`Waiting for ${name} to respond to your live battle invitation`}
       </DialogTitle>
       <DialogContent>
         <DialogContentText
           id="alert-dialog-description"
-          style={{ textAlign: "center", marginBottom: "20px", fontSize: "20px", fontFamily: 'Poppins' }}
+          style={{
+            textAlign: "center",
+            marginBottom: "20px",
+            fontSize: "20px",
+            fontFamily: "Poppins",
+          }}
         >
           You can cancel the invitation if you no longer want to wait.
         </DialogContentText>

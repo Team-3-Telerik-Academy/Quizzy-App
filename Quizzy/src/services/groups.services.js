@@ -14,7 +14,6 @@ import { db } from "../config/firebase-config";
 export const getGroupById = async (id) => {
   try {
     const result = await get(ref(db, `groups/${id}`));
-    console.log('in')
 
     if (!result.exists()) {
       throw new Error(`Group with id ${id} does not exist!`);
@@ -73,23 +72,34 @@ export const addGroup = async (
       description,
       createdBy: username,
       createdOn: new Date().toString(),
-      email: email, 
+      email: email,
       members: {
         [username]: memberImage,
-    },
-    membersStatus: {
-      [username]: 'online',
-    },
+      },
+      membersStatus: {
+        [username]: 'online',
+      },
     });
 
     await invitedUsers.map((user) =>
-      inviteUserToAGroup(result.key, title, user, username, () => {})
+      inviteUserToAGroup(result.key, title, user, username, () => { })
     );
 
     const numberOfGroups = await get(ref(db, `users/${username}/groups`));
     await update(ref(db, `users/${username}`), {
       groups: numberOfGroups.val() + 1,
     });
+
+    const groupsIdsUserParticipatesIn = await get(
+      ref(db, `users/${username}/groupsIds`)
+    );
+    await update(ref(db, `users/${username}`), {
+      groupsIds: {
+        ...groupsIdsUserParticipatesIn.val(),
+        [title]: result.key,
+      },
+    });
+    
     return getGroupById(result.key);
   } catch (error) {
     console.error(error);

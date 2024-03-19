@@ -1,19 +1,35 @@
 import { useState, useEffect } from "react";
-import { createUserMessages, getAllUsers } from "../../services/users.service";
+import {
+  createUserMessages,
+  getAllUsers,
+  getUserByUsername,
+  getUserData,
+} from "../../services/users.service";
 import { Box, Button, Typography } from "@mui/material";
 import AppContext from "../../Context/AppContext";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { friendRequest } from "../../services/users.service";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
+import SingleUserSquareView from "../../Components/SingleUserSquareView/SingleUserSquareView";
 
 const Friends = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
-  const { userData, chatUser, setChatUser, setUserData } =
-    useContext(AppContext);
-  const [text, setText] = useState({});
+  const { userData, setChatUser } = useContext(AppContext);
+  const [setText] = useState({});
   const [friendRequestSent, setFriendRequestSent] = useState(false);
+  const [friends, setFriends] = useState(null);
+
+  useEffect(() => {
+    if (userData.friends) {
+      const friendsPromises = Object.keys(userData.friends).map((friend) =>
+        getUserByUsername(friend).then((user) => user.val())
+      );
+
+      Promise.all(friendsPromises).then((friends) => setFriends(friends));
+    }
+  }, [userData.friends]);
 
   useEffect(() => {
     users.map((user, index) => {
@@ -75,11 +91,31 @@ const Friends = () => {
           alignItems: "center",
         }}
       >
-        You haven't made any friends yet,&nbsp;
+        {userData && userData.friends
+          ? "Here are your friends,"
+          : "You haven't made any friends yet, "}
         <span style={{ color: "rgb(3,165,251)" }}>
           {userData.firstName.charAt(0).toUpperCase() +
             userData.firstName.slice(1).toLowerCase()}
         </span>
+        {friends?.map((friend) => (
+          <Box
+            key={friend.username}
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4,1fr)",
+              justifyContent: "center",
+              alignItems: "center",
+              marginLeft: "10px",
+              gap: "20px",
+            }}
+          >
+            <SingleUserSquareView
+              user={friend}
+              handleMessage={handleMessage}
+            />
+          </Box>
+        ))}
         <Typography
           variant="h4"
           sx={{

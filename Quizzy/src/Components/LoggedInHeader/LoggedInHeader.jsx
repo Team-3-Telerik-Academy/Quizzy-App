@@ -31,7 +31,9 @@ import {
 } from "./loggedInHeaderStyle";
 import SingleNotification from "../SingleNotification/SingleNotification";
 import { getAllPublicQuizzes } from "../../services/quizzes.service";
-import { getAllUsers } from "../../services/users.service";
+import {
+  getAllUsers,
+} from "../../services/users.service";
 import UserProfilePic from "../UserProfilePic/UserProfilePic";
 
 const LoggedInHeader = ({ open, handleDrawerOpen }) => {
@@ -51,6 +53,39 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [allUsers, setAllUsers] = useState(null);
   const [searchInput, setSearchInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+
+  const [messagesEl, setMessagesEl] = useState(null);
+  const [messages, setMessages] = useState(0);
+  const [allMessages, setAllMessages] = useState(null);
+  const [openedMessages, setOpenedMessages] = useState(
+    localStorage.getItem("openedMessages")
+      ? Number(localStorage.getItem("openedMessages"))
+      : 0
+  );
+
+  useEffect(() => {
+    if (userData) {
+      setMessages(
+        (userData?.messages ? Object.keys(userData.messages).length : 0) -
+          openedMessages
+      );
+    }
+  }, [userData, openedMessages]);
+
+  useEffect(() => {
+    localStorage.setItem("openedMessages", openedMessages);
+  }, [openedMessages]);
+
+  const handleMessagesOpen = (event) => {
+    if (userData?.messages) setOpenedMessages(messages + openedMessages);
+
+    setMessagesEl(event.currentTarget);
+    setMessages(0);
+  };
+
+  const handleMessagesClose = () => {
+    setMessagesEl(null);
+  };
 
   useEffect(() => {
     if (searchInput) {
@@ -108,7 +143,6 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   }, [openedNotifications]);
 
   useEffect(() => {
-    // + friendRequest
     if (userData) {
       setNotifications(
         (userData?.quizInvitations
@@ -122,6 +156,9 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             : 0) +
           (userData?.quizRepliesNotifications
             ? Object.keys(userData.quizRepliesNotifications).length
+            : 0) +
+          (userData?.friendRequests
+            ? Object.keys(userData.friendRequests).length
             : 0) -
           openedNotifications
       );
@@ -129,7 +166,6 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   }, [userData]);
 
   const handleNotificationsOpen = (event) => {
-    // for friend request
     if (
       (userData?.quizInvitations
         ? Object.keys(userData.quizInvitations).length
@@ -142,6 +178,9 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
           : 0) +
         (userData?.quizRepliesNotifications
           ? Object.keys(userData.quizRepliesNotifications).length
+          : 0) +
+        (userData?.friendRequests
+          ? Object.keys(userData.friendRequests).length
           : 0) ===
       0
     )
@@ -243,11 +282,21 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
         </Search>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
-          <IconButton size="large" color="inherit">
-            <Badge badgeContent={4} color="secondary">
+          <IconButton size="large" color="inherit" onClick={handleMessagesOpen}>
+            <Badge badgeContent={messages} color="secondary">
               <EmailIcon />
             </Badge>
           </IconButton>
+          <Menu
+            id="simple-menu"
+            anchorEl={messagesEl}
+            keepMounted
+            open={Boolean(messagesEl)}
+            onClose={handleMessagesClose}
+          >
+            {/* {userData?.messages} */}
+            <MenuItem onClick={handleMessagesClose}>Notification 1</MenuItem>
+          </Menu>
           <IconButton
             size="large"
             color="inherit"
@@ -281,6 +330,16 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
                   key={invitation}
                   invitation={invitation}
                   value="groupInvitations"
+                  handleNotificationsClose={handleNotificationsClose}
+                  setOpenedNotifications={setOpenedNotifications}
+                />
+              ))}
+            {userData?.friendRequests &&
+              Object.keys(userData.friendRequests).map((invitation) => (
+                <SingleNotification
+                  key={invitation}
+                  invitation={invitation}
+                  value="friendRequests"
                   handleNotificationsClose={handleNotificationsClose}
                   setOpenedNotifications={setOpenedNotifications}
                 />
@@ -332,7 +391,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             onClick={handleProfileMenuOpen}
             color="inherit"
           >
-            <UserProfilePic image={userData?.image} status={userData?.status}/>
+            <UserProfilePic image={userData?.image} status={userData?.status} />
           </IconButton>
         </Box>
         <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -387,7 +446,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             aria-haspopup="true"
             color="inherit"
           >
-            <UserProfilePic image={userData?.image}/>
+            <UserProfilePic image={userData?.image} />
             <img
               className="img"
               src={userData?.image}

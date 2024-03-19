@@ -350,7 +350,7 @@ const EditQuiz = () => {
                         {Object.keys(quiz.invitedUsers).map((user) => (
                           <FormControlLabel
                             style={{ marginBottom: "10px" }}
-                            key={user}
+                            key={user.username}
                             control={
                               <StyledCheckbox
                                 value={user}

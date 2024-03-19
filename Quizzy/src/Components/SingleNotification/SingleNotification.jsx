@@ -35,7 +35,6 @@ const SingleNotification = ({
   });
 
   const handleAcceptInvitation = () => {
-    //to write for friends
     if (value === "quizInvitations") {
       getQuizByTitle(invitation)
         .then((quiz) => {
@@ -64,7 +63,7 @@ const SingleNotification = ({
             value,
             invitation,
             Object.keys(group.val())[0],
-            userData.image,
+            userData.image
           );
         })
         .then(() => {
@@ -77,10 +76,20 @@ const SingleNotification = ({
           }
         });
     }
+    if (value === "friendRequests") {
+      acceptInvitation(userData.username, value, invitation).then(() => {
+        toast.success("You have accepted the invitation successfully!", {
+          position: "bottom-right",
+        });
+        setOpenedNotifications((prev) => prev - 1);
+        if (location.pathname === "/Friends") {
+          navigate("/Friends");
+        }
+      });
+    }
   };
 
   const handleDeclineInvitation = () => {
-    //to write for friends
     if (value === "quizInvitations") {
       getQuizByTitle(invitation)
         .then((quiz) => {
@@ -115,6 +124,14 @@ const SingleNotification = ({
           setOpenedNotifications((prev) => prev - 1);
         });
     }
+    if (value === "friendRequests") {
+      declineInvitation(userData.username, value, invitation).then(() => {
+        toast.success("You have declined the invitation!", {
+          position: "bottom-right",
+        });
+        setOpenedNotifications((prev) => prev - 1);
+      });
+    }
     if (
       value === "quizCommentsNotifications" ||
       value === "quizRepliesNotifications"
@@ -129,13 +146,28 @@ const SingleNotification = ({
       onClick={handleNotificationsClose}
       style={{ color: "#333", fontSize: "14px" }}
     >
-      {value !== "quizCommentsNotifications" &&
-      value !== "quizRepliesNotifications" ? (
+      {value === "quizInvitations" || value === "groupInvitations" ? (
         <>
           You have been invited from {userData[value][invitation]}{" "}
           {value === "quizInvitations"
             ? `to take the ${invitation} quiz`
             : value === "groupInvitations" && `to join the ${invitation} group`}
+          <IconButton
+            onClick={handleAcceptInvitation}
+            style={{ color: "green", marginLeft: "10px" }}
+          >
+            <Check />
+          </IconButton>
+          <IconButton
+            onClick={handleDeclineInvitation}
+            style={{ color: "red", marginLeft: "10px" }}
+          >
+            <Close />
+          </IconButton>
+        </>
+      ) : value === "friendRequests" ? (
+        <>
+          You have a new friend request from {userData[value][invitation]}
           <IconButton
             onClick={handleAcceptInvitation}
             style={{ color: "green", marginLeft: "10px" }}

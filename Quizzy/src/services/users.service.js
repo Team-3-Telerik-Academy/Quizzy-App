@@ -9,7 +9,6 @@ import {
   orderByChild,
   child,
   push,
-  remove,
   onDisconnect,
 } from "firebase/database";
 import { db } from "../config/firebase-config";
@@ -55,6 +54,12 @@ export const getAllUsersSortedByScore = async () => {
 export const getUserByUsername = (username) => {
   return get(ref(db, `users/${username}`));
 };
+
+export const getUsersStatus = async (username) => {
+  const snapshot = await get(ref(db, `users/${username}`));
+  return snapshot.val().status;
+}
+
 
 export const byUsername = async (username) => {
   const result = await get(ref(db, `users/${username}`));
@@ -152,7 +157,6 @@ export const acceptInvitation = async (
   const userRef = ref(db, `users/${username}`);
   await update(child(userRef, prop), { [value]: null });
 
-  // to write for friends
   if (prop === "quizInvitations") {
     const quizRef = ref(db, `quizzes/${id}`);
     const invitedUsersRef = child(quizRef, "invitedUsers");
@@ -180,14 +184,42 @@ export const acceptInvitation = async (
     await update(membersStatusRef, {
       [username]: 'online',
     });
+
+    const groupsIdsUserParticipatesIn = await get(
+      ref(db, `users/${username}/groupsIds`)
+    );
+
+    const groupDataSnapshot = await get(groupRef);
+    const groupData = groupDataSnapshot.val();
+    const groupTitle = groupData.title;
+
+    await update(ref(db, `users/${username}`), {
+      groupsIds: {
+        ...groupsIdsUserParticipatesIn.val(),
+        [groupTitle]: id,
+      },
+    });
+  } else if (prop === "friendRequests") {
+    const friendRef = ref(db, `users/${username}/friends`);
+    await update(friendRef, {
+      [value]: "online",
+    });
+
+    const friendRef2 = ref(db, `users/${value}/friends`);
+    await update(friendRef2, {
+      [username]: "online",
+    });
+
+    const friend2Ref2 = ref(db, `users/${value}/sentFriendRequests`);
+    await update(friend2Ref2, {
+      [username]: null,
+    });
   }
 };
-
 export const declineInvitation = async (username, prop, value, id) => {
   const userRef = ref(db, `users/${username}`);
   await update(child(userRef, prop), { [value]: null });
 
-  // to write for friends
   if (prop === "quizInvitations") {
     const quizRef = ref(db, `quizzes/${id}`);
     const invitedUsersRef = child(quizRef, "invitedUsers");
@@ -208,6 +240,11 @@ export const declineInvitation = async (username, prop, value, id) => {
     await update(membersStatusRef, {
       [username]: null,
     });
+  } else if (prop === "friendRequests") {
+    const friendRef = ref(db, `users/${value}/sentFriendRequests`);
+    await update(friendRef, {
+      [username]: null,
+    });
   }
 };
 
@@ -221,35 +258,28 @@ export const createUserMessages = async (
   sender,
   navigate,
   path,
-  callback
 ) => {
-  const receivingUser = await set(
+  await set(
     ref(db, `users/${user.username}/messages/${sender.username}`),
     {
       username: sender.username,
       image: sender.image,
       firstName: sender.firstName,
       lastName: sender.lastName,
+      status: sender.status,
     }
   );
 
-  const sendingUser = await set(
+  await set(
     ref(db, `users/${sender.username}/messages/${user.username}`),
     {
       username: user.username,
       image: user.image,
       firstName: user.firstName,
       lastName: user.lastName,
+      status: user.status,
     }
   );
-
-  // const userRef = ref(db, `users/${sender.username}`);
-  // console.log(sender.username);
-  // console.log(user.username);
-
-  // onValue(userRef, (snapshot) => {
-  //   callback(snapshot.val());
-  // });
 
   navigate(path);
 };
@@ -260,7 +290,6 @@ export const sendMessage = async (
   personSendingMessage,
   content,
   personReceivingMessage,
-  callback
 ) => {
   try {
     const senderRef = ref(
@@ -272,7 +301,7 @@ export const sendMessage = async (
       `users/${personReceivingMessage}/messages/${personSendingMessage}/chat/`
     );
 
-    const sender = await push(senderRef, {
+    await push(senderRef, {
       message: content,
       day: new Date().toDateString(),
       hour: new Date().getHours(),
@@ -280,7 +309,7 @@ export const sendMessage = async (
       name: personSendingMessage,
     });
 
-    const receiver = await push(receiverRef, {
+    await push(receiverRef, {
       message: content,
       day: new Date().toDateString(),
       hour: new Date().getHours(),
@@ -292,30 +321,30 @@ export const sendMessage = async (
   }
 };
 
-// on value - not used
-export const displayMessages = async (username, personChatWith, callback) => {
-  const messageRef = ref(
-    db,
-    `users/${username}/messages/${personChatWith}/chat`
-  );
+// // on value - not used
+// export const displayMessages = async (username, personChatWith, callback) => {
+//   const messageRef = ref(
+//     db,
+//     `users/${username}/messages/${personChatWith}/chat`
+//   );
 
-  const chats = onValue(messageRef, (snapshot) => {
-    const result = snapshot.val();
-    callback(result);
-  });
-  return chats;
-};
+//   const chats = onValue(messageRef, (snapshot) => {
+//     const result = snapshot.val();
+//     callback(result);
+//   });
+//   return chats;
+// };
 
-// on value - not used
-export const listenForChatUsers = (username, callback) => {
-  const userRef = ref(db, `users/${username}/messages`);
-  onValue(userRef, (snapshot) => {
-    if (snapshot.val() === null) {
-      return;
-    }
-    callback(Object.values(snapshot.val()));
-  });
-};
+// // on value - not used
+// export const listenForChatUsers = (username, callback) => {
+//   const userRef = ref(db, `users/${username}/messages`);
+//   onValue(userRef, (snapshot) => {
+//     if (snapshot.val() === null) {
+//       return;
+//     }
+//     callback(Object.values(snapshot.val()));
+//   });
+// };
 
 export const friendRequest = async (
   userSendingRequest,
@@ -351,29 +380,7 @@ export const friendRequest = async (
       }
     );
   }
-
-  // ref(
-  //   db,
-  //   `users/${userReceivingRequest.username}/friendRequest/${userSendingRequest.username}`
-  // ),
-  // {
-  //   firstName: userSendingRequest.firstName,
-  //   lastName: userSendingRequest.lastName,
-  // }
 };
-
-// const userRef = ref(
-//   db,
-//   `users/${userReceivingRequest.username}/friendRequests`
-// );
-
-// const request = await push(userRef, {
-// firstName: userReceivingRequest.firstName,
-// lastName: userReceivingRequest.lastName,
-// username: userReceivingRequest.username,
-// image: userReceivingRequest.image,
-// role: userReceivingRequest.role,
-// });
 
 export const changeUserStatus = async (userData) => {
   if (!userData.username) {
@@ -381,4 +388,22 @@ export const changeUserStatus = async (userData) => {
   }
   update(ref(db, `users/${userData.username}`), { status: 'online' });
   onDisconnect(ref(db, `users/${userData.username}`)).update({ status: 'offline' });
+
+  const groups = userData.groupsIds ? Object.values(userData.groupsIds) : [];
+  groups.forEach((id) => {
+    update(ref(db, `groups/${id}/membersStatus/`), { [userData.username]: 'online' });
+    onDisconnect(ref(db, `groups/${id}/membersStatus/`)).update({ [userData.username]: 'offline' });
+  });
+
+  const messages = userData.messages ? Object.keys(userData.messages) : [];
+  messages.forEach((user) => {
+    update(ref(db, `users/${user}/messages/${userData.username}`), { status: 'online' });
+    onDisconnect(ref(db, `users/${user}/messages/${userData.username}`)).update({ status: 'offline' });
+  });
+
+  const friends = userData.friends ? Object.keys(userData.friends) : [];
+  friends.forEach((friend) => {
+    update(ref(db, `users/${friend}/friends/`), { [userData.username]: 'online' });
+    onDisconnect(ref(db, `users/${friend}/friends/`)).update({ [userData.username]: 'offline' });
+  });
 }

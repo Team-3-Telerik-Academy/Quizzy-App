@@ -17,7 +17,6 @@ import {
   DialogActions,
   AvatarGroup,
   Tooltip,
-  Avatar,
 } from "@mui/material";
 import AppContext from "../../Context/AppContext";
 import { getQuizzesByGroupId } from "../../services/quizzes.service";

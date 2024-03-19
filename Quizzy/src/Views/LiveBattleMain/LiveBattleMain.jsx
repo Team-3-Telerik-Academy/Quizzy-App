@@ -5,6 +5,7 @@ import AppContext from "../../Context/AppContext";
 import { useState } from "react";
 import { getAllUsers } from "../../services/users.service";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
+import { inviteToLiveBattle } from "../../services/live-battle.services";
 
 const LiveBattleMain = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -17,6 +18,10 @@ const LiveBattleMain = () => {
     } else {
       setShowOnlineUsers(true);
     }
+  };
+
+  const handleSendInvitation = (receiver) => {
+    inviteToLiveBattle(receiver, userData);
   };
 
   useEffect(() => {
@@ -121,7 +126,9 @@ const LiveBattleMain = () => {
             }}
             onClick={handleOnlineUsersView}
           >
-            {showOnlineUsers === false ? 'See who is online' : 'Hide online users'}
+            {showOnlineUsers === false
+              ? "See who is online"
+              : "Hide online users"}
           </Button>
           {showOnlineUsers && (
             <Box sx={{ display: "flex", width: "100%" }}>
@@ -137,11 +144,16 @@ const LiveBattleMain = () => {
               >
                 {onlineUsers.map((user) => {
                   return (
-                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                    <Box
+                      key={user.username}
+                      sx={{ display: "flex", flexDirection: "column" }}
+                    >
                       <UserProfilePic
                         image={user.image}
                         width={"48px"}
                         height={"48px"}
+                        status={user.status}
+                        onClick={() => handleSendInvitation(user)}
                       />
                       <span>{user.firstName}</span>
                     </Box>

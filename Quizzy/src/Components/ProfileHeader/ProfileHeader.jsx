@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import addUser from "..//..//Images/add-user.png";
 import sendMessage from "..//..//Images/send-message.png";
 import sentRequest from "..//..//Images/sentRequest.png";
+import friends from "..//..//Images/friends.png";
 import UserProfilePic from "../UserProfilePic/UserProfilePic";
 
 const HeaderBox = styled(Box)({
@@ -63,7 +64,12 @@ const ProfileHeader = ({ user }) => {
         }}
       >
         {user?.image && (
-          <UserProfilePic height='100px' width='100px' image={user.image} status={user.status}/>
+          <UserProfilePic
+            height="100px"
+            width="100px"
+            image={user.image}
+            status={user.status}
+          />
         )}
         <Typography variant="h4">
           {user?.username} <br />
@@ -77,15 +83,17 @@ const ProfileHeader = ({ user }) => {
           >
             {user.username !== userData.username && (
               <>
-                {/* <img
-              src={friends}
-              alt="friends"
-              style={{ height: "20px", width: "20px" }}
-            /> */}
-                {userData.sentFriendRequests &&
-                Object.keys(userData.sentFriendRequests).includes(
-                  user.username
-                ) ? (
+                {userData.friends &&
+                Object.keys(userData.friends).includes(user.username) ? (
+                  <img
+                    src={friends}
+                    alt="friends"
+                    style={{ height: "23px", width: "23px" }}
+                  />
+                ) : userData.sentFriendRequests &&
+                  Object.keys(userData.sentFriendRequests).includes(
+                    user.username
+                  ) ? (
                   <img
                     onClick={() => handleFriendRequest("unsend")}
                     src={sentRequest}
@@ -100,7 +108,6 @@ const ProfileHeader = ({ user }) => {
                     style={{ height: "20px", width: "20px", cursor: "pointer" }}
                   />
                 )}
-
                 <img
                   onClick={handleSendMessage}
                   src={sendMessage}

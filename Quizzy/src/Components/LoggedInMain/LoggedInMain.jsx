@@ -5,10 +5,38 @@ import LoggedInHeader from "../LoggedInHeader/LoggedInHeader";
 import propTypes from "prop-types";
 import { useContext, useState } from "react";
 import AppContext from "../../Context/AppContext";
+import LiveBattleInvitationPopUp from "../LiveBattleInvitationPopUp/LiveBattleInvitationPopUp";
+import { deleteNotification } from "../../services/users.service";
+import { acceptLiveBattleInvitation } from "../../services/live-battle.services";
 
 const LoggedInMain = ({ children }) => {
   const [open, setOpen] = useState(false);
-  const {userData} = useContext(AppContext);
+  const { userData } = useContext(AppContext);
+  const [liveBattlePopUpOpen, setLiveBattlePopUpOpen] = useState(true);
+
+  const handleDecline = () => {
+    setLiveBattlePopUpOpen(false);
+    deleteNotification(
+      userData.username,
+      "liveBattleInvitations",
+      Object.keys(userData.liveBattleInvitations)[0]
+    );
+  };
+
+  const handleAccept = () => {
+    setLiveBattlePopUpOpen(false);
+    acceptLiveBattleInvitation(
+      userData,
+      Object.keys(userData.liveBattleInvitations)[0],
+      Object.values(userData.liveBattleInvitations)[0]
+    ).then(() => {
+      deleteNotification(
+        userData.username,
+        "liveBattleInvitations",
+        Object.keys(userData.liveBattleInvitations)[0]
+      );
+    });
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -32,6 +60,14 @@ const LoggedInMain = ({ children }) => {
           >
             <br />
             {children}
+            {userData.liveBattleInvitations && (
+              <LiveBattleInvitationPopUp
+                open={liveBattlePopUpOpen}
+                handleDecline={handleDecline}
+                handleAccept={handleAccept}
+                name={Object.values(userData.liveBattleInvitations)[0]}
+              />
+            )}
           </Box>
         </Box>
       )}

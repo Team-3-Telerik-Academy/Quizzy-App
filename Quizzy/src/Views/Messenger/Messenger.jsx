@@ -1,14 +1,12 @@
 import { Box } from "@mui/material";
 import AppContext from "../../Context/AppContext";
 import { useContext, useEffect, useState } from "react";
-import { byUsername, listenForChatUsers } from "../../services/users.service";
 import { useRef } from "react";
 import { sendMessage } from "../../services/users.service";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
 const Messenger = () => {
-  const { userData, chatUser, setChatUser, setUserData } =
-    useContext(AppContext);
+  const { userData, chatUser } = useContext(AppContext);
   const [people, setPeople] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState(null);
   const messagesEndRef = useRef(null);
@@ -55,11 +53,7 @@ const Messenger = () => {
   ) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const result = await sendMessage(
-        personSendingMessage,
-        content,
-        personReceivingMessage
-      );
+      await sendMessage(personSendingMessage, content, personReceivingMessage);
       setMessage("");
     }
   };
@@ -211,9 +205,10 @@ const Messenger = () => {
           }}
         >
           {selectedPerson?.selected?.image && (
-            <UserProfilePic
-              image={selectedPerson?.selected?.image}
-              status={selectedPerson?.selected?.status}
+            <img
+              src={selectedPerson?.selected?.image}
+              style={{ width: "65px", height: "65px", borderRadius: "50%" }}
+              alt=""
             />
           )}
           <span
@@ -347,7 +342,6 @@ const Messenger = () => {
               padding: "10px",
               resize: "none",
               border: "3px solid #f3f4f6",
-              marginTop: "5px",
               fontFamily: "Segoe UI",
               width: "95%",
             }}

@@ -31,15 +31,15 @@ import {
 } from "./loggedInHeaderStyle";
 import SingleNotification from "../SingleNotification/SingleNotification";
 import { getAllPublicQuizzes } from "../../services/quizzes.service";
-import {
-  getAllUsers,
-} from "../../services/users.service";
+import { getAllUsers } from "../../services/users.service";
 import UserProfilePic from "../UserProfilePic/UserProfilePic";
+import SingleMessageNotification from "../SingleMessageNotification/SingleMessageNotification";
 
 const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const { userData, setUserData, setUserCredentials } = useContext(AppContext);
+  const { userData, setUserData, setUserCredentials, setChatUser } =
+    useContext(AppContext);
   const navigate = useNavigate();
   const [anchorElNotifications, setAnchorElNotifications] = useState(null);
   const [notifications, setNotifications] = useState(0);
@@ -66,8 +66,13 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   useEffect(() => {
     if (userData) {
       setMessages(
-        (userData?.messages ? Object.keys(userData.messages).length : 0) -
-          openedMessages
+        (userData?.messageNotifications
+          ? Object.keys(userData.messageNotifications).length
+          : 0) - openedMessages
+      );
+      setAllMessages(
+        userData?.messageNotifications &&
+          Object.values(userData.messageNotifications).reverse()
       );
     }
   }, [userData, openedMessages]);
@@ -77,14 +82,20 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   }, [openedMessages]);
 
   const handleMessagesOpen = (event) => {
-    if (userData?.messages) setOpenedMessages(messages + openedMessages);
+    if (!userData.messageNotifications) return;
 
+    setOpenedMessages(messages + openedMessages);
     setMessagesEl(event.currentTarget);
     setMessages(0);
   };
 
   const handleMessagesClose = () => {
     setMessagesEl(null);
+  };
+
+  const handleShowInMessenger = (senderUsername) => {
+    setChatUser(senderUsername);
+    navigate("/Messenger");
   };
 
   useEffect(() => {
@@ -115,10 +126,12 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   };
 
   const handleResultSelect = (result) => {
-    const quizKey = Object.entries(userData.takenQuizzes).find(
-      // eslint-disable-next-line no-unused-vars
-      ([_, quiz]) => quiz.id === result.id
-    )?.[0];
+    const quizKey = userData.takenQuizzes
+      ? Object.entries(userData.takenQuizzes).find(
+          // eslint-disable-next-line no-unused-vars
+          ([_, quiz]) => quiz.id === result.id
+        )?.[0]
+      : null;
 
     if (quizKey) {
       setSearchInput("");
@@ -294,8 +307,14 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             open={Boolean(messagesEl)}
             onClose={handleMessagesClose}
           >
-            {/* {userData?.messages} */}
-            <MenuItem onClick={handleMessagesClose}>Notification 1</MenuItem>
+            {allMessages &&
+              allMessages.map((message) => (
+                <SingleMessageNotification
+                  key={message.username}
+                  message={message}
+                  handleShowInMessenger={handleShowInMessenger}
+                />
+              ))}
           </Menu>
           <IconButton
             size="large"

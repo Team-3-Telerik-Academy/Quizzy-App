@@ -53,7 +53,7 @@ const Messenger = () => {
   ) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      await sendMessage(personSendingMessage, content, personReceivingMessage);
+      await sendMessage(personSendingMessage, content, personReceivingMessage, userData.firstName + " " + userData.lastName, userData.image);
       setMessage("");
     }
   };

@@ -140,6 +140,7 @@ const GroupDetails = () => {
                       <UserProfilePic
                         image={group.members[name]}
                         status={group.membersStatus[name]}
+                        onClick={() => {}}
                       />
                     </Link>
                   </Tooltip>
@@ -149,10 +150,14 @@ const GroupDetails = () => {
           </Box>
           <Card sx={{ width: "90%" }}>
             <CardMedia
-              component="img"
-              height="140"
-              image={group.image}
-              alt={group.title}
+              component="div"
+              style={{
+                height: 140,
+                backgroundImage: `url(${group.image})`,
+                backgroundSize: "contain",
+                backgroundRepeat: "repeat",
+                backgroundPosition: "center",
+              }}
             />
             <CardContent
               style={{ display: "flex", justifyContent: "space-between" }}

@@ -14,13 +14,19 @@ const LoggedInMain = ({ children }) => {
   const { userData } = useContext(AppContext);
   const [liveBattlePopUpOpen, setLiveBattlePopUpOpen] = useState(true);
 
-  const handleDecline = () => {
+  const handleDecline = (senderUsername) => {
     setLiveBattlePopUpOpen(false);
     deleteNotification(
       userData.username,
       "liveBattleInvitations",
-      Object.keys(userData.liveBattleInvitations)[0]
-    );
+      senderUsername
+    ).then(() => {
+      deleteNotification(
+        senderUsername,
+        'liveBattleWaitingInvitations',
+        userData.username
+      );
+    });
   };
 
   const handleAccept = () => {
@@ -63,7 +69,9 @@ const LoggedInMain = ({ children }) => {
             {userData.liveBattleInvitations && (
               <LiveBattleInvitationPopUp
                 open={liveBattlePopUpOpen}
-                handleDecline={handleDecline}
+                handleDecline={() =>
+                  handleDecline(Object.keys(userData.liveBattleInvitations)[0])
+                }
                 handleAccept={handleAccept}
                 name={Object.values(userData.liveBattleInvitations)[0]}
               />

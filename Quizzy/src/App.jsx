@@ -51,6 +51,7 @@ import Authenticated from "./Components/hoc/Authenticated/Authenticated";
 import AuthenticatedAdmin from "./Components/hoc/AuthenticatedAdmin/AuthenticatedAdmin";
 import AuthenticatedEducator from "./Components/hoc/AuthenticatedEducator/AuthenticatedEducator";
 import LiveBattleMain from "./Views/LiveBattleMain/LiveBattleMain";
+import LiveBattle from "./Views/LiveBattle/LiveBattle";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -78,7 +79,7 @@ function App() {
   }, [user]);
 
   const userDataRef = useRef();
-  
+
   useEffect(() => {
     if (
       userData &&
@@ -252,6 +253,15 @@ function App() {
                 <LoggedInMain>
                   <QuizzesView />
                 </LoggedInMain>
+              </Authenticated>
+            }
+          />
+
+          <Route
+            path="/battle"
+            element={
+              <Authenticated>
+                <LiveBattle />
               </Authenticated>
             }
           />

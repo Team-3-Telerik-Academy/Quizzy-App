@@ -1,7 +1,12 @@
 import { Box, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { addQuizToLiveBattle, getLiveBattleById, listenToLiveBattle, updateLiveBattle } from "../../services/live-battle.services";
+import {
+  addQuizToLiveBattle,
+  getLiveBattleById,
+  listenToLiveBattle,
+  updateLiveBattle,
+} from "../../services/live-battle.services";
 import AppContext from "../../Context/AppContext";
 import { getLiveBattleQuestions } from "../../services/request-service";
 
@@ -23,15 +28,14 @@ const LiveBattle = () => {
 
   useEffect(() => {
     if (liveBattle && liveBattle.category1 && liveBattle.category2) {
-      getLiveBattleQuestions(liveBattle.category1.value, liveBattle.category2.value).then(
-        (data) => {
-          addQuizToLiveBattle(battleId, "Live Battle Quiz", data);
-        }
-      );
+      getLiveBattleQuestions(
+        liveBattle.category1.value,
+        liveBattle.category2.value
+      ).then((data) => {
+        addQuizToLiveBattle(battleId, "Live Battle Quiz", data);
+      });
     }
   }, [liveBattle]);
-
-  console.log(battleId);
 
   const handleCategory = (category) => {
     setChosenCategory(category);
@@ -131,7 +135,7 @@ const LiveBattle = () => {
         {categories.map((category) => {
           return (
             <Box
-            key={category.value}
+              key={category.value}
               value={category.value}
               sx={{
                 boxShadow: "4",

@@ -290,6 +290,8 @@ export const sendMessage = async (
   personSendingMessage,
   content,
   personReceivingMessage,
+  personSendingMessageFullName,
+  personSendingMessageAvatar,
 ) => {
   try {
     const senderRef = ref(
@@ -316,6 +318,16 @@ export const sendMessage = async (
       minutes: new Date().getMinutes(),
       name: personSendingMessage,
     });
+
+    const receiverMessageNotificationRef = ref(db, `users/${personReceivingMessage}/messageNotifications/`);
+    const newReceiverNotificationRef = push(receiverMessageNotificationRef);
+    await set(newReceiverNotificationRef, {
+      username: personSendingMessage,
+      message: content,
+      fullName: personSendingMessageFullName,
+      avatar: personSendingMessageAvatar,
+    });
+
   } catch (error) {
     console.error("Error sending message:", error);
   }
@@ -396,12 +408,14 @@ export const changeUserStatus = async (userData) => {
   });
 
   const messages = userData.messages ? Object.keys(userData.messages) : [];
+  console.log(messages);
   messages.forEach((user) => {
     update(ref(db, `users/${user}/messages/${userData.username}`), { status: 'online' });
     onDisconnect(ref(db, `users/${user}/messages/${userData.username}`)).update({ status: 'offline' });
   });
 
   const friends = userData.friends ? Object.keys(userData.friends) : [];
+  console.log(friends);
   friends.forEach((friend) => {
     update(ref(db, `users/${friend}/friends/`), { [userData.username]: 'online' });
     onDisconnect(ref(db, `users/${friend}/friends/`)).update({ [userData.username]: 'offline' });

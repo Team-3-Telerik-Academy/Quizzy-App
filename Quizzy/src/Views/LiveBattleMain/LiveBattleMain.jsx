@@ -3,14 +3,16 @@ import quizLogo from ".//..//..//Images/quiz-battle-home-pic.jpg";
 import { useContext, useEffect } from "react";
 import AppContext from "../../Context/AppContext";
 import { useState } from "react";
-import { getAllUsers } from "../../services/users.service";
+import { deleteNotification, getAllUsers } from "../../services/users.service";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 import { inviteToLiveBattle } from "../../services/live-battle.services";
+import LiveBattleInvitationWaitingPopUp from "../../Components/LiveBattleInvitationWaitingPopUp/LiveBattleInvitationWaitingPopUp";
 
 const LiveBattleMain = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { userData } = useContext(AppContext);
   const [showOnlineUsers, setShowOnlineUsers] = useState(false);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
   const handleOnlineUsersView = () => {
     if (showOnlineUsers) {
@@ -21,7 +23,24 @@ const LiveBattleMain = () => {
   };
 
   const handleSendInvitation = (receiver) => {
-    inviteToLiveBattle(receiver, userData);
+    inviteToLiveBattle(receiver, userData).then(() => {
+      setIsPopUpOpen(true);
+    });
+  };
+
+  const handleDecline = (receiverUsername) => {
+    setIsPopUpOpen(false);
+    deleteNotification(
+      userData.username,
+      "liveBattleWaitingInvitations",
+      receiverUsername
+    ).then(() => {
+      deleteNotification(
+        receiverUsername,
+        "liveBattleInvitations",
+        userData.username
+      );
+    });
   };
 
   useEffect(() => {
@@ -97,7 +116,6 @@ const LiveBattleMain = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            // marginLeft:'60px'
           }}
         >
           <Typography
@@ -106,7 +124,6 @@ const LiveBattleMain = () => {
               fontFamily: "fantasy",
               fontSize: "40px",
               color: "#394E6A",
-              //   marginTop: "30px",
               textAlign: "center",
             }}
           >
@@ -131,36 +148,58 @@ const LiveBattleMain = () => {
               : "Hide online users"}
           </Button>
           {showOnlineUsers && (
-            <Box sx={{ display: "flex", width: "100%" }}>
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(4,1fr)",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "10px",
-                  width: "100%",
+            <>
+              <Typography
+                variant="body1"
+                align="center"
+                style={{
+                  color: "#394E6A",
+                  margin: "20px 0",
+                  fontWeight: "bold",
                 }}
               >
-                {onlineUsers.map((user) => {
-                  return (
-                    <Box
-                      key={user.username}
-                      sx={{ display: "flex", flexDirection: "column" }}
-                    >
-                      <UserProfilePic
-                        image={user.image}
-                        width={"48px"}
-                        height={"48px"}
-                        status={user.status}
-                        onClick={() => handleSendInvitation(user)}
-                      />
-                      <span>{user.firstName}</span>
-                    </Box>
-                  );
-                })}
+                Click on the user to send an invitation for a live battle
+              </Typography>
+              <Box sx={{ display: "flex", width: "100%" }}>
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4,1fr)",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  {onlineUsers.map((user) => {
+                    return (
+                      <Box
+                        key={user.username}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <UserProfilePic
+                          image={user.image}
+                          width={"48px"}
+                          height={"48px"}
+                          status={user.status}
+                          onClick={() => handleSendInvitation(user)}
+                        />
+                        <span>{user.firstName}</span>
+                        <LiveBattleInvitationWaitingPopUp
+                          name={user.firstName + " " + user.lastName}
+                          open={isPopUpOpen}
+                          handleCancel={() => handleDecline(user.username)}
+                        />
+                      </Box>
+                    );
+                  })}
+                </Box>
               </Box>
-            </Box>
+            </>
           )}
         </Box>
       </Box>

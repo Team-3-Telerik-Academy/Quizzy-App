@@ -78,7 +78,7 @@ function App() {
   }, [user]);
 
   const userDataRef = useRef();
-
+  
   useEffect(() => {
     if (
       userData &&

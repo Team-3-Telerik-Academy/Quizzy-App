@@ -9,21 +9,7 @@ const LiveBattle = () => {
 
   const handleCategory = (category) => {
     setChosenCategory(category);
-    // if (userData.username === liveBattle.player1) {
-    //   updateLiveBattle(id, "category1", category);
-    // } else {
-    //   updateLiveBattle(id, "category2", category);
-    // }
   };
-
-//   useEffect(() => {
-//     getLiveBattleById(id).then((data) => {
-//       setLiveBattle(data);
-//       listenToLiveBattle(id, (data) => {
-//         setLiveBattle(data);
-//       });
-//     });
-//   }, []);
 
   const categories = [
     { name: "General Knowledge", value: "9" },

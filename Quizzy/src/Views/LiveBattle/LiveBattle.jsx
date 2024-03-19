@@ -43,19 +43,18 @@ const LiveBattle = () => {
   const [quiz, setQuiz] = useState([]);
   const [categoriesView, setCategoriesView] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [secondsLeft, setSecondsLeft] = useState(15);
+  const [secondsLeft, setSecondsLeft] = useState(10);
   const [buttonColor, setButtonColor] = useState("rgb(3,165,251)");
   const [points, setPoints] = useState({});
   const [questions, setQuestions] = useState([]);
-  const length = questions?.length;
   const [selectedItem, setSelectedItem] = useState({});
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(7);
   const [chosenCategory, setChosenCategory] = useState({});
+  const length = questions?.length;
 
   useEffect(() => {
     getLiveBattleById(battleId).then((data) => {
       setLiveBattle(data);
-      setQuestions(Object.values(data.questions));
       listenToLiveBattle(battleId, (data) => {
         setLiveBattle(data);
       });
@@ -63,7 +62,12 @@ const LiveBattle = () => {
   }, []);
 
   useEffect(() => {
-    if (liveBattle && liveBattle.category1 && liveBattle.category2) {
+    if (
+      liveBattle &&
+      liveBattle.category1 &&
+      liveBattle.category2 &&
+      !liveBattle.quiz
+    ) {
       getLiveBattleQuestions(
         liveBattle.category1.value,
         liveBattle.category2.value
@@ -76,6 +80,7 @@ const LiveBattle = () => {
       setQuiz(liveBattle.quiz);
       setCategoriesView(false);
       setLoading(false);
+      setQuestions(Object.values(liveBattle.quiz.questions));
     }
   }, [liveBattle]);
 
@@ -98,7 +103,8 @@ const LiveBattle = () => {
         if (prevSec > 0) {
           return prevSec - 1;
         } else {
-          setIndex((prev) => prev + 1);
+          setSecondsLeft(10);
+          setIndex((prev) => prev + 0.5);
         }
       });
     }, 1000);
@@ -106,12 +112,12 @@ const LiveBattle = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const handleClick = (question, answer, index, questionPoint) => {
+  const handleClick = (question, answer, index) => {
     setSelectedItem({ ...selectedItem, [index]: question });
     setButtonColor("rgb(3,165,251)");
 
     if (question === answer) {
-      setPoints({ ...points, [index]: questionPoint });
+      setPoints({ ...points, [index]: 1 });
     } else {
       setPoints({ ...points, [index]: 0 });
     }
@@ -253,7 +259,7 @@ const LiveBattle = () => {
               color: "white",
               fontSize: "20px",
             }}
-            onClick={() => handleSubmitCategory(setChosenCategory)}
+            onClick={() => handleSubmitCategory(chosenCategory)}
           >
             Select
           </Button>
@@ -263,6 +269,7 @@ const LiveBattle = () => {
         <>
           <Box
             sx={{
+              marginTop: "100px",
               minWidth: "100%",
               display: "flex",
               justifyContent: "center",
@@ -372,8 +379,7 @@ const LiveBattle = () => {
                           handleClick(
                             question,
                             questions[index].correctAnswer,
-                            index,
-                            questionPoint
+                            index
                           )
                         }
                       >
@@ -387,6 +393,7 @@ const LiveBattle = () => {
           </Box>
         </>
       )}
+      {questions?.length === index + 1 && secondsLeft === 0 && <h1>hello</h1>}
     </>
   );
 };

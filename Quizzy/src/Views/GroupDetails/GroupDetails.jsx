@@ -137,7 +137,10 @@ const GroupDetails = () => {
                       to={`/profile/${name}`}
                       style={{ textDecoration: "none" }}
                     >
-                      <UserProfilePic image={group.members[name]} status={group.membersStatus[name]}/>
+                      <UserProfilePic
+                        image={group.members[name]}
+                        status={group.membersStatus[name]}
+                      />
                     </Link>
                   </Tooltip>
                 ))}

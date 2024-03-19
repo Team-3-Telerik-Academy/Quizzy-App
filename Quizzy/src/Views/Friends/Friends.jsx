@@ -110,10 +110,7 @@ const Friends = () => {
               gap: "20px",
             }}
           >
-            <SingleUserSquareView
-              user={friend}
-              handleMessage={handleMessage}
-            />
+            <SingleUserSquareView user={friend} handleMessage={handleMessage} />
           </Box>
         ))}
         <Typography
@@ -195,11 +192,11 @@ const Friends = () => {
                           {user.firstName}
                         </span>
                         <span>{user.lastName}</span>
-                        <span>
-                          Role:{" "}
+                        {/* <span> */}
+                        {/* Role:{" "}
                           {user.role.charAt(0).toUpperCase() +
                             user.role.slice(1)}
-                        </span>
+                        </span> */}
                       </Box>
                       <Box
                         sx={{

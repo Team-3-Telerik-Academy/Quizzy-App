@@ -272,15 +272,20 @@ const Messenger = () => {
                         <span
                           style={{
                             backgroundColor: "#dfe0e2",
+
+                            height: "auto",
+                            padding: "10px",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
-                            height: "35px",
-                            padding: "10px",
                             borderRadius: "15px",
                             color: "black",
                             fontSize: "17px",
                             marginBottom: "8px",
+                            maxWidth: "500px",
+                            wordWrap: "break-word",
+                            overflowWrap: "break-word",
+                            whiteSpace: "pre-wrap",
                           }}
                         >
                           {message.message}
@@ -297,7 +302,7 @@ const Messenger = () => {
                       <span
                         style={{
                           backgroundColor: "rgb(3,165,251)",
-                          height: "30px",
+                          height: "auto",
                           padding: "10px",
                           display: "flex",
                           justifyContent: "center",
@@ -306,6 +311,10 @@ const Messenger = () => {
                           color: "white",
                           fontSize: "17px",
                           marginBottom: "8px",
+                          maxWidth: "500px",
+                          wordWrap: "break-word",
+                          overflowWrap: "break-word",
+                          whiteSpace: "pre-wrap",
                         }}
                       >
                         {message.message}

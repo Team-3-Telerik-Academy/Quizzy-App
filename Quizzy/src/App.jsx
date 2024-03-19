@@ -52,6 +52,7 @@ import AuthenticatedAdmin from "./Components/hoc/AuthenticatedAdmin/Authenticate
 import AuthenticatedEducator from "./Components/hoc/AuthenticatedEducator/AuthenticatedEducator";
 import LiveBattleMain from "./Views/LiveBattleMain/LiveBattleMain";
 import LiveBattle from "./Views/LiveBattle/LiveBattle";
+import CreatingLiveBattleLoading from "./Components/CreatingLiveBattleLoading/CreatingLiveBattleLoading";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -63,7 +64,6 @@ function App() {
     setUserCredentials(user);
   }
 
-  // finally retrieve user data if the user is logged (this is also broken and will be fixed in a bit)
   useEffect(() => {
     if (user === null) return;
 
@@ -103,6 +103,7 @@ function App() {
       }}
     >
       <Toaster />
+      {/* <CreatingLiveBattleLoading/> */}
       <BrowserRouter>
         {loading && <Loading />}
         {!loading && !user && <Header />}
@@ -401,12 +402,6 @@ function App() {
               </AuthenticatedAdmin>
             }
           />
-          {/* 
-          <Route path="/quiz/:id" element={<Quiz />} />
-          <Route path="/friends" element={<Friends />} />
-          <Route path="/messenger" element={<Messenger />} />
-          <Route path="/liveBattle" element={<LiveBattle />} /> */}
-          {/* takeQuiz/:id for path to be universal */}
         </Routes>
       </BrowserRouter>
     </AppContext.Provider>

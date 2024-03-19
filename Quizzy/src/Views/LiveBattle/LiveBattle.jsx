@@ -207,59 +207,56 @@ const LiveBattle = () => {
           >
             {categories.map((category) => {
               return (
-                <>
-                  <Box
-                    key={category.value}
-                    value={category.value}
-                    sx={{
-                      boxShadow: "4",
-                      width: "160px",
-                      height: "150px",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: "15px",
-                      transition: "transform 0.2s",
-                      fontFamily: "fantasy",
-                      // color: "#394e6a",
-                      color:
-                        chosenCategory.value === category.value
-                          ? "white"
-                          : "#394e6a",
-                      backgroundColor:
-                        chosenCategory.value === category.value
-                          ? "rgb(3,165,251)"
-                          : "white",
-                    }}
-                    onClick={() => handleCategory(category)}
-                    onMouseOver={(e) => {
-                      e.currentTarget.style.transform = "scale(1.03)";
-                    }}
-                    onMouseOut={(e) => {
-                      e.currentTarget.style.transform = "scale(1)";
-                    }}
-                  >
-                    {category.name}
-                  </Box>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: "107px",
-                      height: "auto",
-                      fontSize: "10px",
-                      marginBottom: "5px",
-                      marginLeft: "15px",
-                      backgroundColor: "rgb(3,165,251)",
-                      color: "white",
-                    }}
-                    onClick={() => handleSubmitCategory(category)}
-                  >
-                    Select
-                  </Button>
-                </>
+                <Box
+                  key={category.value}
+                  value={category.value}
+                  sx={{
+                    boxShadow: "4",
+                    width: "160px",
+                    height: "150px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: "15px",
+                    transition: "transform 0.2s",
+                    fontFamily: "fantasy",
+                    color:
+                      chosenCategory.value === category.value
+                        ? "white"
+                        : "#394e6a",
+                    backgroundColor:
+                      chosenCategory.value === category.value
+                        ? "rgb(3,165,251)"
+                        : "white",
+                  }}
+                  onClick={() => handleCategory(category)}
+                  onMouseOver={(e) => {
+                    e.currentTarget.style.transform = "scale(1.03)";
+                  }}
+                  onMouseOut={(e) => {
+                    e.currentTarget.style.transform = "scale(1)";
+                  }}
+                >
+                  {category.name}
+                </Box>
               );
             })}
           </Box>
+          <Button
+            variant="contained"
+            sx={{
+              width: "110px",
+              height: "45px",
+              marginTop: "40px",
+              marginLeft: "15px",
+              backgroundColor: "rgb(3,165,251)",
+              color: "white",
+              fontSize: "20px",
+            }}
+            onClick={() => handleSubmitCategory(setChosenCategory)}
+          >
+            Select
+          </Button>
           {loading && <CircularProgress />}
         </Box>
       ) : (

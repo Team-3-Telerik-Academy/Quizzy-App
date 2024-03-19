@@ -1,16 +1,44 @@
-import { Backdrop as MuiBackdrop, CircularProgress } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  CircularProgress,
+  Box,
+} from "@mui/material";
 import { styled } from "@mui/system";
 
-const Backdrop = styled(MuiBackdrop)(({ theme }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  color: "#fff",
-}));
+const StyledDialogTitle = styled(DialogTitle)({
+  textAlign: "center",
+  color: "black",
+  backgroundColor: "rgb(3,165,251)",
+  fontFamily: "Poppins",
+  fontSize: "24px",
+});
+
+const StyledDialogContent = styled(DialogContent)({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "white",
+});
+
+const StyledCircularProgress = styled(CircularProgress)({
+  color: "rgb(3,165,251)",
+});
 
 const CreatingLiveBattleLoading = () => {
   return (
-    <Backdrop open={true}>
-      <CircularProgress color="inherit" />
-    </Backdrop>
+    <Dialog open={true}>
+      <StyledDialogTitle>
+        We are creating the quiz for your battle
+      </StyledDialogTitle>
+      <StyledDialogContent>
+        <Box my={2}>
+          <StyledCircularProgress />
+        </Box>
+      </StyledDialogContent>
+    </Dialog>
   );
 };
 

@@ -408,14 +408,12 @@ export const changeUserStatus = async (userData) => {
   });
 
   const messages = userData.messages ? Object.keys(userData.messages) : [];
-  console.log(messages);
   messages.forEach((user) => {
     update(ref(db, `users/${user}/messages/${userData.username}`), { status: 'online' });
     onDisconnect(ref(db, `users/${user}/messages/${userData.username}`)).update({ status: 'offline' });
   });
 
   const friends = userData.friends ? Object.keys(userData.friends) : [];
-  console.log(friends);
   friends.forEach((friend) => {
     update(ref(db, `users/${friend}/friends/`), { [userData.username]: 'online' });
     onDisconnect(ref(db, `users/${friend}/friends/`)).update({ [userData.username]: 'offline' });

@@ -258,7 +258,7 @@ function App() {
           />
 
           <Route
-            path="/battle"
+            path="/battle/:battleId"
             element={
               <Authenticated>
                 <LiveBattle />

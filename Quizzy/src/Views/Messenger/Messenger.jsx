@@ -71,7 +71,7 @@ const Messenger = () => {
         setSelectedPerson({ selected: people[0] });
       }
     }
-  }, [userData?.messages]);
+  }, [userData?.messages, chatUser]);
 
   return (
     <Box

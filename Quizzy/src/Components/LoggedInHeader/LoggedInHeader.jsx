@@ -466,12 +466,6 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             color="inherit"
           >
             <UserProfilePic image={userData?.image} />
-            <img
-              className="img"
-              src={userData?.image}
-              alt={userData?.username}
-              style={{ width: "35px", height: "35px", borderRadius: "50%" }}
-            />
           </IconButton>
           <p>Profile</p>
         </MenuItem>

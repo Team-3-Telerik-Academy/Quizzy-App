@@ -43,7 +43,7 @@ const PublicQuizView = () => {
         setQuizExists(true);
       }
     });
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (resultView) {

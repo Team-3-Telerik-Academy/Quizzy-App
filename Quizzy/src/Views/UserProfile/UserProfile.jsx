@@ -39,7 +39,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     getUserByUsername(username).then((result) => setUser(result.val()));
-  }, []);
+  }, [username]);
 
   const handleFirstNameChange = () => {
     if (profileInfo.firstName.length < 4 || profileInfo.firstName.length > 32) {

@@ -10,9 +10,9 @@ import {
 import AppContext from "../../Context/AppContext";
 import { createTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
-import CreatingLiveBattleLoading from "../../Components/LiveBattleComponents/CreatingLiveBattleLoading/CreatingLiveBattleLoading";
 import Loading from "../../Components/Loading/Loading";
 import { getQuizQuestions } from "../../services/request-service";
+import LiveBattleLoading from "../../Components/LiveBattleComponents/LiveBattleLoading/LiveBattleLoading";
 
 const theme = createTheme({
   palette: {
@@ -287,10 +287,14 @@ const LiveBattle = () => {
           >
             Select
           </Button>
-          <CreatingLiveBattleLoading open={loading} />
+          <LiveBattleLoading
+            open={loading}
+            text1={"We are creating the quiz for your battle"}
+            text2={
+              "Please wait while we prepare your quiz. This may take a few seconds."
+            }
+          />
         </Box>
-      ) : loading ? (
-        <Loading />
       ) : (
         <Box
           sx={{
@@ -413,6 +417,10 @@ const LiveBattle = () => {
               })}
             </Grid>
           </Box>
+          <LiveBattleLoading
+            open={loading}
+            text1={"The results are being processed!"}
+          />
         </Box>
       )}
     </>

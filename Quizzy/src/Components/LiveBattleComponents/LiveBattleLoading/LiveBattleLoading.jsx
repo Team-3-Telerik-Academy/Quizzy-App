@@ -31,26 +31,30 @@ const StyledCircularProgress = styled(CircularProgress)({
   animationDuration: "4s",
 });
 
-const CreatingLiveBattleLoading = ({ open }) => {
+const LiveBattleLoading = ({ open, text1, text2 }) => {
   return (
     <Dialog open={open} maxWidth="md" fullWidth={true}>
       <StyledDialogTitle>
-        We are creating the quiz for your battle
+        {text1}
       </StyledDialogTitle>
-      <StyledDialogContent>
-        <Box my={2}>
-          <StyledCircularProgress />
-        </Box>
-        <Typography variant="body1" style={{ fontFamily: "Fantasy" }}>
-          Please wait while we prepare your quiz. This may take a few moments.
-        </Typography>
-      </StyledDialogContent>
+      {text2 && (
+        <StyledDialogContent>
+          <Box my={2}>
+            <StyledCircularProgress />
+          </Box>
+          <Typography variant="body1" style={{ fontFamily: "Fantasy" }}>
+            {text2}
+          </Typography>
+        </StyledDialogContent>
+      )}
     </Dialog>
   );
 };
 
-CreatingLiveBattleLoading.propTypes = {
+LiveBattleLoading.propTypes = {
   open: PropTypes.bool.isRequired,
+  text1: PropTypes.string,
+  text2: PropTypes.string,
 };
 
-export default CreatingLiveBattleLoading;
+export default LiveBattleLoading;

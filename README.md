@@ -58,3 +58,14 @@ Message friends, discuss quiz strategies, or share fun facts. Communication is k
 - Fun and Educational: Because quizzes don’t have to be boring!
  
 So, whether you’re a seasoned quizmaster or a curious learner, join the Quizzy community today. 🎯📚🔥
+
+## Project Structure
+You will find the following folders and files:
+
+1. src/AppContext - the main context provider where all the global state of the application is being held.
+2. src/components - contains all the smaller components used to build the application.
+3. src/views - contains all the routed components - About us, Admin Educators,AdminHome,AdminPanel,AdminQuizzes,AdminStudents,AdminUsers,BlockedUsers,CreateGroup,CreateQuiz,CreateSuccessView,EditQuiz,EducatorGroups,Friends,GroupDetails,Home,HomeWhenLoggedIn,LiveBattle,LiveBattleFinalView,LiveBattleMain,Messenger,MyQuzzies,NotFound,PublicQuizView,PublicQuizzes,QuizzesView,ResultDetails,Scoreboard,SignIn,SignUp,SinleStatisticsView,TakenQuizViewDetails,TakenQuizzes,UserProfile,ViewDetailsSingleQuizStatistics
+4. src/config - the firebase configuration file.
+5. src/Images - all the images that are used in the application.
+6. src/services - services functions for users, posts, and authentication used to manipulate firebase data.
+7. App.jsx - the composition root of the application.

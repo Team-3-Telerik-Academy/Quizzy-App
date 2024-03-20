@@ -26,9 +26,10 @@ const PublicQuizzes = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100%",
+        height: "100vh",
         gap: "20px",
         flexDirection: "column",
+        overflow:'hidden'
       }}
     >
       <Typography

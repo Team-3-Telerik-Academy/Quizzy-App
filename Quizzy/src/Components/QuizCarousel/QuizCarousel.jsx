@@ -18,7 +18,7 @@ const QuizCarousel = ({ quizzes, value, fn, width }) => {
       </style>
       <Swiper
         style={{
-          height: "80vh",
+          height: "75vh",
           width: width || "94.6vw",
           paddingTop: "30px",
           margin: "0",

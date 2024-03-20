@@ -48,6 +48,7 @@ const SingleNotification = ({
 
   const handleAcceptInvitation = () => {
     if (value === "quizInvitations") {
+      setOpenedNotifications((prev) => prev - 1);
       getQuizByTitle(invitation)
         .then((quiz) => {
           acceptInvitation(
@@ -61,13 +62,13 @@ const SingleNotification = ({
           toast.success("You have accepted the invitation successfully!", {
             position: "bottom-right",
           });
-          setOpenedNotifications((prev) => prev - 1);
           if (location.pathname === "/quizzes") {
             navigate("/quizzes");
           }
         });
     }
     if (value === "groupInvitations") {
+      setOpenedNotifications((prev) => prev - 1);
       getGroupByTitle(invitation)
         .then((group) => {
           acceptInvitation(
@@ -82,18 +83,17 @@ const SingleNotification = ({
           toast.success("You have accepted the invitation successfully!", {
             position: "bottom-right",
           });
-          setOpenedNotifications((prev) => prev - 1);
           if (location.pathname === "/educatorGroups") {
             navigate("/educatorGroups");
           }
         });
     }
     if (value === "friendRequests") {
+      setOpenedNotifications((prev) => prev - 1);
       acceptInvitation(userData.username, value, invitation).then(() => {
         toast.success("You have accepted the invitation successfully!", {
           position: "bottom-right",
         });
-        setOpenedNotifications((prev) => prev - 1);
         if (location.pathname === "/Friends") {
           navigate("/Friends");
         }
@@ -103,6 +103,7 @@ const SingleNotification = ({
 
   const handleDeclineInvitation = () => {
     if (value === "quizInvitations") {
+      setOpenedNotifications((prev) => prev - 1);
       getQuizByTitle(invitation)
         .then((quiz) => {
           declineInvitation(
@@ -116,10 +117,10 @@ const SingleNotification = ({
           toast.success("You have declined the invitation!", {
             position: "bottom-right",
           });
-          setOpenedNotifications((prev) => prev - 1);
         });
     }
     if (value === "groupInvitations") {
+      setOpenedNotifications((prev) => prev - 1);
       getGroupByTitle(invitation)
         .then((quiz) => {
           declineInvitation(
@@ -133,23 +134,22 @@ const SingleNotification = ({
           toast.success("You have declined the invitation!", {
             position: "bottom-right",
           });
-          setOpenedNotifications((prev) => prev - 1);
         });
     }
     if (value === "friendRequests") {
+      setOpenedNotifications((prev) => prev - 1);
       declineInvitation(userData.username, value, invitation).then(() => {
         toast.success("You have declined the invitation!", {
           position: "bottom-right",
         });
-        setOpenedNotifications((prev) => prev - 1);
       });
     }
     if (
       value === "quizCommentsNotifications" ||
       value === "quizRepliesNotifications"
     ) {
-      deleteNotification(userData.username, value, id);
       setOpenedNotifications((prev) => prev - 1);
+      deleteNotification(userData.username, value, id);
     }
   };
 

@@ -33,31 +33,22 @@ const Friends = () => {
     }
   }, [userData.friends]);
 
-  // useEffect(() => {
-  //   getAllUsers()
-  //     .then((users) => {
-  //       return users.filter((user) => {
-  //         return user.username !== userData?.username;
-  //       });
-  //     })
-  //     .then((result) => setUsers(result));
-  // }, []);
-
-  
- useEffect(() => {
-  getAllUsers()
-    .then((users) => {
-      return users.filter((user) => {
-        return !friends?.includes(user);
-      });
-    })
-    .then((users) => {
-      return users.filter((user) => {
-        return user.username !== userData?.username;
-      });
-    })
-    .then((result) => setUsers(result));
-}, []);
+  useEffect(() => {
+    if (userData) {
+      getAllUsers()
+        .then((users) => {
+          return users.filter((user) => {
+            return !Object.keys(userData.friends).includes(user.username);
+          });
+        })
+        .then((users) => {
+          return users.filter((user) => {
+            return user.username !== userData?.username;
+          });
+        })
+        .then((result) => setUsers(result));
+    }
+  }, [userData]);
 
   const handleFriendRequest = async (sender, receiver, action) => {
     const result = await friendRequest(sender, receiver, action);
@@ -109,18 +100,22 @@ const Friends = () => {
         </span>
         <Box
           sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4,1fr)",
-          justifyContent: "center",
-          alignItems: "center",
-          marginLeft: "10px",
-          gap: "20px",
-          marginTop: '15px',
-          marginBottom: '40px',
+            display: "grid",
+            gridTemplateColumns: "repeat(4,1fr)",
+            justifyContent: "center",
+            alignItems: "center",
+            marginLeft: "10px",
+            gap: "20px",
+            marginTop: "15px",
+            marginBottom: "40px",
           }}
         >
           {friends?.map((friend) => (
-            <SingleUserSquareView key={friend.username} user={friend} handleMessage={handleMessage} />
+            <SingleUserSquareView
+              key={friend.username}
+              user={friend}
+              handleMessage={handleMessage}
+            />
           ))}
         </Box>
         <Typography

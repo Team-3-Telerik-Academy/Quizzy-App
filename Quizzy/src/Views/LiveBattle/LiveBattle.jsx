@@ -80,7 +80,7 @@ const LiveBattle = () => {
           ? liveBattle.category1.value
           : liveBattle.category2.value;
 
-      getQuizQuestions(category, "medium", 6).then((data) => {
+      getQuizQuestions(category, "medium", 4).then((data) => {
         addQuizToLiveBattle(battleId, "Live Battle", data);
       });
     }
@@ -104,7 +104,7 @@ const LiveBattle = () => {
             setIndex((prev) => prev + 0.5);
           }
         });
-      }, 300);
+      }, 600);
 
       return () => clearInterval(timer);
     }
@@ -205,7 +205,7 @@ const LiveBattle = () => {
               marginBottom: "15px",
             }}
           >
-            <span style={{ color: "rgb(3,165,251)" }}>5</span> random questions
+            <span style={{ color: "rgb(3,165,251)" }}>4</span> random questions
             will be generated and included in the Quiz battle.
           </Typography>
           <Typography

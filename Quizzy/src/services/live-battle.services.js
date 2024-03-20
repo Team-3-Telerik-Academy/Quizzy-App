@@ -1,4 +1,4 @@
-import { get, onValue, push, ref, update } from "firebase/database";
+import { get, onValue, push, ref, remove, update } from "firebase/database";
 import { db } from "../config/firebase-config";
 
 export const inviteToLiveBattle = async (
@@ -22,18 +22,19 @@ export const inviteToLiveBattle = async (
 export const acceptLiveBattleInvitation = async (
     receiver,
     sender,
-    senderFullName,
 ) => {
     try {
+        const senderData = (await (get(ref(db, `users/${sender}`)))).val();
+
         const result = await push(ref(db, "liveBattles"), {
             player1: sender,
-            player1FullName: senderFullName,
+            player1FullName: senderData.firstName + ' ' + senderData.lastName,
+            player1Image: senderData.image,
             player2: receiver.username,
             player2FullName: receiver.firstName + ' ' + receiver.lastName,
-            player1Ready: false,
-            player2Ready: false,
-            player1Score: 0,
-            player2Score: 0,
+            player2Image: receiver.image,
+            // player1Score: 0,
+            // player2Score: 0,
         });
 
         await update(
@@ -43,7 +44,6 @@ export const acceptLiveBattleInvitation = async (
             }
         );
 
-        console.log(result.key);
         return result.key;
     } catch (error) {
         console.error(error);
@@ -76,16 +76,14 @@ export const addQuizToLiveBattle = async (liveBattleId, title, questions) => {
 }
 
 export const updateLiveBattle = async (liveBattleId, prop, value) => {
-    await update(ref(db, `liveBattles/${liveBattleId}/${prop}`), value);
+
+    await update(ref(db, `liveBattles/${liveBattleId}`), { [prop]: value });
 }
 
 export const deleteLiveBattle = async (liveBattleId, sender) => {
-    await update(
-        ref(db, `users/${sender}/liveBattleWaitingInvitations/`),
-        null
-    );
+    await remove(ref(db, `users/${sender}/liveBattleWaitingInvitations/`));
 
-    await update(ref(db, `liveBattles/${liveBattleId}`), null);
+    await remove(ref(db, `liveBattles/${liveBattleId}`));
 }
 
 export const listenToLiveBattle = (liveBattleId, callback) => {

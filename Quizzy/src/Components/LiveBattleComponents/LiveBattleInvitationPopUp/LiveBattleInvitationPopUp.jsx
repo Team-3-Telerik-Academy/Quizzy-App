@@ -60,24 +60,32 @@ const LiveBattleInvitationPopUp = ({
         },
       }}
     >
-      <DialogTitle id="alert-dialog-title" style={{ textAlign: "center", fontSize: '24px', fontFamily: 'Poppins'}}>
+      <DialogTitle
+        id="alert-dialog-title"
+        style={{ textAlign: "center", fontSize: "24px", fontFamily: "Poppins" }}
+      >
         {`You received a new invitation for a live battle from ${name}`}
       </DialogTitle>
-    <DialogContent>
+      <DialogContent>
         <DialogContentText
-            id="alert-dialog-description"
-            style={{ textAlign: "center", marginBottom: "20px", fontSize: "20px", fontFamily: 'Poppins' }}
+          id="alert-dialog-description"
+          style={{
+            textAlign: "center",
+            marginBottom: "20px",
+            fontSize: "20px",
+            fontFamily: "Poppins",
+          }}
         >
-            What would you like to do next?
+          What would you like to do next?
         </DialogContentText>
         <StyledLinearProgress variant="determinate" value={progress} />
-    </DialogContent>
+      </DialogContent>
       <DialogActions>
-        <Button onClick={handleAccept} color="inherit">
-          Accept
-        </Button>
         <Button onClick={handleDecline} color="inherit" autoFocus>
           Decline
+        </Button>
+        <Button onClick={handleAccept} color="inherit">
+          Accept
         </Button>
       </DialogActions>
     </Dialog>

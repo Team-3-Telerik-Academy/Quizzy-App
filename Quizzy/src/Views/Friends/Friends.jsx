@@ -17,7 +17,7 @@ const Friends = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const { userData, setChatUser } = useContext(AppContext);
-  const [setText] = useState({});
+  // const [text, setText] = useState({});
   const [friendRequestSent, setFriendRequestSent] = useState(false);
   const [friends, setFriends] = useState(null);
 
@@ -31,13 +31,13 @@ const Friends = () => {
     }
   }, [userData.friends]);
 
-  useEffect(() => {
-    users.map((user, index) => {
-      if (index % 2 === 0) {
-        setText((prevText) => ({ ...prevText, [index]: "Add friend" }));
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   users.map((user, index) => {
+  //     if (index % 2 === 0) {
+  //       setText((prevText) => ({ ...prevText, [index]: "Add friend" }));
+  //     }
+  //   });
+  // }, []);
 
   useEffect(() => {
     getAllUsers()
@@ -98,21 +98,22 @@ const Friends = () => {
           {userData.firstName.charAt(0).toUpperCase() +
             userData.firstName.slice(1).toLowerCase()}
         </span>
-        {friends?.map((friend) => (
-          <Box
-            key={friend.username}
-            sx={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4,1fr)",
-              justifyContent: "center",
-              alignItems: "center",
-              marginLeft: "10px",
-              gap: "20px",
-            }}
-          >
-            <SingleUserSquareView user={friend} handleMessage={handleMessage} />
-          </Box>
-        ))}
+        <Box
+          sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4,1fr)",
+          justifyContent: "center",
+          alignItems: "center",
+          marginLeft: "10px",
+          gap: "20px",
+          marginTop: '15px',
+          marginBottom: '40px',
+          }}
+        >
+          {friends?.map((friend) => (
+            <SingleUserSquareView key={friend.username} user={friend} handleMessage={handleMessage} />
+          ))}
+        </Box>
         <Typography
           variant="h4"
           sx={{
@@ -192,8 +193,8 @@ const Friends = () => {
                           {user.firstName}
                         </span>
                         <span>{user.lastName}</span>
-                        {/* <span> */}
-                        {/* Role:{" "}
+                        {/* <span>
+                        Role:{" "}
                           {user.role.charAt(0).toUpperCase() +
                             user.role.slice(1)}
                         </span> */}

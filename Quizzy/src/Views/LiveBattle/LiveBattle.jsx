@@ -1,13 +1,6 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Typography,
-  Grid,
-  Paper,
-} from "@mui/material";
+import { Box, Button, Typography, Grid, Paper } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   addQuizToLiveBattle,
   getLiveBattleById,
@@ -16,8 +9,10 @@ import {
 } from "../../services/live-battle.services";
 import AppContext from "../../Context/AppContext";
 import { getLiveBattleQuestions } from "../../services/request-service";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
+import CreatingLiveBattleLoading from "../../Components/LiveBattleComponents/CreatingLiveBattleLoading/CreatingLiveBattleLoading";
+import Loading from "../../Components/Loading/Loading";
 
 const theme = createTheme({
   palette: {
@@ -37,6 +32,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const LiveBattle = () => {
+  const navigate = useNavigate();
   const { battleId } = useParams();
   const { userData } = useContext(AppContext);
   const [liveBattle, setLiveBattle] = useState(null);
@@ -45,23 +41,30 @@ const LiveBattle = () => {
   const [loading, setLoading] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(10);
   const [buttonColor, setButtonColor] = useState("rgb(3,165,251)");
-  const [points, setPoints] = useState({});
+  const [points, setPoints] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [selectedItem, setSelectedItem] = useState({});
-  const [index, setIndex] = useState(7);
+  const [index, setIndex] = useState(0);
   const [chosenCategory, setChosenCategory] = useState({});
   const length = questions?.length;
 
   useEffect(() => {
     getLiveBattleById(battleId).then((data) => {
       setLiveBattle(data);
-      listenToLiveBattle(battleId, (data) => {
-        setLiveBattle(data);
-      });
+      listenToLiveBattle(battleId, setLiveBattle);
     });
-  }, []);
+  }, [battleId]);
 
   useEffect(() => {
+    if (
+      liveBattle &&
+      (liveBattle.player1Score || liveBattle.player1Score === 0) &&
+      (liveBattle.player2Score || liveBattle.player2Score === 0)
+    ) {
+      setLoading(false);
+      navigate("/liveBattleResults", { state: { battleId } });
+    }
+
     if (
       liveBattle &&
       liveBattle.category1 &&
@@ -72,17 +75,53 @@ const LiveBattle = () => {
         liveBattle.category1.value,
         liveBattle.category2.value
       ).then((data) => {
-        addQuizToLiveBattle(battleId, "Live Battle Quiz", data);
+        addQuizToLiveBattle(battleId, "Live Battle", data);
       });
     }
 
     if (liveBattle && liveBattle.quiz) {
       setQuiz(liveBattle.quiz);
+      setQuestions(Object.values(liveBattle.quiz.questions));
       setCategoriesView(false);
       setLoading(false);
-      setQuestions(Object.values(liveBattle.quiz.questions));
     }
   }, [liveBattle]);
+
+  useEffect(() => {
+    if (questions.length > 0) {
+      const timer = setInterval(() => {
+        setSecondsLeft((prevSec) => {
+          if (prevSec > 0) {
+            return prevSec - 1;
+          } else {
+            setSecondsLeft(10);
+            setIndex((prev) => prev + 0.5);
+          }
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [questions]);
+
+  useEffect(() => {
+    if (questions.length === index + 1 && secondsLeft <= 1) {
+      setLoading(true);
+      if (userData.username === liveBattle.player1) {
+        updateLiveBattle(battleId, "player1Score", points).then(() => {
+          if (liveBattle.player2Score) {
+            navigate("/liveBattleResults", { state: { battleId } });
+          }
+        });
+      } else {
+        updateLiveBattle(battleId, "player2Score", points).then(() => {
+          if (liveBattle.player1Score) {
+            navigate("/liveBattleResults", { state: { battleId } });
+          }
+        });
+      }
+    }
+  }, [index, secondsLeft]);
 
   const handleCategory = (category) => {
     setChosenCategory(category);
@@ -97,29 +136,12 @@ const LiveBattle = () => {
     }
   };
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setSecondsLeft((prevSec) => {
-        if (prevSec > 0) {
-          return prevSec - 1;
-        } else {
-          setSecondsLeft(10);
-          setIndex((prev) => prev + 0.5);
-        }
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
   const handleClick = (question, answer, index) => {
     setSelectedItem({ ...selectedItem, [index]: question });
     setButtonColor("rgb(3,165,251)");
 
     if (question === answer) {
-      setPoints({ ...points, [index]: 1 });
-    } else {
-      setPoints({ ...points, [index]: 0 });
+      setPoints(points + 1);
     }
   };
 
@@ -263,137 +285,134 @@ const LiveBattle = () => {
           >
             Select
           </Button>
-          {loading && <CircularProgress />}
+          <CreatingLiveBattleLoading open={loading} />
         </Box>
+      ) : loading ? (
+        <Loading />
       ) : (
-        <>
-          <Box
-            sx={{
-              marginTop: "100px",
-              minWidth: "100%",
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
-              alignItems: "center",
-              position: "relative",
+        <Box
+          sx={{
+            marginTop: "100px",
+            minWidth: "100%",
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <Typography
+            style={{
+              color: "#394E6A",
+              fontFamily: "Fantasy",
+              marginTop: "30px",
+              marginBottom: "5px",
+              fontSize: "25px",
             }}
           >
-            <Typography
+            {quiz.title} Quiz
+          </Typography>
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              fontFamily: "cursive",
+              color: "#394E6A",
+              fontSize: "17px",
+              minWidth: "45%",
+              marginBottom: "5px",
+            }}
+          >
+            {" "}
+            Time left: {secondsLeft}
+          </Typography>
+          <Box
+            sx={{
+              boxShadow: 4,
+              width: "45%",
+              height: "auto",
+              display: "flex",
+              flexDirection: "column",
+              padding: "20px",
+              borderRadius: "10px",
+            }}
+          >
+            <span
               style={{
                 color: "#394E6A",
                 fontFamily: "Fantasy",
-                marginTop: "30px",
-                marginBottom: "5px",
-                fontSize: "25px",
+                marginBottom: "10px",
               }}
             >
-              {quiz.title} Quiz
-            </Typography>
-
+              Question
+              <span style={{ fontSize: "23px", marginLeft: "7px" }}>
+                {index + 1}
+              </span>{" "}
+              / {length}
+            </span>
             <Typography
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                fontFamily: "cursive",
+              style={{
+                fontFamily: "fantasy",
                 color: "#394E6A",
-                fontSize: "17px",
-                minWidth: "45%",
-                marginBottom: "5px",
-              }}
-            >
-              {" "}
-              Time left: {secondsLeft}
-            </Typography>
-
-            <Box
-              sx={{
-                boxShadow: 4,
-                width: "45%",
-                height: "auto",
+                marginBottom: "20px",
                 display: "flex",
-                flexDirection: "column",
-                padding: "20px",
-                borderRadius: "10px",
+                justifyContent: "center",
               }}
+              variant="h5"
             >
-              <span
-                style={{
-                  color: "#394E6A",
-                  fontFamily: "Fantasy",
-                  marginBottom: "10px",
-                }}
-              >
-                Question
-                <span style={{ fontSize: "23px", marginLeft: "7px" }}>
-                  {index + 1}
-                </span>{" "}
-                / {length}
-              </span>
-              <Typography
-                style={{
-                  fontFamily: "fantasy",
-                  color: "#394E6A",
-                  marginBottom: "20px",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-                variant="h5"
-              >
-                {questions[index]?.title}
-              </Typography>
-              <Grid
-                container
-                rowSpacing={1}
-                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-              >
-                {questions[index]?.answers?.map((question) => {
-                  return (
-                    <Grid key={question} item xs={6}>
-                      <Item
-                        sx={{
-                          fontFamily: "Monospace",
-                          cursor: "pointer",
+              {questions[index]?.title}
+            </Typography>
+            <Grid
+              container
+              rowSpacing={1}
+              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+            >
+              {questions[index]?.answers?.map((question) => {
+                return (
+                  <Grid key={question} item xs={6}>
+                    <Item
+                      sx={{
+                        fontFamily: "Monospace",
+                        cursor: "pointer",
+                        backgroundColor:
+                          selectedItem[index] === question
+                            ? "rgb(3,165,251)"
+                            : "initial",
+                        color:
+                          selectedItem[index] === question
+                            ? "#ffffff"
+                            : theme.palette.text.secondary,
+                        "&:hover": {
                           backgroundColor:
                             selectedItem[index] === question
-                              ? "rgb(3,165,251)"
-                              : "initial",
-                          color:
-                            selectedItem[index] === question
-                              ? "#ffffff"
-                              : theme.palette.text.secondary,
-                          "&:hover": {
-                            backgroundColor:
-                              selectedItem[index] === question
-                                ? buttonColor
-                                : "#EBECF0",
-                          },
-                          transition: "transform 0.2s",
-                        }}
-                        onMouseOver={(e) => {
-                          e.currentTarget.style.transform = "scale(1.03)";
-                        }}
-                        onMouseOut={(e) => {
-                          e.currentTarget.style.transform = "scale(1)";
-                        }}
-                        onClick={() =>
-                          handleClick(
-                            question,
-                            questions[index].correctAnswer,
-                            index
-                          )
-                        }
-                      >
-                        {question}
-                      </Item>
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </Box>
+                              ? buttonColor
+                              : "#EBECF0",
+                        },
+                        transition: "transform 0.2s",
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.transform = "scale(1.03)";
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
+                      }}
+                      onClick={() =>
+                        handleClick(
+                          question,
+                          questions[index].correctAnswer,
+                          index
+                        )
+                      }
+                    >
+                      {question}
+                    </Item>
+                  </Grid>
+                );
+              })}
+            </Grid>
           </Box>
-        </>
+        </Box>
       )}
-      {questions?.length === index + 1 && secondsLeft === 0 && <h1>hello</h1>}
     </>
   );
 };

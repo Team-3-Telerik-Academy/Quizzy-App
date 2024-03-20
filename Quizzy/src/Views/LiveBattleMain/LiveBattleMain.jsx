@@ -6,7 +6,7 @@ import { useState } from "react";
 import { deleteNotification, getAllUsers } from "../../services/users.service";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 import { inviteToLiveBattle } from "../../services/live-battle.services";
-import LiveBattleInvitationWaitingPopUp from "../../Components/LiveBattleInvitationWaitingPopUp/LiveBattleInvitationWaitingPopUp";
+import LiveBattleInvitationWaitingPopUp from "../../Components/LiveBattleComponents/LiveBattleInvitationWaitingPopUp/LiveBattleInvitationWaitingPopUp";
 
 const LiveBattleMain = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
@@ -156,6 +156,7 @@ const LiveBattleMain = () => {
                   color: "#394E6A",
                   margin: "20px 0",
                   fontWeight: "bold",
+                  fontSize: "12.5px",
                 }}
               >
                 Click on the user to send an invitation for a live battle

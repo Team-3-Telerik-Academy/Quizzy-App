@@ -38,11 +38,15 @@ export const getQuizQuestions = async (category, difficulty, amount = 10) => {
 export const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 export const getLiveBattleQuestions = async (category1, category2) => {
-  const questions1 = await getQuizQuestions(category1, "medium", 5);
+  await delay(1000);
+
+  const questions1 = await getQuizQuestions(category1, "medium", 3);
+  console.log(questions1);
 
   await delay(5000);
 
-  const questions2 = await getQuizQuestions(category2, "medium", 5);
+  const questions2 = await getQuizQuestions(category2, "medium", 3);
+  console.log(questions2);
 
   return shuffleArray([...questions1, ...questions2]);
 };

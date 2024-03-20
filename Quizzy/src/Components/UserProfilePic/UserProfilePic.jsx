@@ -15,8 +15,8 @@ const UserProfilePic = ({ image, status, height, width, onClick }) => {
       <Avatar src={image} style={{ height: "100%", width: "100%" }} />
       <div
         style={{
-          width: "20%",
-          height: "20%",
+          width: "25%",
+          height: "25%",
           borderRadius: "50%",
           position: "absolute",
           right: "7%",

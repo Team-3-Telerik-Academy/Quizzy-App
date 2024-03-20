@@ -5,10 +5,10 @@ import LoggedInHeader from "../LoggedInHeader/LoggedInHeader";
 import propTypes from "prop-types";
 import { useContext, useState } from "react";
 import AppContext from "../../Context/AppContext";
-import LiveBattleInvitationPopUp from "../LiveBattleInvitationPopUp/LiveBattleInvitationPopUp";
 import { deleteNotification } from "../../services/users.service";
 import { acceptLiveBattleInvitation } from "../../services/live-battle.services";
 import { useNavigate } from "react-router-dom";
+import LiveBattleInvitationPopUp from "../LiveBattleComponents/LiveBattleInvitationPopUp/LiveBattleInvitationPopUp";
 
 const LoggedInMain = ({ children }) => {
   const [open, setOpen] = useState(false);
@@ -42,7 +42,15 @@ const LoggedInMain = ({ children }) => {
         userData.username,
         "liveBattleInvitations",
         Object.keys(userData.liveBattleInvitations)[0]
-      ).then(() => navigate(`/battle/${liveBattleId}`));
+      )
+        .then(() => {
+          deleteNotification(
+            Object.keys(userData.liveBattleInvitations)[0],
+            "liveBattleWaitingInvitations",
+            userData.username
+          );
+        })
+        .then(() => navigate(`/battle/${liveBattleId}`));
     });
   };
 

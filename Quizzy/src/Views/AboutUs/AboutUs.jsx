@@ -16,7 +16,7 @@ const AboutUs = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        height: '100%',
+        height: '89.7vh',
         
       }}
     >

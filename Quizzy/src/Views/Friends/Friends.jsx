@@ -33,15 +33,31 @@ const Friends = () => {
     }
   }, [userData.friends]);
 
-  useEffect(() => {
-    getAllUsers()
-      .then((users) => {
-        return users.filter((user) => {
-          return user.username !== userData?.username;
-        });
-      })
-      .then((result) => setUsers(result));
-  }, []);
+  // useEffect(() => {
+  //   getAllUsers()
+  //     .then((users) => {
+  //       return users.filter((user) => {
+  //         return user.username !== userData?.username;
+  //       });
+  //     })
+  //     .then((result) => setUsers(result));
+  // }, []);
+
+  
+ useEffect(() => {
+  getAllUsers()
+    .then((users) => {
+      return users.filter((user) => {
+        return !friends?.includes(user);
+      });
+    })
+    .then((users) => {
+      return users.filter((user) => {
+        return user.username !== userData?.username;
+      });
+    })
+    .then((result) => setUsers(result));
+}, []);
 
   const handleFriendRequest = async (sender, receiver, action) => {
     const result = await friendRequest(sender, receiver, action);

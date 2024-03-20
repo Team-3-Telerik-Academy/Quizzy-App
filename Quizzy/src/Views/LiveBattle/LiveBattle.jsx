@@ -100,7 +100,7 @@ const LiveBattle = () => {
             setIndex((prev) => prev + 0.5);
           }
         });
-      }, 100);
+      }, 300);
 
       return () => clearInterval(timer);
     }

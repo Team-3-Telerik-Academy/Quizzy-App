@@ -52,7 +52,7 @@ import AuthenticatedAdmin from "./Components/hoc/AuthenticatedAdmin/Authenticate
 import AuthenticatedEducator from "./Components/hoc/AuthenticatedEducator/AuthenticatedEducator";
 import LiveBattleMain from "./Views/LiveBattleMain/LiveBattleMain";
 import LiveBattle from "./Views/LiveBattle/LiveBattle";
-import CreatingLiveBattleLoading from "./Components/CreatingLiveBattleLoading/CreatingLiveBattleLoading";
+import LiveBattleFinalView from "./Views/LiveBattleFinalView/LiveBattleFinalView";
 
 function App() {
   const [user, loading, error] = useAuthState(auth);
@@ -103,7 +103,6 @@ function App() {
       }}
     >
       <Toaster />
-      {/* <CreatingLiveBattleLoading/> */}
       <BrowserRouter>
         {loading && <Loading />}
         {!loading && !user && <Header />}
@@ -257,27 +256,6 @@ function App() {
               </Authenticated>
             }
           />
-
-          <Route
-            path="/battle/:battleId"
-            element={
-              <Authenticated>
-                <LiveBattle />
-              </Authenticated>
-            }
-          />
-
-          <Route
-            path="/live-battle"
-            element={
-              <Authenticated>
-                <LoggedInMain>
-                  <LiveBattleMain />
-                </LoggedInMain>
-              </Authenticated>
-            }
-          />
-
           <Route
             path="/takenQuizzes"
             element={
@@ -326,6 +304,32 @@ function App() {
                 <LoggedInMain>
                   <Messenger />
                 </LoggedInMain>
+              </Authenticated>
+            }
+          />
+          <Route
+            path="/live-battle"
+            element={
+              <Authenticated>
+                <LoggedInMain>
+                  <LiveBattleMain />
+                </LoggedInMain>
+              </Authenticated>
+            }
+          />
+          <Route
+            path="/battle/:battleId"
+            element={
+              <Authenticated>
+                <LiveBattle />
+              </Authenticated>
+            }
+          />
+          <Route
+            path="/liveBattleResults"
+            element={
+              <Authenticated>
+                  <LiveBattleFinalView />
               </Authenticated>
             }
           />

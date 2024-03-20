@@ -24,6 +24,15 @@ const theme = createTheme({
   },
 });
 
+/**
+ * Renders a form for writing a question manually.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Function} props.addQuestion - The function to add the question.
+ * @param {Function} props.cancelQuestion - The function to cancel adding the question.
+ * @returns {JSX.Element} The JSX element representing the WriteQuestionManually component.
+ */
 const WriteQuestionManually = ({ addQuestion, cancelQuestion }) => {
   const [open, setOpen] = useState(true);
   const [isAddAnswerButtonClicked, setIsAddAnswerButtonClicked] =

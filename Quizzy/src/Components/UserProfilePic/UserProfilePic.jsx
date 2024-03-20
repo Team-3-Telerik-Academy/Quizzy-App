@@ -1,6 +1,18 @@
 import { Avatar } from "@mui/material";
 import PropTypes from "prop-types";
 
+/**
+ * Renders a user profile picture with an optional status indicator.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.image - The URL of the user's profile picture.
+ * @param {string} [props.status] - The status of the user (e.g., "online", "offline").
+ * @param {string} [props.height] - The height of the profile picture (default: "40px").
+ * @param {string} [props.width] - The width of the profile picture (default: "40px").
+ * @param {function} [props.onClick] - The click event handler for the profile picture.
+ * @returns {JSX.Element} The rendered UserProfilePic component.
+ */
 const UserProfilePic = ({ image, status, height, width, onClick }) => {
   return (
     <div

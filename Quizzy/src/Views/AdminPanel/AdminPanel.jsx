@@ -7,14 +7,17 @@ import ListItemText from "@mui/material/ListItemText";
 import { useNavigate } from "react-router-dom";
 import { Drawer, DrawerHeader } from "./drawerStyle";
 import AdminHeader from "../../Components/AdminHeader/AdminHeader";
-import { useContext } from "react";
-import AppContext from "../../Context/AppContext";
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
 
+/**
+ * Renders the AdminPanel component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered AdminPanel component.
+ */
 const AdminPanel = () => {
   const navigate = useNavigate();
-  const { userData } = useContext(AppContext);
 
   return (
     <Drawer variant="permanent">
@@ -33,27 +36,6 @@ const AdminPanel = () => {
             icon: <LogoutIcon />,
             click: () => navigate("/"),
           },
-          // {
-          //   text: "Users",
-          //   icon: <PeopleIcon />,
-          //   click: () => navigate(""),
-          // },
-          // {
-          //   text: "Blocked Users",
-          //   icon: <BlockIcon />,
-          //   click: () => navigate(""),
-          // },
-
-          // {
-          //   text: "Private Quizzes",
-          //   icon: <LockIcon />,
-          //   click: () => navigate(""),
-          // },
-          // {
-          //   text: "Public Quizzes",
-          //   icon: <LockOpenIcon />,
-          //   click: () => navigate(""),
-          // },
         ].map((item) => (
           <ListItem
             onClick={item.click}

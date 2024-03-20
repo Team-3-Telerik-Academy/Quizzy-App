@@ -44,6 +44,14 @@ const StyledTextField = styled(TextField)({
 
 const storage = getStorage();
 
+/**
+ * CreateGroup component is responsible for creating a new group.
+ * It renders a form where the user can enter the group details such as title, description, and invited users.
+ * When the user clicks on the "Create Group" button, it triggers the handleAddGroup function to create the group.
+ * The component also displays a loading dialog while the group is being created.
+ *
+ * @returns {JSX.Element} The CreateGroup component.
+ */
 const CreateGroup = () => {
   const navigate = useNavigate();
   const { userData } = useContext(AppContext);

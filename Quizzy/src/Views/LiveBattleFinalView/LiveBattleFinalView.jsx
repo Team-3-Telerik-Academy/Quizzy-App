@@ -37,6 +37,12 @@ const PlayerBox = styled(Box)({
   gap: "20px",
 });
 
+/**
+ * Renders the final view of a live battle.
+ *
+ * @component
+ * @returns {JSX.Element} The final view of the live battle.
+ */
 const LiveBattleFinalView = () => {
   const location = useLocation();
   const battleId = location.state.battleId;

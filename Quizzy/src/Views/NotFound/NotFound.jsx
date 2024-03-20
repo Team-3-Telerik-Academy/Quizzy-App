@@ -3,6 +3,15 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import notFound from "../../Images/not-found.png";
 
+/**
+ * Renders the NotFound component.
+ *
+ * @component
+ * @example
+ * return (
+ *   <NotFound />
+ * )
+ */
 const NotFound = () => (
   <Box
     sx={{

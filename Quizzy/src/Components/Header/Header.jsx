@@ -2,6 +2,10 @@ import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import QuizzyLogo from "..//..//Images/logo.png";
 
+/**
+ * Represents the header component of the Quizzy app.
+ * @component
+ */
 const Header = () => {
   const navigate = useNavigate();
 

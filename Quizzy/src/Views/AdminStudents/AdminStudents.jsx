@@ -6,6 +6,11 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
+/**
+ * Renders the AdminStudents component.
+ *
+ * @returns {JSX.Element} The rendered AdminStudents component.
+ */
 const AdminStudents = () => {
   const [users, setUsers] = useState(null);
   const { userData } = useContext(AppContext);

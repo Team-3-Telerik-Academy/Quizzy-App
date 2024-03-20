@@ -24,6 +24,15 @@ import { MilitaryTech, Scoreboard } from "@mui/icons-material";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import Groups2Icon from "@mui/icons-material/Groups2";
 
+/**
+ * Represents a drawer component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {boolean} props.open - Indicates whether the drawer is open or not.
+ * @param {Function} props.handleDrawerClose - The function to handle closing the drawer.
+ * @returns {JSX.Element} The rendered drawer component.
+ */
 const DrawerComponent = ({ open, handleDrawerClose }) => {
   const { userData } = useContext(AppContext);
   const theme = useTheme();

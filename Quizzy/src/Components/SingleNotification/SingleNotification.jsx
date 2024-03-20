@@ -14,6 +14,18 @@ import toast from "react-hot-toast";
 import { getGroupByTitle } from "../../services/groups.services";
 import { useLocation, useNavigate } from "react-router-dom";
 
+/**
+ * Renders a single notification item.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.invitation - The invitation object.
+ * @param {string} props.value - The value of the notification.
+ * @param {Function} props.handleNotificationsClose - The function to handle closing the notifications.
+ * @param {Function} props.setOpenedNotifications - The function to set the opened notifications count.
+ * @param {string} props.id - The ID of the notification.
+ * @returns {JSX.Element} The rendered SingleNotification component.
+ */
 const SingleNotification = ({
   invitation,
   value,

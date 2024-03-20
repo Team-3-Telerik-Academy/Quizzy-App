@@ -5,6 +5,15 @@ import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import AppContext from "../../Context/AppContext";
 
+/**
+ * Renders a single user square view component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.user - The user object containing user information.
+ * @param {Function} props.handleMessage - The function to handle sending a message to the user.
+ * @returns {JSX.Element} The rendered SingleUserSquareView component.
+ */
 const SingleUserSquareView = ({ user, handleMessage }) => {
   const navigate = useNavigate();
   const { userData } = useContext(AppContext);
@@ -75,40 +84,6 @@ const SingleUserSquareView = ({ user, handleMessage }) => {
           >
             Send Message
           </Button>
-          {/* {userData.sentFriendRequests &&
-          Object.keys(userData.sentFriendRequests).includes(user.username) ? (
-            <Button
-              variant="contained"
-              sx={{
-                width: "115px",
-                height: "auto",
-                fontSize: "9.8px",
-                marginBottom: "5px",
-                marginLeft: "10px",
-                backgroundColor: "rgb(3,165,251)",
-                color: "white",
-              }}
-              onClick={() => handleFriendRequest(userData, user, "unsend")}
-            >
-              Request sent
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              sx={{
-                width: "115px",
-                height: "auto",
-                fontSize: "9.8px",
-                marginBottom: "5px",
-                marginLeft: "10px",
-                backgroundColor: "rgb(3,165,251)",
-                color: "white",
-              }}
-              onClick={() => handleFriendRequest(userData, user, "send")}
-            >
-              Add Friend
-            </Button>
-          )} */}
         </Box>
       </Box>
     </Box>

@@ -23,6 +23,14 @@ const HeaderBox = styled(Box)({
   justifyContent: "space-between",
 });
 
+/**
+ * Renders the profile header component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.user - The user object containing profile information.
+ * @returns {JSX.Element} The rendered ProfileHeader component.
+ */
 const ProfileHeader = ({ user }) => {
   const [rank, setRank] = useState("unknown");
   const { userData, setChatUser } = useContext(AppContext);

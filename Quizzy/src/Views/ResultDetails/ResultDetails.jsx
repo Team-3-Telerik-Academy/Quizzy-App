@@ -1,17 +1,7 @@
 import { Box, Typography, Paper } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "rgba(3,165,251)",
-      contrastText: "#ffffff",
-    },
-  },
-});
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -21,6 +11,16 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+/**
+ * Renders the detailed analysis of the quiz results.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.answers - The answers object containing the quiz results.
+ * @param {string} [props.height="100vh"] - The height of the component.
+ * @param {string} [props.color="#F3F4f6"] - The background color of the component.
+ * @returns {JSX.Element} The rendered ResultDetails component.
+ */
 const ResultDetails = (props) => {
   const location = useLocation();
   const answers = location.state?.answers || props.answers;

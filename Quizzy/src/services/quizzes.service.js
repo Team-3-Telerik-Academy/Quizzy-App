@@ -12,6 +12,11 @@ import {
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
+/**
+ * Converts a Firebase snapshot of quizzes into an array of quiz objects.
+ * @param {Object} snapshot - The Firebase snapshot containing quizzes.
+ * @returns {Array} - An array of quiz objects.
+ */
 export const fromQuizzesDocument = (snapshot) => {
   try {
     const quizzesDocument = snapshot.val();
@@ -38,6 +43,12 @@ export const fromQuizzesDocument = (snapshot) => {
   }
 };
 
+/**
+ * Retrieves a quiz by its ID from the database.
+ * @param {string} id - The ID of the quiz to retrieve.
+ * @returns {Promise<Object>} - A promise that resolves to the retrieved quiz object.
+ * @throws {Error} - If the quiz with the specified ID does not exist.
+ */
 export const getQuizById = async (id) => {
   try {
     const result = await get(ref(db, `quizzes/${id}`));
@@ -56,6 +67,13 @@ export const getQuizById = async (id) => {
   }
 };
 
+/**
+ * Retrieves a quiz by its title.
+ *
+ * @param {string} title - The title of the quiz to retrieve.
+ * @returns {Promise<any>} - A promise that resolves to the result of the retrieval.
+ * @throws {Error} - If an error occurs during the retrieval process.
+ */
 export const getQuizByTitle = async (title) => {
   try {
     const result = await get(
@@ -67,6 +85,10 @@ export const getQuizByTitle = async (title) => {
   }
 };
 
+/**
+ * Retrieves all public quizzes from the database.
+ * @returns {Promise<Array>} A promise that resolves to an array of public quizzes.
+ */
 export const getAllPublicQuizzes = async () => {
   try {
     const result = await get(
@@ -79,6 +101,10 @@ export const getAllPublicQuizzes = async () => {
   }
 };
 
+/**
+ * Retrieves all private quizzes from the database.
+ * @returns {Promise<Array>} A promise that resolves to an array of private quizzes.
+ */
 export const getAllPrivateQuizzes = async () => {
   try {
     const result = await get(
@@ -91,6 +117,12 @@ export const getAllPrivateQuizzes = async () => {
   }
 };
 
+/**
+ * Retrieves quizzes by group ID.
+ *
+ * @param {string} groupId - The ID of the group.
+ * @returns {Promise<Array>} - A promise that resolves to an array of quizzes.
+ */
 export const getQuizzesByGroupId = async (groupId) => {
   try {
     const result = await get(
@@ -103,6 +135,11 @@ export const getQuizzesByGroupId = async (groupId) => {
   }
 };
 
+/**
+ * Retrieves quizzes by author from the database.
+ * @param {string} username - The username of the author.
+ * @returns {Promise<Array>} - A promise that resolves to an array of quizzes.
+ */
 export const getQuizzesByAuthor = async (username) => {
   try {
     const snapshot = await get(
@@ -117,6 +154,12 @@ export const getQuizzesByAuthor = async (username) => {
   }
 };
 
+/**
+ * Retrieves the taken quizzes by a user.
+ *
+ * @param {string} username - The username of the user.
+ * @returns {Promise<Array>} - A promise that resolves to an array of taken quizzes.
+ */
 export const getTakenQuizzesByUser = async (username) => {
   try {
     const result = await get(ref(db, `users/${username}/takenQuizzes`));
@@ -130,6 +173,22 @@ export const getTakenQuizzesByUser = async (username) => {
   }
 };
 
+/**
+ * Adds a new quiz to the database.
+ * @param {string} title - The title of the quiz.
+ * @param {Array} questions - An array of questions for the quiz.
+ * @param {string} image - The URL of the image for the quiz.
+ * @param {string} difficulty - The difficulty level of the quiz.
+ * @param {number} timer - The duration of the quiz in seconds.
+ * @param {number} totalPoints - The total points available in the quiz.
+ * @param {string} type - The type of the quiz.
+ * @param {string} category - The category of the quiz.
+ * @param {Array} invitedUsers - An array of usernames of users invited to the quiz.
+ * @param {string} username - The username of the author of the quiz.
+ * @param {string} ongoingTill - The date until which the quiz is ongoing.
+ * @param {string} group - The group associated with the quiz.
+ * @returns {Promise} A promise that resolves to the newly created quiz.
+ */
 export const addQuiz = async (
   title,
   questions,
@@ -172,9 +231,9 @@ export const addQuiz = async (
       status: "Ongoing",
     });
 
-    await questions.map((question) => addQuestionToAQuiz(result.key, question, () => { }));
+    questions.map((question) => addQuestionToAQuiz(result.key, question, () => { }));
 
-    await invitedUsers.map(user => inviteUserToAQuiz(result.key, title, user, username, () => { }));
+    invitedUsers.map(user => inviteUserToAQuiz(result.key, title, user, username, () => { }));
 
     const createdQuizzes = await get(
       ref(db, `users/${username}/createdQuizzes`)
@@ -188,6 +247,12 @@ export const addQuiz = async (
   }
 };
 
+/**
+ * Deletes a quiz from the database and updates the user's created quizzes count.
+ * @param {string} quizId - The ID of the quiz to be deleted.
+ * @param {string} username - The username of the user who created the quiz.
+ * @returns {Promise<void>} - A promise that resolves when the quiz is deleted and the user's created quizzes count is updated.
+ */
 export const deleteQuiz = async (quizId, username) => {
   try {
     await remove(ref(db, `quizzes/${quizId}`));
@@ -203,6 +268,15 @@ export const deleteQuiz = async (quizId, username) => {
   }
 };
 
+/**
+ * Updates the information of a quiz in the database.
+ * 
+ * @param {string} id - The ID of the quiz to update.
+ * @param {string} prop - The property of the quiz to update.
+ * @param {any} value - The new value for the specified property.
+ * @param {Function} callback - The callback function to be called after the update is completed.
+ * @returns {Promise<void>} - A promise that resolves when the update is completed.
+ */
 export const updateQuizInfo = async (id, prop, value, callback) => {
   const quizRef = ref(db, `quizzes/${id}`);
 
@@ -228,6 +302,13 @@ export const updateQuizInfo = async (id, prop, value, callback) => {
   });
 };
 
+/**
+ * Adds a question to a quiz.
+ * @param {string} quizId - The ID of the quiz.
+ * @param {object} question - The question object to be added.
+ * @param {function} callback - The callback function to be called after the question is added.
+ * @returns {Promise<void>} - A promise that resolves when the question is added successfully.
+ */
 export const addQuestionToAQuiz = async (quizId, question, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
   const totalPoints = await get(child(quizRef, "totalPoints"));
@@ -241,6 +322,14 @@ export const addQuestionToAQuiz = async (quizId, question, callback) => {
   });
 };
 
+/**
+ * Removes a question from a quiz.
+ * 
+ * @param {string} quizId - The ID of the quiz.
+ * @param {object} question - The question object to be removed.
+ * @param {function} callback - The callback function to be called after the question is removed.
+ * @returns {Promise<void>} - A promise that resolves when the question is successfully removed.
+ */
 export const removeQuestionFromAQuiz = async (quizId, question, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
   const totalPoints = await get(child(quizRef, "totalPoints"));
@@ -254,6 +343,16 @@ export const removeQuestionFromAQuiz = async (quizId, question, callback) => {
   });
 };
 
+/**
+ * Invites a user to a quiz.
+ * 
+ * @param {string} quizId - The ID of the quiz.
+ * @param {string} quizTitle - The title of the quiz.
+ * @param {string} username - The username of the user to invite.
+ * @param {string} sender - The username of the sender.
+ * @param {Function} callback - The callback function to be called after the invitation is sent.
+ * @returns {Promise<void>} - A promise that resolves when the invitation is sent.
+ */
 export const inviteUserToAQuiz = async (quizId, quizTitle, username, sender, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
   const invitedUsersRef = child(quizRef, "invitedUsers");
@@ -272,6 +371,15 @@ export const inviteUserToAQuiz = async (quizId, quizTitle, username, sender, cal
   });
 };
 
+/**
+ * Removes a user's quiz invitation.
+ * 
+ * @param {string} quizId - The ID of the quiz.
+ * @param {string} quizTitle - The title of the quiz.
+ * @param {string} username - The username of the user.
+ * @param {Function} callback - The callback function to be called after removing the invitation.
+ * @returns {Promise<void>} - A promise that resolves when the invitation is removed.
+ */
 export const removeUserQuizInvitation = async (quizId, quizTitle, username, callback) => {
   const quizRef = ref(db, `quizzes/${quizId}`);
   const invitedUsersRef = child(quizRef, "invitedUsers");
@@ -291,6 +399,17 @@ export const removeUserQuizInvitation = async (quizId, quizTitle, username, call
   });
 };
 
+/**
+ * Adds a comment to a taken quiz.
+ * 
+ * @param {string} username - The username of the user who took the quiz.
+ * @param {string} quizId - The ID of the quiz.
+ * @param {string} comment - The content of the comment.
+ * @param {string} author - The author of the comment.
+ * @param {string} authorUsername - The username of the author.
+ * @param {function} callback - The callback function to be called after the comment is added.
+ * @returns {Promise<void>} - A promise that resolves when the comment is added successfully.
+ */
 export const addCommentToATakenQuiz = async (username, quizId, comment, author, authorUsername, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
   const commentsRef = child(takenQuizRef, 'comments');
@@ -309,6 +428,14 @@ export const addCommentToATakenQuiz = async (username, quizId, comment, author, 
   });
 };
 
+/**
+ * Removes a comment from a taken quiz.
+ * @param {string} username - The username of the participant who took the quiz.
+ * @param {string} quizId - The ID of the taken quiz.
+ * @param {string} commentId - The ID of the comment to be removed.
+ * @param {Function} callback - The callback function to be called after the comment is removed.
+ * @returns {Promise<void>} - A promise that resolves when the comment is removed.
+ */
 export const removeCommentToATakenQuiz = async (username, quizId, commentId, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
   const commentsRef = child(takenQuizRef, `comments/${commentId}`);
@@ -320,6 +447,16 @@ export const removeCommentToATakenQuiz = async (username, quizId, commentId, cal
   });
 };
 
+/**
+ * Edits a comment for a taken quiz.
+ * 
+ * @param {string} username - The username of the participant who took the quiz.
+ * @param {string} quizId - The ID of the quiz.
+ * @param {string} commentId - The ID of the comment to be edited.
+ * @param {string} newComment - The new content of the comment.
+ * @param {function} callback - The callback function to be called after the comment is edited.
+ * @returns {Promise<void>} - A promise that resolves when the comment is successfully edited.
+ */
 export const editCommentToATakenQuiz = async (username, quizId, commentId, newComment, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
   const commentRef = child(takenQuizRef, `comments/${commentId}`);
@@ -331,15 +468,25 @@ export const editCommentToATakenQuiz = async (username, quizId, commentId, newCo
   });
 };
 
+/**
+ * Adds a reply to a comment in a taken quiz.
+ * 
+ * @param {string} username - The username of the user adding the reply.
+ * @param {string} quizId - The ID of the quiz.
+ * @param {string} commentId - The ID of the comment.
+ * @param {string} reply - The content of the reply.
+ * @param {string} author - The author of the reply.
+ * @param {string} replyAuthor - The username of the reply author.
+ * @param {string} commentAuthorUsername - The username of the comment author.
+ * @param {function} callback - The callback function to be called after the reply is added.
+ * @returns {Promise<void>} - A promise that resolves when the reply is added successfully.
+ */
 export const addReplyToACommentToATakenQuiz = async (username, quizId, commentId, reply, author, replyAuthor, commentAuthorUsername, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
   const repliesRef = child(takenQuizRef, `comments/${commentId}/replies`);
 
-  //not finished - only one notification will appear like this
   if (replyAuthor === username) {
     const authorRef = child(ref(db, `users/${commentAuthorUsername}`), 'quizRepliesNotifications');
-    // const newReplyRef = await push(child(authorRef, 'replies'));
-    // const newReplyKey = newReplyRef.key;
 
     await push(authorRef, {
       quizId: quizId,
@@ -364,6 +511,15 @@ export const addReplyToACommentToATakenQuiz = async (username, quizId, commentId
   });
 };
 
+/**
+ * Deletes a reply from a comment from a taken quiz.
+ * @param {string} username - The username of the participant who took the quiz.
+ * @param {string} quizId - The ID of the quiz.
+ * @param {string} commentId - The ID of the comment.
+ * @param {string} replyId - The ID of the reply.
+ * @param {Function} callback - The callback function to be called after the reply is deleted.
+ * @returns {Promise<void>} - A promise that resolves when the reply is deleted.
+ */
 export const deleteReplyFromACommentFromATakenQuiz = async (username, quizId, commentId, replyId, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
   const replyRef = child(takenQuizRef, `comments/${commentId}/replies/${replyId}`);
@@ -375,6 +531,17 @@ export const deleteReplyFromACommentFromATakenQuiz = async (username, quizId, co
   });
 };
 
+/**
+ * Edits a reply in a comment in a taken quiz.
+ * 
+ * @param {string} username - The username of the participant who took the quiz.
+ * @param {string} quizId - The ID of the quiz.
+ * @param {string} commentId - The ID of the comment containing the reply.
+ * @param {string} replyId - The ID of the reply to be edited.
+ * @param {string} newReplyContent - The new content for the reply.
+ * @param {function} callback - The callback function to be called after the reply is edited.
+ * @returns {Promise<void>} - A promise that resolves when the reply is successfully edited.
+ */
 export const editReplyInACommentInATakenQuiz = async (username, quizId, commentId, replyId, newReplyContent, callback) => {
   const takenQuizRef = ref(db, `users/${username}/takenQuizzes/${quizId}`);
   const replyRef = child(takenQuizRef, `comments/${commentId}/replies/${replyId}`);

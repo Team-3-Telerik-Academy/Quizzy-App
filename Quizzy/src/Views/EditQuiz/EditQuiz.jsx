@@ -53,6 +53,11 @@ const StyledCheckbox = styled(Checkbox)({
   },
 });
 
+/**
+ * EditQuiz component allows users to edit a quiz.
+ *
+ * @returns {JSX.Element} The EditQuiz component.
+ */
 const EditQuiz = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -118,7 +123,6 @@ const EditQuiz = () => {
     }
   }, [quiz]);
 
-  // to be moved in another file
   const validateData = (prop) => {
     if (prop === "timer") {
       if (!quizInfo.timer) {

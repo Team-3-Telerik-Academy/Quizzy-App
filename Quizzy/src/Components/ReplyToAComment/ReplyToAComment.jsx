@@ -12,6 +12,18 @@ const buttonStyle = {
   border: "1px solid white",
 };
 
+/**
+ * Renders a component for replying to a comment.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.comment - The comment object.
+ * @param {string} props.theme - The theme for the component.
+ * @param {Function} props.handleAddReply - The function to handle adding a reply.
+ * @param {Function} props.handleDeleteReply - The function to handle deleting a reply.
+ * @param {Function} props.handleEditReply - The function to handle editing a reply.
+ * @returns {JSX.Element} The rendered component.
+ */
 const ReplyToAComment = ({
   comment,
   theme,

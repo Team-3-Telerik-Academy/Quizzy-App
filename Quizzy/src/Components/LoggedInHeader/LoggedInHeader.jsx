@@ -35,6 +35,13 @@ import { getAllUsers } from "../../services/users.service";
 import UserProfilePic from "../UserProfilePic/UserProfilePic";
 import SingleMessageNotification from "../SingleMessageNotification/SingleMessageNotification";
 
+/**
+ * Represents the header component for the logged-in user.
+ * @param {Object} props - The component props.
+ * @param {boolean} props.open - Flag indicating whether the header is open.
+ * @param {Function} props.handleDrawerOpen - Function to handle opening the drawer.
+ * @returns {JSX.Element} The rendered component.
+ */
 const LoggedInHeader = ({ open, handleDrawerOpen }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);

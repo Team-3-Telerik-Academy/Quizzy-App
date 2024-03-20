@@ -5,6 +5,12 @@ import {
 } from "firebase/storage";
 import toast from "react-hot-toast";
 
+/**
+ * Deletes an image from the specified image reference.
+ *
+ * @param {string} imageRef - The reference to the image to be deleted.
+ * @returns {Promise<void>} A promise that resolves when the image is deleted successfully.
+ */
 export const deleteImage = (imageRef) => {
 
   deleteObject(imageRef)
@@ -16,6 +22,13 @@ export const deleteImage = (imageRef) => {
     });
 };
 
+/**
+ * Uploads an image file to the specified storage reference.
+ * @param {Object} storageRef - The storage reference to upload the image to.
+ * @param {File} file - The image file to be uploaded.
+ * @returns {Promise<string>} A promise that resolves to the download URL of the uploaded image.
+ * @throws {Error} If the file format is invalid.
+ */
 export const uploadImage = (storageRef, file) => {
   const fileExtension = file.name.split('.').pop().toLowerCase();
 

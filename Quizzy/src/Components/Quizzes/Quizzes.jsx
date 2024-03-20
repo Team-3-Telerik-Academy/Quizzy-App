@@ -6,6 +6,22 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { updateQuizInfo } from "../../services/quizzes.service";
 
+/**
+ * Renders a list of quizzes.
+ *
+ * @component
+ * @param {Object[]} quizzes - An array of quiz objects.
+ * @param {string} quizzes[].id - The unique identifier of the quiz.
+ * @param {string} quizzes[].title - The title of the quiz.
+ * @param {string} quizzes[].image - The URL of the quiz image.
+ * @param {string} quizzes[].type - The type of the quiz (public or private).
+ * @param {string} quizzes[].category - The category of the quiz.
+ * @param {string} quizzes[].status - The status of the quiz (Ongoing or Finished).
+ * @param {string} quizzes[].ongoingTill - The date and time until the quiz is ongoing.
+ * @param {string} value - The value used for conditional rendering.
+ * @param {Function} fn - A function to trigger a re-render of the component.
+ * @returns {JSX.Element} The rendered component.
+ */
 const Quizzes = ({ quizzes, value, fn }) => {
   const navigate = useNavigate();
   const [countdownTimes, setCountdownTimes] = useState(
@@ -26,7 +42,6 @@ const Quizzes = ({ quizzes, value, fn }) => {
           .map((timeObj) => {
             const quizId = Object.keys(timeObj)[0];
             const time = timeObj[quizId];
-
             if (time - 1000 > 0) {
               return { [quizId]: time - 1000 };
             } else {

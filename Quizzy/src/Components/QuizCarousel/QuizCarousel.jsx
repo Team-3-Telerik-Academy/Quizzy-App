@@ -6,6 +6,16 @@ import { EffectCoverflow, Pagination } from "swiper/modules";
 import SingleQuiz from "../SingleQuiz/SingleQuiz";
 import PropTypes from "prop-types";
 
+/**
+ * Renders a carousel of quizzes.
+ *
+ * @component
+ * @param {Object[]} quizzes - An array of quiz objects.
+ * @param {number} value - The current value of the carousel.
+ * @param {Function} fn - The function to handle carousel events.
+ * @param {string} [width] - The width of the carousel. Defaults to "94.6vw".
+ * @returns {JSX.Element} The rendered QuizCarousel component.
+ */
 const QuizCarousel = ({ quizzes, value, fn, width }) => {
   return (
     <>

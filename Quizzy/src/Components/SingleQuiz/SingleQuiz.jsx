@@ -6,6 +6,16 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { updateQuizInfo } from "../../services/quizzes.service";
 
+/**
+ * Renders a single quiz component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.quiz - The quiz object.
+ * @param {string} props.value - The value prop.
+ * @param {Function} props.fn - The function prop.
+ * @returns {JSX.Element} The rendered SingleQuiz component.
+ */
 const SingleQuiz = ({ quiz, value, fn }) => {
   const navigate = useNavigate();
   const [countdownTime, setCountdownTime] = useState(

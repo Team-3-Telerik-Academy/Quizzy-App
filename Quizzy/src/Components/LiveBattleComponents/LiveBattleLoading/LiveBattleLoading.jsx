@@ -31,6 +31,16 @@ const StyledCircularProgress = styled(CircularProgress)({
   animationDuration: "4s",
 });
 
+/**
+ * Renders a loading dialog for live battle.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {boolean} props.open - Determines whether the dialog is open or not.
+ * @param {string} props.text1 - The text to be displayed in the dialog title.
+ * @param {string} props.text2 - The text to be displayed in the dialog content (optional).
+ * @returns {JSX.Element} The rendered LiveBattleLoading component.
+ */
 const LiveBattleLoading = ({ open, text1, text2 }) => {
   return (
     <Dialog open={open} maxWidth="md" fullWidth={true}>

@@ -10,7 +10,6 @@ import {
 import AppContext from "../../Context/AppContext";
 import { createTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
-import Loading from "../../Components/Loading/Loading";
 import { getQuizQuestions } from "../../services/request-service";
 import LiveBattleLoading from "../../Components/LiveBattleComponents/LiveBattleLoading/LiveBattleLoading";
 
@@ -31,6 +30,11 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+/**
+ * Renders the LiveBattle component.
+ *
+ * @returns {JSX.Element} The LiveBattle component.
+ */
 const LiveBattle = () => {
   const navigate = useNavigate();
   const { battleId } = useParams();

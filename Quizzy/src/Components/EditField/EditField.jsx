@@ -17,6 +17,19 @@ const InfoInput = styled(TextField)({
   },
 });
 
+/**
+ * EditField component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {string} props.label - The label for the field.
+ * @param {string} props.value - The current value of the field.
+ * @param {boolean} props.isEditing - Indicates whether the field is in editing mode.
+ * @param {Function} props.onEdit - The function to be called when the edit button is clicked.
+ * @param {Function} props.onChange - The function to be called when the field value changes.
+ * @param {Function} props.onSave - The function to be called when the save button is clicked.
+ * @returns {JSX.Element} The rendered EditField component.
+ */
 const EditField = ({
   label,
   value,

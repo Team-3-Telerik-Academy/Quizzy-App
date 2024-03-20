@@ -6,6 +6,12 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
+/**
+ * Renders the AdminEducators component.
+ * This component displays a list of educators in the system.
+ *
+ * @returns {JSX.Element} The rendered AdminEducators component.
+ */
 const AdminEducators = () => {
   const [users, setUsers] = useState(null);
   const { userData } = useContext(AppContext);

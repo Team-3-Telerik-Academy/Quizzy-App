@@ -2,6 +2,12 @@ import { useLocation } from "react-router-dom";
 import QuizzesComment from "../../Components/QuizzesComment/QuizzesComment";
 import ResultDetails from "../ResultDetails/ResultDetails";
 
+/**
+ * Renders the details of a taken quiz.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered component.
+ */
 const TakenQuizViewDetails = () => {
   const location = useLocation();
   const quiz = location.state?.quiz;

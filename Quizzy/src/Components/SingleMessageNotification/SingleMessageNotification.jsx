@@ -8,6 +8,15 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 
+/**
+ * Renders a single message notification item.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.message - The message object containing information about the message.
+ * @param {Function} props.handleShowInMessenger - The function to handle showing the message in the messenger.
+ * @returns {JSX.Element} The rendered SingleMessageNotification component.
+ */
 const SingleMessageNotification = ({ message, handleShowInMessenger }) => {
   return (
     <MenuItem onClick={() => handleShowInMessenger(message.username)}>

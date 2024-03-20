@@ -25,6 +25,15 @@ const theme = createTheme({
   },
 });
 
+/**
+ * Sign In component.
+ *
+ * @component
+ * @example
+ * return (
+ *   <SignIn />
+ * )
+ */
 const SignIn = () => {
   const location = useLocation();
   const navigate = useNavigate();

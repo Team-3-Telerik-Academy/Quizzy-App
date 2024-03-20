@@ -4,6 +4,13 @@ import QuizCarousel from "../../Components/QuizCarousel/QuizCarousel";
 import { Typography } from "@mui/material";
 import Quizzes from "../../Components/Quizzes/Quizzes";
 
+/**
+ * Renders the PublicQuizzes component.
+ * This component displays a list of public quizzes and allows the user to switch between different views.
+ *
+ * @component
+ * @returns {JSX.Element} The PublicQuizzes component
+ */
 const PublicQuizzes = () => {
   const [view, setView] = useState(
     localStorage.getItem("publicQuizzesView") || "carousel"

@@ -37,6 +37,11 @@ const StyledButton = styled(Button)({
   },
 });
 
+/**
+ * Renders the details of a group, including group information, members, and quizzes.
+ *
+ * @returns {JSX.Element} The rendered GroupDetails component.
+ */
 const GroupDetails = () => {
   const [group, setGroup] = useState(null);
   const [open, setOpen] = useState(false);

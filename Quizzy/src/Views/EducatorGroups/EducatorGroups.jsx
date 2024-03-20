@@ -4,6 +4,11 @@ import { getAllGroups } from "../../services/groups.services";
 import { useEffect, useState, useContext } from "react";
 import AppContext from "../../Context/AppContext";
 
+/**
+ * Renders the Educator Groups component.
+ *
+ * @returns {JSX.Element} The Educator Groups component.
+ */
 const EducatorGroups = () => {
   const [groups, setGroups] = useState(null);
   const [groupsOnPage, setGroupsOnPage] = useState(null);

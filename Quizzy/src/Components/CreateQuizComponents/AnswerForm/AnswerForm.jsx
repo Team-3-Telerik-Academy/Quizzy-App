@@ -2,6 +2,15 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { Box, Button, TextField } from "@mui/material";
 
+/**
+ * AnswerForm component for creating a new answer.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Function} props.addAnswer - The function to add an answer.
+ * @param {Function} props.hideForm - The function to hide the form.
+ * @returns {JSX.Element} The rendered AnswerForm component.
+ */
 const AnswerForm = ({ addAnswer, hideForm }) => {
   const [answer, setAnswer] = useState("");
 

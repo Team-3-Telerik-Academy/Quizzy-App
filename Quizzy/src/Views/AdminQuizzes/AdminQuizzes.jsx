@@ -23,6 +23,11 @@ const StyledButton = styled(Button)({
   },
 });
 
+/**
+ * Renders the AdminQuizzes component.
+ * 
+ * @returns {JSX.Element} The rendered AdminQuizzes component.
+ */
 const AdminQuizzes = () => {
   const { type } = useParams();
   const [updateQuizzes, setUpdateQuizzes] = useState(false);

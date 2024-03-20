@@ -5,6 +5,11 @@ import { useRef } from "react";
 import { sendMessage } from "../../services/users.service";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
+/**
+ * Renders the Messenger component.
+ * 
+ * @returns {JSX.Element} The Messenger component.
+ */
 const Messenger = () => {
   const { userData, chatUser } = useContext(AppContext);
   const [people, setPeople] = useState([]);
@@ -71,7 +76,7 @@ const Messenger = () => {
         setSelectedPerson({ selected: people[0] });
       }
     }
-  }, [userData?.messages]);
+  }, [userData?.messages, chatUser]);
 
   return (
     <Box
@@ -166,11 +171,6 @@ const Messenger = () => {
                 onClick={() => setSelectedPerson({ selected: person })}
               >
                 <UserProfilePic image={person.image} status={person.status} />
-                {/* <img
-                  src={person.image}
-                  style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-                  alt=""
-                /> */}
                 <span
                   style={{
                     marginLeft: "20px",
@@ -272,7 +272,6 @@ const Messenger = () => {
                         <span
                           style={{
                             backgroundColor: "#dfe0e2",
-
                             height: "auto",
                             padding: "10px",
                             display: "flex",

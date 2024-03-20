@@ -7,6 +7,11 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
+/**
+ * Renders the AdminUsers component.
+ *
+ * @returns {JSX.Element} The rendered AdminUsers component.
+ */
 const AdminUsers = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState(null);
@@ -82,7 +87,6 @@ const AdminUsers = () => {
                       display: "flex",
                       alignItems: "center",
                       transition: "transform 0.2s",
-                      // cursor: "pointer",
                     }}
                     onMouseOver={(e) => {
                       e.currentTarget.style.transform = "scale(1.05)";

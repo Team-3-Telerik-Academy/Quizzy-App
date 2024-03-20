@@ -20,6 +20,12 @@ const StyledButton = styled(Button)({
   },
 });
 
+/**
+ * Renders the MyQuizzes component.
+ *
+ * @component
+ * @returns {JSX.Element} The MyQuizzes component.
+ */
 const MyQuizzes = () => {
   const [view, setView] = useState(localStorage.getItem('myQuizzesView') || "carousel");
   const [updateQuizzes, setUpdateQuizzes] = useState(false);

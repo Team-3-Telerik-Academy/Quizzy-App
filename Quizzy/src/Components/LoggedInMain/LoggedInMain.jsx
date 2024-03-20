@@ -10,6 +10,14 @@ import { acceptLiveBattleInvitation } from "../../services/live-battle.services"
 import { useNavigate } from "react-router-dom";
 import LiveBattleInvitationPopUp from "../LiveBattleComponents/LiveBattleInvitationPopUp/LiveBattleInvitationPopUp";
 
+/**
+ * Represents the main component for the logged-in user.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {ReactNode} props.children - The child components to be rendered.
+ * @returns {JSX.Element} The rendered component.
+ */
 const LoggedInMain = ({ children }) => {
   const [open, setOpen] = useState(false);
   const { userData } = useContext(AppContext);

@@ -60,6 +60,11 @@ const StyledFormControl = styled(FormControl)({
 
 const storage = getStorage();
 
+/**
+ * Renders the CreateQuiz component.
+ * 
+ * @returns {JSX.Element} The CreateQuiz component.
+ */
 const CreateQuiz = () => {
   const navigate = useNavigate();
   const { userData } = useContext(AppContext);
@@ -437,7 +442,7 @@ const CreateQuiz = () => {
                 </>
               )}
             </div>
-            {generatedQuestions && (
+            {generatedQuestions && generatedQuestions.length > 0 && (
               <>
                 <hr />
                 <Typography variant="h4" marginTop="15px">

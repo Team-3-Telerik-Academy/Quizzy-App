@@ -11,6 +11,12 @@ import {
 } from "firebase/database";
 import { db } from "../config/firebase-config";
 
+/**
+ * Retrieves a group by its ID from the database.
+ * @param {string} id - The ID of the group to retrieve.
+ * @returns {Promise<Object>} A promise that resolves to the retrieved group object.
+ * @throws {Error} If the group with the specified ID does not exist.
+ */
 export const getGroupById = async (id) => {
   try {
     const result = await get(ref(db, `groups/${id}`));
@@ -29,6 +35,11 @@ export const getGroupById = async (id) => {
   }
 };
 
+/**
+ * Retrieves all groups from the database.
+ * @returns {Promise<Object>} A promise that resolves to an object containing all the groups.
+ * @throws {Error} If there are no groups in the database.
+ */
 export const getAllGroups = async () => {
   try {
     const result = await get(ref(db, `groups/`));
@@ -43,6 +54,12 @@ export const getAllGroups = async () => {
   }
 };
 
+/**
+ * Retrieves a group by its title.
+ *
+ * @param {string} title - The title of the group to retrieve.
+ * @returns {Promise<any>} - A promise that resolves to the result of the retrieval.
+ */
 export const getGroupByTitle = async (title) => {
   try {
     const result = await get(
@@ -54,6 +71,19 @@ export const getGroupByTitle = async (title) => {
   }
 };
 
+/**
+ * Adds a new group to the database.
+ *
+ * @param {string} title - The title of the group.
+ * @param {string} image - The image URL of the group. If not provided, a default image URL will be used.
+ * @param {string} description - The description of the group.
+ * @param {Array<string>} invitedUsers - An array of usernames of users to be invited to the group.
+ * @param {string} username - The username of the user creating the group.
+ * @param {string} memberImage - The image URL of the user creating the group.
+ * @param {string} email - The email of the user creating the group.
+ * @returns {Promise<Object>} A promise that resolves to the newly created group.
+ * @throws {Error} If an error occurs while adding the group.
+ */
 export const addGroup = async (
   title,
   image,
@@ -106,6 +136,16 @@ export const addGroup = async (
   }
 };
 
+/**
+ * Invites a user to a group.
+ *
+ * @param {string} groupId - The ID of the group.
+ * @param {string} groupTitle - The title of the group.
+ * @param {string} username - The username of the user to be invited.
+ * @param {string} sender - The sender of the invitation.
+ * @param {Function} callback - The callback function to be called after the invitation is sent.
+ * @returns {Promise<void>} - A promise that resolves when the invitation is sent.
+ */
 export const inviteUserToAGroup = async (
   groupId,
   groupTitle,
@@ -130,6 +170,15 @@ export const inviteUserToAGroup = async (
   });
 };
 
+/**
+ * Removes a user's group invitation.
+ *
+ * @param {string} groupId - The ID of the group.
+ * @param {string} groupTitle - The title of the group.
+ * @param {string} username - The username of the user.
+ * @param {Function} callback - The callback function to be called after removing the invitation.
+ * @returns {Promise<void>} - A promise that resolves when the invitation is successfully removed.
+ */
 export const removeUserGroupInvitation = async (
   groupId,
   groupTitle,

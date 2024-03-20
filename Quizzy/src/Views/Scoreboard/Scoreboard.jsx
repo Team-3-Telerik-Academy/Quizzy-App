@@ -14,6 +14,11 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
+/**
+ * Renders a scoreboard displaying users and their scores.
+ *
+ * @returns {JSX.Element} The rendered scoreboard component.
+ */
 const Scoreboard = () => {
   const [users, setUsers] = useState(null);
   const [usersOnPage, setUsersOnPage] = useState(null);

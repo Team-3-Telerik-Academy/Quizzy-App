@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
 
 const theme = createTheme({
   palette: {
@@ -26,6 +27,26 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+/**
+ * Renders a quiz component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {number} props.minutes - The number of minutes for the quiz.
+ * @param {string} props.formattedSeconds - The formatted seconds for the quiz.
+ * @param {string} props.buttonColor - The color of the button.
+ * @param {Object} props.quiz - The quiz object.
+ * @param {number} props.index - The index of the current question.
+ * @param {number} props.length - The total number of questions.
+ * @param {Array} props.questions - The array of questions.
+ * @param {number} props.page - The current page number.
+ * @param {Object} props.selectedItem - The selected item object.
+ * @param {Function} props.handleView - The function to handle the view.
+ * @param {Function} props.handleChange - The function to handle the change.
+ * @param {Function} props.handleClick - The function to handle the click.
+ * @param {number} props.questionPoint - The point value of each question.
+ * @returns {JSX.Element} The rendered TakeQuiz component.
+ */
 const TakeQuiz = ({
   minutes,
   formattedSeconds,
@@ -39,7 +60,6 @@ const TakeQuiz = ({
   handleView,
   handleChange,
   handleClick,
-  // quizTotalPoints,
   questionPoint,
 }) => {
   return (
@@ -82,7 +102,6 @@ const TakeQuiz = ({
             Time left: {minutes - 1}:{formattedSeconds}
           </Typography>
         )}
-
         <Box
           sx={{
             boxShadow: 4,
@@ -205,6 +224,22 @@ const TakeQuiz = ({
       </Box>
     </>
   );
+};
+
+TakeQuiz.propTypes = {
+  minutes: PropTypes.number,
+  formattedSeconds: PropTypes.string,
+  buttonColor: PropTypes.string,
+  quiz: PropTypes.object,
+  index: PropTypes.number,
+  length: PropTypes.number,
+  questions: PropTypes.array,
+  page: PropTypes.number,
+  selectedItem: PropTypes.object,
+  handleView: PropTypes.func,
+  handleChange: PropTypes.func,
+  handleClick: PropTypes.func,
+  questionPoint: PropTypes.number,
 };
 
 export default TakeQuiz;

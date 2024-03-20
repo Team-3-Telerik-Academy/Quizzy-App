@@ -3,6 +3,12 @@ import MuiDrawer from "@mui/material/Drawer";
 
 const drawerWidth = 240;
 
+/**
+ * A mixin function that returns the styles for an opened drawer.
+ *
+ * @param {Object} theme - The theme object containing the transitions and durations.
+ * @returns {Object} - The styles for an opened drawer.
+ */
 const openedMixin = (theme) => ({
   width: drawerWidth,
   transition: theme.transitions.create("width", {
@@ -12,6 +18,12 @@ const openedMixin = (theme) => ({
   overflowX: "hidden",
 });
 
+/**
+ * A mixin function that defines the styles for a closed drawer.
+ *
+ * @param {Object} theme - The theme object provided by Material-UI.
+ * @returns {Object} - The CSS styles for the closed drawer.
+ */
 const closedMixin = (theme) => ({
   transition: theme.transitions.create("width", {
     easing: theme.transitions.easing.sharp,
@@ -24,6 +36,14 @@ const closedMixin = (theme) => ({
   },
 });
 
+/**
+ * Custom styled component for the Drawer component.
+ *
+ * @component
+ * @param {object} props - The props object.
+ * @param {boolean} props.open - Determines whether the drawer is open or closed.
+ * @returns {JSX.Element} The styled Drawer component.
+ */
 export const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -41,6 +61,13 @@ export const Drawer = styled(MuiDrawer, {
   }),
 }));
 
+/**
+ * Represents the styled component for the drawer header.
+ *
+ * @component
+ * @param {Object} theme - The theme object containing styling properties.
+ * @returns {JSX.Element} The JSX element representing the drawer header.
+ */
 export const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",

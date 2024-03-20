@@ -2,6 +2,19 @@ import PropTypes from "prop-types";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { Box, Button, Grid, Typography } from "@mui/material";
 
+/**
+ * Renders a single question component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.question - The question object.
+ * @param {string} props.question.title - The title of the question.
+ * @param {string[]} props.question.answers - The array of possible answers for the question.
+ * @param {string} props.question.correctAnswer - The correct answer for the question.
+ * @param {number} props.question.points - The points assigned to the question.
+ * @param {Function} props.removeQuestion - The function to remove the question.
+ * @returns {JSX.Element} The rendered SingleQuestion component.
+ */
 const SingleQuestion = ({ question, removeQuestion }) => {
   return (
     <Box

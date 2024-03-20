@@ -4,7 +4,6 @@ import {
   MenuItem,
   IconButton,
   Toolbar,
-  Typography,
 } from "@mui/material";
 import {
   MoreVert as MoreIcon,
@@ -40,6 +39,16 @@ const AppBar = styled(MuiAppBar, {
   backgroundColor: "rgb(3, 165, 251)",
 }));
 
+/**
+ * AdminHeader component displays the header for the admin section of the application.
+ * It includes a user profile picture, a menu for profile and logout options, and a mobile menu for smaller screens.
+ *
+ * @component
+ * @example
+ * return (
+ *   <AdminHeader />
+ * )
+ */
 const AdminHeader = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -75,9 +84,6 @@ const AdminHeader = () => {
   return (
     <AppBar position="fixed" open={open}>
       <Toolbar>
-        {/* <Typography sx={{ fontFamily: "fantasy", fontSize: "30px" }}>
-          Hi, {userData?.firstName + " " + userData?.lastName}
-        </Typography> */}
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ display: { xs: "none", md: "flex" } }}>
           <IconButton
@@ -105,7 +111,6 @@ const AdminHeader = () => {
           </IconButton>
         </Box>
       </Toolbar>
-
       <Menu
         anchorEl={anchorEl}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

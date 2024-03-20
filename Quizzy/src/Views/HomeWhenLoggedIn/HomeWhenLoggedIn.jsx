@@ -4,6 +4,12 @@ import Typography from "@mui/material/Typography";
 import quizHomePic from "../../Images/quiz-home-pic.jpeg";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Renders the home page content when the user is logged in.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered HomeWhenLoggedIn component.
+ */
 const HomeWhenLoggedIn = () => {
   const navigate = useNavigate();
 

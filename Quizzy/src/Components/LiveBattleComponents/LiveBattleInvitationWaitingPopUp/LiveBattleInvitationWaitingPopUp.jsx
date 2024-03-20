@@ -20,6 +20,17 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
+/**
+ * Represents a pop-up component that displays a waiting message and progress bar
+ * while waiting for a response to a live battle invitation.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {boolean} props.open - Determines whether the pop-up is open or not.
+ * @param {function} props.handleCancel - The function to handle the cancel action.
+ * @param {string} props.name - The name of the user to whom the invitation was sent.
+ * @returns {JSX.Element} The rendered component.
+ */
 const LiveBattleInvitationWaitingPopUp = ({ open, handleCancel, name }) => {
   const theme = useTheme();
   const [progress, setProgress] = useState(0);

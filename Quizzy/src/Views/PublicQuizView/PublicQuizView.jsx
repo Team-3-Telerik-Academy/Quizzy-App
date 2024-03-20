@@ -9,6 +9,12 @@ import AppContext from "../../Context/AppContext";
 import LoggedInMain from "../../Components/LoggedInMain/LoggedInMain";
 import { updateUserInfo } from "../../services/users.service";
 
+/**
+ * Renders the public quiz view component.
+ *
+ * @component
+ * @returns {JSX.Element} The public quiz view component.
+ */
 const PublicQuizView = () => {
   const { userData } = useContext(AppContext);
   const { id } = useParams();
@@ -43,7 +49,7 @@ const PublicQuizView = () => {
         setQuizExists(true);
       }
     });
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (resultView) {

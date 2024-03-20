@@ -8,6 +8,11 @@ import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 import { inviteToLiveBattle } from "../../services/live-battle.services";
 import LiveBattleInvitationWaitingPopUp from "../../Components/LiveBattleComponents/LiveBattleInvitationWaitingPopUp/LiveBattleInvitationWaitingPopUp";
 
+/**
+ * Renders the main view for the Live Battle feature.
+ *
+ * @returns {JSX.Element} The LiveBattleMain component.
+ */
 const LiveBattleMain = () => {
   const [onlineUsers, setOnlineUsers] = useState([]);
   const { userData } = useContext(AppContext);

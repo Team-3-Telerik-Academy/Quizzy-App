@@ -26,6 +26,12 @@ const owners = [
   },
 ];
 
+/**
+ * Renders the profile component.
+ *
+ * @component
+ * @returns {JSX.Element} The profile component.
+ */
 const Profile = () => {
   return (
     <div
@@ -40,7 +46,6 @@ const Profile = () => {
         gap: "30px",
         overflow: "hidden",
         paddingBottom: "17.5px",
-        // alignItems: "center",
       }}
     >
       {owners.map((owner) => {
@@ -127,7 +132,6 @@ const Profile = () => {
               >
                 Contact details
               </span>
-
               <span
                 style={{
                   marginTop: "7px",
@@ -141,7 +145,6 @@ const Profile = () => {
                   style={{ width: "18px", marginRight: "7px" }}
                   alt=""
                 />
-
                 {owner.phone}
               </span>
               <span

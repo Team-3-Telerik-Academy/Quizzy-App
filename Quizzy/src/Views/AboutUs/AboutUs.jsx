@@ -1,6 +1,12 @@
 import { Typography } from "@mui/material";
 import Profile from "../../Components/Profile/Profile";
 
+/**
+ * Renders the About Us page of the Quizzy Application.
+ *
+ * @component
+ * @returns {JSX.Element} The About Us page component.
+ */
 const AboutUs = () => {
   return (
     <div

@@ -7,6 +7,16 @@ import { getStorage, ref } from "firebase/storage";
 
 const storage = getStorage();
 
+/**
+ * Renders an image upload component for creating a quiz or group image.
+ *
+ * @component
+ * @param {Object} prop - The props for the component.
+ * @param {Object} prop.prop - The prop object containing the image and file information.
+ * @param {Function} prop.fn - The function to update the prop object.
+ * @param {string} prop.value - The value indicating whether the image is for a quiz or a group.
+ * @returns {JSX.Element} The QuizImage component.
+ */
 const QuizImage = ({ prop, fn, value }) => {
   const { userData } = useContext(AppContext);
 

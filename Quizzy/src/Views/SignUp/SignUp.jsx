@@ -34,6 +34,11 @@ const theme = createTheme({
   },
 });
 
+/**
+ * Represents the sign-up page component.
+ * @component
+ * @returns {JSX.Element} The sign-up page.
+ */
 export default function SignUp() {
   const { setUserCredentials } = useContext(AppContext);
   const navigate = useNavigate();

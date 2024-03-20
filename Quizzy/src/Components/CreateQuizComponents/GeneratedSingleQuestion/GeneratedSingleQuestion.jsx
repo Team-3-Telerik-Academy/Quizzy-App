@@ -22,6 +22,19 @@ const theme = createTheme({
   },
 });
 
+/**
+ * Represents a single generated question component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.question - The question object.
+ * @param {string} props.question.title - The title of the question.
+ * @param {string[]} props.question.answers - The array of possible answers for the question.
+ * @param {string} props.question.correctAnswer - The correct answer for the question.
+ * @param {number} props.question.points - The points assigned to the question.
+ * @param {Function} props.addQuestion - The function to add the question.
+ * @returns {JSX.Element} The generated single question component.
+ */
 const GeneratedSingleQuestion = ({ question, addQuestion }) => {
   const [newQuestion, setNewQuestion] = useState(question);
 
@@ -61,7 +74,6 @@ const GeneratedSingleQuestion = ({ question, addQuestion }) => {
                   fontFamily: "Monospace",
                   cursor: "pointer",
                   borderRadius: "5px",
-
                   backgroundColor:
                     answer === question.correctAnswer
                       ? "rgba(144, 238, 144, 0.7)"

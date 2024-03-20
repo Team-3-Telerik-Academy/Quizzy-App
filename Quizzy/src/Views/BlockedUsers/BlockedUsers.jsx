@@ -7,6 +7,16 @@ import { unblockUser } from "../../services/users.service";
 import { useNavigate } from "react-router-dom";
 import UserProfilePic from "../../Components/UserProfilePic/UserProfilePic";
 
+/**
+ * Represents the BlockedUsers component.
+ * This component displays a list of blocked users and provides an option to unblock them.
+ *
+ * @component
+ * @example
+ * return (
+ *   <BlockedUsers />
+ * )
+ */
 const BlockedUsers = () => {
   const [users, setUsers] = useState(null);
   const { userData } = useContext(AppContext);

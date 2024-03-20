@@ -19,6 +19,17 @@ const StyledLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
+/**
+ * Represents a pop-up component for a live battle invitation.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {boolean} props.open - Determines whether the pop-up is open or not.
+ * @param {Function} props.handleDecline - The function to handle the decline action.
+ * @param {Function} props.handleAccept - The function to handle the accept action.
+ * @param {string} props.name - The name of the inviter.
+ * @returns {JSX.Element} The rendered LiveBattleInvitationPopUp component.
+ */
 const LiveBattleInvitationPopUp = ({
   open,
   handleDecline,

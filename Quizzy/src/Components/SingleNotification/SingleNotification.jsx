@@ -14,6 +14,18 @@ import toast from "react-hot-toast";
 import { getGroupByTitle } from "../../services/groups.services";
 import { useLocation, useNavigate } from "react-router-dom";
 
+/**
+ * Renders a single notification item.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.invitation - The invitation object.
+ * @param {string} props.value - The value of the notification.
+ * @param {Function} props.handleNotificationsClose - The function to handle closing the notifications.
+ * @param {Function} props.setOpenedNotifications - The function to set the opened notifications count.
+ * @param {string} props.id - The ID of the notification.
+ * @returns {JSX.Element} The rendered SingleNotification component.
+ */
 const SingleNotification = ({
   invitation,
   value,
@@ -36,6 +48,7 @@ const SingleNotification = ({
 
   const handleAcceptInvitation = () => {
     if (value === "quizInvitations") {
+      setOpenedNotifications((prev) => prev - 1);
       getQuizByTitle(invitation)
         .then((quiz) => {
           acceptInvitation(
@@ -49,13 +62,13 @@ const SingleNotification = ({
           toast.success("You have accepted the invitation successfully!", {
             position: "bottom-right",
           });
-          setOpenedNotifications((prev) => prev - 1);
           if (location.pathname === "/quizzes") {
             navigate("/quizzes");
           }
         });
     }
     if (value === "groupInvitations") {
+      setOpenedNotifications((prev) => prev - 1);
       getGroupByTitle(invitation)
         .then((group) => {
           acceptInvitation(
@@ -70,18 +83,17 @@ const SingleNotification = ({
           toast.success("You have accepted the invitation successfully!", {
             position: "bottom-right",
           });
-          setOpenedNotifications((prev) => prev - 1);
           if (location.pathname === "/educatorGroups") {
             navigate("/educatorGroups");
           }
         });
     }
     if (value === "friendRequests") {
+      setOpenedNotifications((prev) => prev - 1);
       acceptInvitation(userData.username, value, invitation).then(() => {
         toast.success("You have accepted the invitation successfully!", {
           position: "bottom-right",
         });
-        setOpenedNotifications((prev) => prev - 1);
         if (location.pathname === "/Friends") {
           navigate("/Friends");
         }
@@ -91,6 +103,7 @@ const SingleNotification = ({
 
   const handleDeclineInvitation = () => {
     if (value === "quizInvitations") {
+      setOpenedNotifications((prev) => prev - 1);
       getQuizByTitle(invitation)
         .then((quiz) => {
           declineInvitation(
@@ -104,10 +117,10 @@ const SingleNotification = ({
           toast.success("You have declined the invitation!", {
             position: "bottom-right",
           });
-          setOpenedNotifications((prev) => prev - 1);
         });
     }
     if (value === "groupInvitations") {
+      setOpenedNotifications((prev) => prev - 1);
       getGroupByTitle(invitation)
         .then((quiz) => {
           declineInvitation(
@@ -121,23 +134,22 @@ const SingleNotification = ({
           toast.success("You have declined the invitation!", {
             position: "bottom-right",
           });
-          setOpenedNotifications((prev) => prev - 1);
         });
     }
     if (value === "friendRequests") {
+      setOpenedNotifications((prev) => prev - 1);
       declineInvitation(userData.username, value, invitation).then(() => {
         toast.success("You have declined the invitation!", {
           position: "bottom-right",
         });
-        setOpenedNotifications((prev) => prev - 1);
       });
     }
     if (
       value === "quizCommentsNotifications" ||
       value === "quizRepliesNotifications"
     ) {
-      deleteNotification(userData.username, value, id);
       setOpenedNotifications((prev) => prev - 1);
+      deleteNotification(userData.username, value, id);
     }
   };
 

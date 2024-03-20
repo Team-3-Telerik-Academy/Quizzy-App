@@ -5,9 +5,8 @@ import { useContext, useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
-
 /**
- * Higher-order component that provides authentication and authorization for admin users.
+ * Higher-order component that provides authentication and authorization for educator users.
  *
  * @component
  * @param {Object} props - The component props.

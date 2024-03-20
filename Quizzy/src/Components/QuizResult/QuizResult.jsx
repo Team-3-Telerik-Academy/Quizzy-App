@@ -8,6 +8,22 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 
+/**
+ * Represents the QuizResult component.
+ *
+ * @component
+ * @param {Object} props - The component props.
+ * @param {Object} props.answers - The answers object.
+ * @param {number} props.length - The length of the quiz.
+ * @param {number} props.score - The score obtained in the quiz.
+ * @param {Object} props.correctAns - The correct answers object.
+ * @param {number} props.timeTaken - The time taken to complete the quiz.
+ * @param {number} props.quizTotalPoints - The total points of the quiz.
+ * @param {string} props.height - The height of the component.
+ * @param {string} props.color - The background color of the component.
+ * @param {string} props.margin - The margin of the component.
+ * @returns {JSX.Element} The QuizResult component.
+ */
 const QuizResult = (props) => {
   const location = useLocation();
   const {
@@ -80,7 +96,6 @@ const QuizResult = (props) => {
               }}
             >
               <span style={{ fontSize: "40px" }}>
-                {/* Your score: <br /> */}
                 Score: <br />
               </span>
               {((score / quizTotalPoints) * 100).toFixed(2)} %

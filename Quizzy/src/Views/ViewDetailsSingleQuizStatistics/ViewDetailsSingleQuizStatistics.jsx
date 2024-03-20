@@ -3,6 +3,16 @@ import QuizzesComment from "../../Components/QuizzesComment/QuizzesComment";
 import QuizResult from "../../Components/QuizResult/QuizResult";
 import { useEffect, useState } from "react";
 
+/**
+ * Renders the details of a single quiz statistics.
+ *
+ * @component
+ * @example
+ * // Usage
+ * return (
+ *   <ViewDetailsSingleQuizStatistics />
+ * )
+ */
 const ViewDetailsSingleQuizStatistics = () => {
   const location = useLocation();
   const [result, setResult] = useState(null);

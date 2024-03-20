@@ -54,8 +54,13 @@ import LiveBattleMain from "./Views/LiveBattleMain/LiveBattleMain";
 import LiveBattle from "./Views/LiveBattle/LiveBattle";
 import LiveBattleFinalView from "./Views/LiveBattleFinalView/LiveBattleFinalView";
 
+/**
+ * The main component of the Quizzy application.
+ *
+ * @returns {JSX.Element} The JSX element representing the App component.
+ */
 function App() {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const [userCredentials, setUserCredentials] = useState(null);
   const [userData, setUserData] = useState(null);
   const [chatUser, setChatUser] = useState(null);

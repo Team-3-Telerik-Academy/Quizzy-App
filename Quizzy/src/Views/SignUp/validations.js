@@ -1,3 +1,9 @@
+/**
+ * Validates the form data for signing up.
+ * @param {object} form - The form data to be validated.
+ * @param {function} fn - The callback function to handle validation errors.
+ * @returns {boolean} - Returns true if the form data is valid, otherwise false.
+ */
 export const validateData = (form, fn) => {
     if (form.username.length < 3 || form.username.length > 30) {
         fn("Username should be between 3 and 30 characters long!");
@@ -50,31 +56,30 @@ export const validateData = (form, fn) => {
         return false;
     }
 
-    // For more secure password:
-    // if (form.password.length < 8) {
-    //     fn('Password must be at least 8 characters.');
-    //     return false;
-    // }
+    if (form.password.length < 8) {
+        fn('Password must be at least 8 characters.');
+        return false;
+    }
 
-    // if (!/[a-z]/.test(form.password)) {
-    //     fn('Password must contain at least one lowercase letter.');
-    //     return false;
-    // }
+    if (!/[a-z]/.test(form.password)) {
+        fn('Password must contain at least one lowercase letter.');
+        return false;
+    }
 
-    // if (!/[A-Z]/.test(form.password)) {
-    //     fn('Password must contain at least one uppercase letter.');
-    //     return false;
-    // }
+    if (!/[A-Z]/.test(form.password)) {
+        fn('Password must contain at least one uppercase letter.');
+        return false;
+    }
 
-    // if (!/[0-9]/.test(form.password)) {
-    //     fn('Password must contain at least one number.');
-    //     return false;
-    // }
+    if (!/[0-9]/.test(form.password)) {
+        fn('Password must contain at least one number.');
+        return false;
+    }
 
-    // if (!/[!@#$%^&*()-+=\[\]{};':"\\|,.<>\/?]/.test(form.password)) {
-    //     fn('Password must contain at least one special character.');
-    //     return false;
-    // }
+    if (!/[!@#$%^&*()-+=[\]{};':"\\|,.<>/?]/.test(form.password)) {
+        fn('Password must contain at least one special character.');
+        return false;
+    }
 
     if (!form.role) {
         fn("Role is required!");

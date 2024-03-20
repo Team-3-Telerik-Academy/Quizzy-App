@@ -2,6 +2,12 @@ import { Box, Button, Typography } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import createQuizSuccessBackground from "../../Images/sign-in-background.jpg";
 
+/**
+ * Renders the success view after creating a quiz or a group.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered success view component.
+ */
 const CreateSuccessView = () => {
   const navigate = useNavigate();
   const { value } = useParams();

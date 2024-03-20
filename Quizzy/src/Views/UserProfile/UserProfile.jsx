@@ -20,6 +20,12 @@ import ProfileHeader from "../../Components/ProfileHeader/ProfileHeader";
 import EditField from "../../Components/EditField/EditField";
 import { useParams } from "react-router-dom";
 
+/**
+ * UserProfile component displays the user profile information.
+ * It allows the user to edit their profile information such as first name, last name, and phone number.
+ *
+ * @returns {JSX.Element} The rendered UserProfile component.
+ */
 const UserProfile = () => {
   const { username } = useParams();
   const { userData } = useContext(AppContext);
@@ -39,7 +45,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     getUserByUsername(username).then((result) => setUser(result.val()));
-  }, []);
+  }, [username]);
 
   const handleFirstNameChange = () => {
     if (profileInfo.firstName.length < 4 || profileInfo.firstName.length > 32) {

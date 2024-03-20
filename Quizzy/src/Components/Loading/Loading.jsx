@@ -3,6 +3,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import signUpBackground from "../../Images/sign-up-background.jpg";
 
+/**
+ * Represents a loading component.
+ *
+ * @component
+ * @example
+ * // Usage:
+ * <Loading />
+ */
 const Loading = () => (
   <Box
     sx={{

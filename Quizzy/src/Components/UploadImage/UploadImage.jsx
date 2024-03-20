@@ -9,6 +9,15 @@ import { updateQuizInfo } from "../../services/quizzes.service";
 
 const storage = getStorage();
 
+/**
+ * UploadImage component allows users to upload and manage images.
+ *
+ * @component
+ * @param {Object} prop - The props object.
+ * @param {Function} fn - The function to be called after image upload.
+ * @param {string} value - The value indicating the type of image (quizImage or userImage).
+ * @returns {JSX.Element} The UploadImage component.
+ */
 const UploadImage = ({ prop, fn, value }) => {
   const { userData } = useContext(AppContext);
 

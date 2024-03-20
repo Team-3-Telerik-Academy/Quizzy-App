@@ -15,6 +15,12 @@ import {
 } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
+/**
+ * Renders the component for displaying taken quizzes.
+ *
+ * @component
+ * @returns {JSX.Element} The JSX element representing the TakenQuizzes component.
+ */
 const TakenQuizzes = () => {
   const [takenQuizzes, setTakenQuizzes] = useState(null);
   const [quizzesOnPage, setQuizzesOnPage] = useState(null);

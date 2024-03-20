@@ -2,6 +2,12 @@ import { Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import quizMainLogo from "..//..//Images/quiz-main-pic.png";
 
+/**
+ * Renders the Home component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered Home component.
+ */
 const Home = () => {
   const navigate = useNavigate();
   return (

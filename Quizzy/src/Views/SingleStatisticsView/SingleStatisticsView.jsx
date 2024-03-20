@@ -19,6 +19,12 @@ import Loading from "../../Components/Loading/Loading";
 import correct from "..//..//Images/done.png";
 import incorrect from "..//..//Images/cancel.png";
 
+/**
+ * Renders the Single Statistics View component.
+ * This component displays the statistics of a single quiz, including participant scores and answers.
+ *
+ * @returns {JSX.Element} The Single Statistics View component.
+ */
 const SingleStatisticsView = () => {
   const [quiz, setQuiz] = useState(null);
   const [results, setResults] = useState(null);

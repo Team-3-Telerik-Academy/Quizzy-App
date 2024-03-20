@@ -23,6 +23,14 @@ const theme = createTheme({
   },
 });
 
+/**
+ * Renders a component for displaying and managing comments on a quiz.
+ *
+ * @component
+ * @example
+ * return (
+ *   <QuizzesComment value="educator" result={quizResult}>
+ *     {/* Additional components or elements */
 const QuizzesComment = (props) => {
   const [editedComment, setEditedComment] = useState("");
   const [editingCommentId, setEditingCommentId] = useState(null);

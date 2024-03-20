@@ -1,15 +1,9 @@
-// Light Blue: #ADD8E6
-// Sky Blue: #87CEEB
-// Pale Yellow: #FFFFE0
-// Light Pink: #FFB6C1
-
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
 import { getAllUsers } from "../../services/users.service";
 import { getAllPrivateQuizzes } from "../../services/quizzes.service";
 import { getAllPublicQuizzes } from "../../services/quizzes.service";
 import AppContext from "../../Context/AppContext";
-import GroupIcon from "@mui/icons-material/Group";
 import publicQuizzesIcon from ".//..//..//Images/publicQuizzesIcon.svg";
 import privateQuizzesIcon from ".//..//..//Images/privateQuizzesIcon.svg";
 import blockedUsersIcon from ".//..//..//Images/blockedUsersIcon.svg";
@@ -18,6 +12,11 @@ import studentsIcon from ".//..//..//Images/studentsIcon.svg";
 import educatorsIcon from ".//..//..//Images/educatorIcon.svg";
 import { useNavigate } from "react-router-dom/dist";
 
+/**
+ * Renders the Admin Home page.
+ *
+ * @returns {JSX.Element} The rendered Admin Home component.
+ */
 const AdminHome = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -27,6 +26,14 @@ const AdminHome = () => {
   const [publicQuizzes, setPublicQuizzes] = useState([]);
   const { userData } = useContext(AppContext);
   const [blockedUsers, setBlockedUsers] = useState([]);
+
+  useEffect(() => {
+    getAllPrivateQuizzes().then((quizzes) => setPrivateQuizzes(quizzes));
+  }, []);
+
+  useEffect(() => {
+    getAllPublicQuizzes().then((quizzes) => setPublicQuizzes(quizzes));
+  }, [])
 
   useEffect(() => {
     getAllUsers()
@@ -233,7 +240,7 @@ const AdminHome = () => {
                 marginTop: "5px",
               }}
             >
-              4
+              {publicQuizzes?.length}
             </span>
             <span
               style={{
@@ -280,7 +287,7 @@ const AdminHome = () => {
                 marginTop: "5px",
               }}
             >
-              2
+              {privateQuizzes?.length}
             </span>
             <span
               style={{

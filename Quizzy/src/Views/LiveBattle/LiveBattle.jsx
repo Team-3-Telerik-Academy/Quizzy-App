@@ -205,7 +205,7 @@ const LiveBattle = () => {
               marginBottom: "15px",
             }}
           >
-            <span style={{ color: "rgb(3,165,251)" }}>4</span> random questions
+            <span style={{ color: "rgb(3,165,251)" }}>2</span> random questions
             will be generated and included in the Quiz battle.
           </Typography>
           <Typography

@@ -8,11 +8,11 @@ import {
   updateLiveBattle,
 } from "../../services/live-battle.services";
 import AppContext from "../../Context/AppContext";
-import { getLiveBattleQuestions } from "../../services/request-service";
 import { createTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import CreatingLiveBattleLoading from "../../Components/LiveBattleComponents/CreatingLiveBattleLoading/CreatingLiveBattleLoading";
 import Loading from "../../Components/Loading/Loading";
+import { getQuizQuestions } from "../../services/request-service";
 
 const theme = createTheme({
   palette: {
@@ -71,10 +71,12 @@ const LiveBattle = () => {
       liveBattle.category2 &&
       !liveBattle.quiz
     ) {
-      getLiveBattleQuestions(
-        liveBattle.category1.value,
-        liveBattle.category2.value
-      ).then((data) => {
+      const category =
+        Math.random() < 0.5
+          ? liveBattle.category1.value
+          : liveBattle.category2.value;
+
+      getQuizQuestions(category, "medium", 6).then((data) => {
         addQuizToLiveBattle(battleId, "Live Battle", data);
       });
     }
@@ -98,7 +100,7 @@ const LiveBattle = () => {
             setIndex((prev) => prev + 0.5);
           }
         });
-      }, 1000);
+      }, 100);
 
       return () => clearInterval(timer);
     }
@@ -109,13 +111,13 @@ const LiveBattle = () => {
       setLoading(true);
       if (userData.username === liveBattle.player1) {
         updateLiveBattle(battleId, "player1Score", points).then(() => {
-          if (liveBattle.player2Score) {
+          if (liveBattle.player2Score || liveBattle.player2Score === 0) {
             navigate("/liveBattleResults", { state: { battleId } });
           }
         });
       } else {
         updateLiveBattle(battleId, "player2Score", points).then(() => {
-          if (liveBattle.player1Score) {
+          if (liveBattle.player1Score || liveBattle.player1Score === 0) {
             navigate("/liveBattleResults", { state: { battleId } });
           }
         });

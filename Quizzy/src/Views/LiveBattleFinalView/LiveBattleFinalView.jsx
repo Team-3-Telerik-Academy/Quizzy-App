@@ -104,10 +104,13 @@ const LiveBattleFinalView = () => {
             gutterBottom
             style={{ color: "white", fontFamily: "Fantasy" }}
           >
-            {player1.points === player2.points && "It's a Tie!"}
-            {"The winner is " +
-              (player1.points > player2.points ? player1.name : player2.name) +
-              "!"}
+            {player1.points === player2.points
+              ? "It's a Tie!"
+              : "The winner is " +
+                (player1.points > player2.points
+                  ? player1.name
+                  : player2.name) +
+                "!"}
           </Typography>
           <Grid container justifyContent="center" style={{ gap: "10px" }}>
             <PlayerBox>

@@ -12,6 +12,7 @@ import { createTheme } from "@mui/material/styles";
 import { styled } from "@mui/material/styles";
 import { getQuizQuestions } from "../../services/request-service";
 import LiveBattleLoading from "../../Components/LiveBattleComponents/LiveBattleLoading/LiveBattleLoading";
+import Loading from "../../Components/Loading/Loading";
 
 const theme = createTheme({
   palette: {
@@ -299,7 +300,7 @@ const LiveBattle = () => {
             }
           />
         </Box>
-      ) : (
+      ) : loading ? <Loading/> : (
         <Box
           sx={{
             marginTop: "100px",
@@ -421,10 +422,6 @@ const LiveBattle = () => {
               })}
             </Grid>
           </Box>
-          <LiveBattleLoading
-            open={loading}
-            text1={"The results are being processed!"}
-          />
         </Box>
       )}
     </>

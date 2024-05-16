@@ -102,10 +102,10 @@ const LiveBattle = () => {
             return prevSec - 1;
           } else {
             setSecondsLeft(10);
-            setIndex((prev) => prev + 0.5);
+            setIndex((prev) => prev + 1);
           }
         });
-      }, 600);
+      }, 1000);
 
       return () => clearInterval(timer);
     }

@@ -38,12 +38,12 @@ const ProfileHeader = ({ user }) => {
 
   useEffect(() => {
     getAllUsersSortedByScore().then((users) => {
-      const user = users.find((user) => user.username === user.username);
-      if (user) {
-        setRank(users.indexOf(user) + 1);
+      const findUser = users.find((el) => el.username === user.username);
+      if (findUser) {
+        setRank(users.indexOf(findUser) + 1);
       }
     });
-  }, []);
+  }, [user]);
 
   const handleFriendRequest = (action) => {
     friendRequest(userData, user, action);

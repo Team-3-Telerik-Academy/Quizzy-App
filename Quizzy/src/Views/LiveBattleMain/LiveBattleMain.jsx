@@ -195,11 +195,13 @@ const LiveBattleMain = () => {
                           onClick={() => handleSendInvitation(user)}
                         />
                         <span>{user.firstName}</span>
-                        <LiveBattleInvitationWaitingPopUp
-                          name={user.firstName + " " + user.lastName}
-                          open={isPopUpOpen}
-                          handleCancel={() => handleDecline(user.username)}
-                        />
+                        {userData?.liveBattleWaitingInvitations && (
+                          <LiveBattleInvitationWaitingPopUp
+                            name={user.firstName + " " + user.lastName}
+                            open={isPopUpOpen}
+                            handleCancel={() => handleDecline(user.username)}
+                          />
+                        )}
                       </Box>
                     );
                   })}

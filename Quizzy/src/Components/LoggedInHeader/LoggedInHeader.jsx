@@ -472,7 +472,7 @@ const LoggedInHeader = ({ open, handleDrawerOpen }) => {
             aria-haspopup="true"
             color="inherit"
           >
-            <UserProfilePic image={userData?.image} />
+            <UserProfilePic image={userData?.image} status={userData?.status} />
           </IconButton>
           <p>Profile</p>
         </MenuItem>
